@@ -1,0 +1,37 @@
+.widget{
+    width: 100%;
+    box-sizing: border-box;
+    text-align: justify;
+    border-bottom: 1px solid  $mediumgray;
+    margin-top: 30px;
+    padding: 10px;
+
+    &:first-of-type{
+        margin-top: 50px;
+    }
+
+    h2{
+        text-align: center;
+        margin-bottom: 10px;
+        @if $title_line_display == yes{
+            @include arrowline($widget_title_bar_bg, $widget_title_bar_color, $line, 10px);
+        }
+        @else{
+            position: relative;
+            background: $widget_title_bar_bg;
+            color: $widget_title_bar_color;
+        }
+    }
+
+    p{
+        padding: 10px;
+    }
+}
+
+.widget_search{
+    padding: 0px;
+
+    .group{
+        margin-bottom: -1px;
+    }
+}

@@ -1,0 +1,153 @@
+html{
+    font: {
+        family: $ssfont;
+        size: 1em;
+        size: $root_font_size;
+        weight: $sslight;
+    }
+    color: $main_color;
+}
+body{
+    @extend html;
+    line-height: $general_line-height;
+    background:{
+        color: $bodybg;
+    }
+}
+
+img, hr{
+    max-width: 100%;
+}
+
+section .content{
+    max-width: $max-width;
+    width: $content_width;
+    @extend %center;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-weight: $ssnormal;
+    text-transform: $h_text_transform;
+    line-height: 1;
+    padding: 10px 0px;
+}
+
+h1{
+    font-size: 2.1em;
+}
+
+h2{
+    font-size: 1.6em;
+}
+
+h3{
+    font-size: 1.2em;
+}
+
+h4{
+    font-size: 1em;
+}
+
+h5{
+    font-size: .83em;
+}
+
+h6{
+    font-size: .75em;
+}
+
+a{
+    transition: .3s all;
+    color: $a_color;
+    text-decoration: none;
+
+    &:hover{
+        transiton: .3s all;
+        color: $a_hover_color;
+    }
+
+    .post &,
+    article footer &,
+    .widget & {
+        @extend %linkline;
+    }
+}
+
+.hidden{
+    display: none;
+}
+
+.responsive_vid{
+    @include paddinghack(100%, 16, 9);
+
+    iframe{
+        @extend %paddinghack;
+    }
+}
+
+.alignleft{
+    float: left;
+}
+
+.alignright{
+    float: right;
+}
+
+.aligncenter{
+    margin: 0 auto;
+    display: block;
+}
+
+blockquote{
+    width: 90%;
+    margin-left: 10%;
+    display: block;
+    padding: 5px 10px;
+    border-left: $line;
+    font-family: $sfont;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-sizing: border-box;
+}
+
+article {
+    ol {
+        margin: 1em 0;
+        padding: 0 0 0 40px;
+
+        li {
+            list-style-type: decimal;
+        }
+    }
+
+    ul{
+        @extend ol;
+
+        li{
+            list-style-type: circle;
+        }
+    }
+}
+
+
+// WP default class stuff
+.wp-caption {
+    margin-bottom: 1.5em;
+    text-align: center;
+    padding-top: 5px;
+}
+.wp-caption-text{
+    font-size: .6em;
+}
+.sticky{
+    position: fixed;
+}
+
+.gallery-caption{
+    @extend .wp-caption;
+}
+
+.bypostauthor{
+    @extend .wp-caption-text;
+}

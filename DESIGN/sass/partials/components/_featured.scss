@@ -1,0 +1,36 @@
+.feat{
+    width: 100%;
+
+    .content{
+        border-bottom: $line;
+    }
+
+    article{
+
+        .feattitle{
+            @if $ribbon_display == yes {
+                content: '';
+                position: absolute;
+                right: -10px;
+                top: 30px;
+                padding: 3px;
+                font-size: .7em;
+                color: $ribbon_color;
+                text-transform: uppercase;
+                background: $ribbon_bg;
+                z-index: 2;
+
+                &:after{
+                    @include triangle_ra(10px, (10px/1.5), top-left, darken($ribbon_bg, 15%));
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                }
+            }
+            @else{
+                display: none;
+            }
+        }
+    }
+}

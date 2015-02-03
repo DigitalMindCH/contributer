@@ -1,0 +1,137 @@
+//Mixins
+=flexbox($direction, $wrap, $justify, $align)
+    display: flex
+    flex-direction: $direction
+    flex-wrap: $wrap
+    justify-content: $justify
+    align-items: $align
+//@include flexbox(direction, wrap, justify, align)
+
+=rowMachine($numPerRow, $marginright, $marginbottom)
+    width: ((100% - (($numPerRow - 1) * $marginright)) / $numPerRow)
+
+    &:nth-child(n)
+        margin-bottom: $marginbottom
+        margin-right: $marginright
+
+    &:nth-child(#{$numPerRow}n)
+        margin-right: 0
+//@include rowMachine(numPerRow, margin)
+
+=paddinghack($containerwidth, $ratiowidth, $ratioheight)
+    position: relative
+    width: $containerwidth
+    height: 0
+    padding: (($ratioheight / $ratiowidth) * $containerwidth) 0 0 0
+// @include paddinghack(width, ratiowidth, ratioheight)
+
+// Button
+=button($c)
+    margin-top: 10px
+    margin-right: 10px
+    padding: 7px 13px
+    font-size: 1em
+    color: set-button-color($c)
+    display:inline-block
+    vertical-align: middle
+    text-align: center
+    cursor: pointer
+    transition: background 0.1s ease-in-out
+    border-radius: 2px
+    outline: 0 none
+    background-color: $c
+    box-shadow: 0px 3px 0px 0px darken($c, set-button-shadow($c))
+
+    &:hover,
+    &:focus
+        background-color: saturate($c, 20%)
+
+    &:active,
+    &:focus
+        padding-top: 15px
+        margin-bottom: -1px
+        outline: 0 none
+        box-shadow: 0px 1px 0px 0px darken($c, 25%)
+// @include button(color)
+
+// Basic Triangle
+=triangle($bw, $dir, $c)
+    width: 0
+    height: 0
+    border-style: solid
+
+    @if $dir == right
+        border-color: transparent transparent transparent $c
+
+    @if $dir == left
+        border-color: transparent $c transparent transparent
+
+    @if $dir == bottom or $dir == down
+        border-color: $c transparent transparent transparent
+
+    @if $dir == top or $dir == up
+        border-color: transparent transparent $c transparent
+
+    border-width: $bw
+
+// @include triangle(border-width, direction[use: right, left, top/up, bottom/down], color);
+
+// Right-Angled Triangle
+=triangle_ra($w, $h, $dir, $c)
+    width: 0
+    height: 0
+    border-style: solid
+
+    @if $dir == bottom-left
+        border-color: transparent transparent transparent $c
+        border-width: $h 0 0 $w
+
+    @if $dir == bottom-right
+        border-color: transparent transparent $c transparent
+        border-width: 0 0 $h $w
+
+    @if $dir == top-left
+        border-color: $c transparent transparent transparent
+        border-width: $h $w 0 0
+
+    @if $dir == top-right
+        border-color: transparent $c transparent transparent
+        border-width: 0px $w $h 0px
+// @include triangle_ra(width, height, direction[use: bottom-left, bottom-right, top-left, top-right], color);
+
+=ghostbutton($bc, $bg, $bch, $bgh)
+    padding: 5px 12px
+    text-transform: uppercase
+    border-top: 1px solid $bc
+    border-bottom: 1px solid $bc
+    background: $bg
+    border-radius: 0px
+    line-height: 2.8
+    color: set-button-color($bg)
+
+    &:hover
+        border-color: $bch
+        background: $bgh
+        color: set-button-color($bgh)
+// @include  ghostbutton(border-color, background-color, border-color hover, background-color hover);
+
+
+=arrowline($bg, $c, $lc, $s)
+    position: relative
+    background: $bg
+    color: $c
+    border-bottom: $lc
+
+    &:after
+        content: ''
+        width: $s
+        height: $s
+        background: $bg
+        position: absolute
+        top: 100%;
+        left: 50%;
+        margin-top: -($s * 1.414213562)/2.8
+        margin-left: -($s / 2)
+        transform: rotate(45deg)
+        border-bottom: $lc
+        border-right: $lc

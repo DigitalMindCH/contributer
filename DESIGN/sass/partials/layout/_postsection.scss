@@ -1,0 +1,63 @@
+@import "../components/featured";
+
+.blog_container{
+    .content{
+        @include flexbox(row, nowrap, space-between, stretch);
+    }
+
+    .main_container{
+        width: (95% - $sidebar_width);
+
+        @media screen and (max-width: $sidebar_collapse){
+            width: 100%;
+        }
+    }
+
+    @import "sidebar";
+}
+
+// Full Layout
+.full{
+    $toggle_collapse: $topnav_collapse;
+
+    .main_container{
+        width: 100%;
+    }
+
+    .sidebar{
+        display: none;
+    }
+
+    .toggle_link2{
+        display: none;
+    }
+
+    .toggle_link{
+        $sidebar_collapse: 0;
+        @media screen and (max-width: $maxw) and (min-width: $minw){
+            display: toggle_visible($toggle_collapse, $sidebar_collapse);
+        }
+    }
+}
+
+@import "../components/article";
+
+@import "../components/comments";
+
+@import "../components/pagination";
+
+// Page Meta
+.page{
+    article{
+        .meta{
+            position: relative;
+
+            @if $meta_line_display == yes{
+                &:after{
+                    width: 20%;
+                    left: (50% - (20% / 2));
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,89 @@
+@media screen and (max-width: $toggle_collapse){
+    body,
+    .top_menu{
+        margin-top: 55px;
+    }
+}
+
+.toggle_nav{
+    display: none;
+
+    .toggle_link,
+    .toggle_link2{
+        display: none;
+    }
+
+    @media screen and (max-width: $toggle_collapse){
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 104;
+        background: $togglenav_bg;
+        height: 55px;
+        padding: 15px;
+        box-sizing: border-box;
+
+        .toggle_link,
+        .toggle_link2{
+            &:hover{
+                color: $togglenav_hover_color;
+            }
+
+            color: $togglenav_color;
+            padding: 7px 15px;
+            transition: .3s all ease;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: inline-block;
+
+            @media screen and (max-width: 240px){
+                font-size: 80%;
+            }
+
+        }
+
+        .toggle_link2{
+
+            @media screen and (max-width: $maxw) and (min-width: $minw){
+                display: toggle_visible($toggle_collapse, $sidebar_collapse);
+            }
+
+            right: 5px;
+
+            &:before{
+                content: quote($sidebar_name);
+            }
+        }
+
+        .toggle_link{
+            @media screen and (max-width: $maxw) and (min-width: $minw){
+                display: toggle_visible($toggle_collapse, $topnav_collapse);
+            }
+
+            left: 5px;
+
+            &:after{
+                content: quote($menu_name);
+            }
+        }
+
+        .search{
+            display: none;
+            @if $search_display == yes{
+                @media screen and (max-width: $topnav_collapse){
+                    @extend .toggle_link;
+                    display: inline-block;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+
+                    &:after{
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}

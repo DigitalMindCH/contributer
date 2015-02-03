@@ -1,0 +1,37 @@
+.sidebar{
+    width: $sidebar_width;
+
+    .toggle_link2{
+        display: none;
+    }
+
+    // Responsive Off-Canvas Version
+    @media screen and (max-width: $sidebar_collapse){
+        width: 320px;
+        height: 100%;
+        position: fixed;
+        overflow-y: auto;
+        overflow-x: hidden;
+        top: 0px;
+        right: -320px;
+        background: $offcanvas_sidebar_bg;
+        box-sizing: border-box;
+        padding: 20px;
+        transform: translate(0px, 0px);
+        transition: .3s all ease;
+        z-index: 108;
+        color: set-button-color($offcanvas_sidebar_bg);
+
+        .toggle_link2{
+            display: block;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        &.active{
+            transform: translate(-320px, 0px);
+            transition: .3s all ease;
+        }
+    }
+}
