@@ -1,10 +1,198 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Feb 1, 2015, 4:47:07 AM
-    Author     : mersed
-*/
+.newpost_container nav:after,
+.profile_container nav:after {
+	content:"";
+	display:table;
+	clear:both;
+}
 
+section .content,
+#menu,.pagination {
+	display:block !important;
+	position:relative;
+	margin:0 auto;
+}
+
+.profile_container .content {
+	width: 100%;
+}
+
+.group {
+	position:relative;
+	margin-bottom:20px;
+}
+
+.group input,
+.group textarea {
+	font-size:18px;
+	display:block;
+	box-sizing:border-box;
+	width:100%;
+	border:none;
+	border-bottom:1px solid #C7C6C5;
+	padding:10px 10px 10px 5px;
+}
+
+.group input:focus,
+.group textarea:focus {
+	outline:none;
+}
+
+.group input:valid ~ label,
+.group input:focus ~ label,
+.group textarea:valid ~ label,
+.group textarea:focus ~ label {
+	top:-20px;
+	font-size:14px;
+}
+
+.group label {
+	font-size:18px;
+	font-weight:400;
+	position:absolute;
+	pointer-events:none;
+	left:5px;
+	top:10px;
+	-webkit-transition:.2s ease all;
+	transition:.2s ease all;
+}
+
+.group .bar {
+	position:relative;
+	display:block;
+	width:100%;
+}
+
+.group .bar:before,
+.group .bar:after {
+	content:'';
+	height:2px;
+	width:0;
+	bottom:1px;
+	position:absolute;
+	background:#111113;
+	-webkit-transition:.2s ease all;
+	transition:.2s ease all;
+}
+
+.group .bar:before {
+	left:50%;
+}
+
+.group .bar:after {
+	right:50%;
+}
+
+.newpost_container .button {
+	text-align:center;
+	font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+	letter-spacing:2px;
+	font-size:12px;
+	padding:10px 0;
+}
+
+.newpost_container .upload {
+	margin-top:30px;
+	background:#FFF;
+	position:relative;
+	font-size:18px;
+	display:block;
+	box-sizing:border-box;
+	width:100%;
+	border:none;
+	border-bottom:1px solid #C7C6C5;
+	text-align:center;
+	padding:10px 10px 10px 5px;
+}
+
+.newpost_container select {
+	font-size:16px;
+	display:block;
+	box-sizing:border-box;
+	width:100%;
+	border:none;
+	border-bottom:1px solid #C7C6C5;
+	-webkit-appearance:none;
+	padding:10px 10px 10px 5px;
+}
+
+.profile_container .img {
+	display:flex;
+	-webkit-box-align:center;
+	-webkit-align-items:center;
+	-ms-flex-align:center;
+	align-items:center;
+	margin-bottom:20px;
+}
+
+.profile_container .img img {
+	padding:20px;
+}
+
+.newpost_container nav,
+.profile_container nav {
+	text-align:center;
+	font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+	letter-spacing:2px;
+	padding:10px 0;
+}
+
+.newpost_container .button a {
+	text-transform:uppercase;
+	border-top:1px solid #3C3D40;
+	border-bottom:1px solid #3C3D40;
+	background:#FDFDFD;
+	border-radius:0;
+	line-height:2.8;
+	color:#121212;
+	padding:5px 12px;
+}
+
+.newpost_container .upload .label {
+	font-size:14px;
+	font-weight:400;
+	position:absolute;
+	pointer-events:none;
+	left:5px;
+	top:-20px;
+	-webkit-transition:.2s ease all;
+	transition:.2s ease all;
+}
+
+.group input:focus ~ .bar:before,
+.group input:focus ~ .bar:after,
+.group textarea:focus ~ .bar:before,
+.group textarea:focus ~ .bar:after{
+	width:50%;
+}
+
+.newpost_container .desc,
+.profile_container .group {
+	margin-bottom:30px;
+}
+
+.newpost_container .button a:hover,
+.newpost_container nav a:hover,
+.profile_container nav a:hover {
+	background:#FFF;
+	color:#121212;
+	border-color:#F5F4EC;
+}
+
+.newpost_container nav a,
+.profile_container nav a {
+	text-transform:uppercase;
+	border-top:1px solid #3C3D40;
+	border-bottom:1px solid #3C3D40;
+	background:#FDFDFD;
+	border-radius:0;
+	line-height:2.8;
+	color:#121212;
+	float:left;
+	padding:5px 12px;
+}
+
+.newpost_container nav .publish,
+.profile_container nav .save {
+	color:red;
+	float:right;
+}

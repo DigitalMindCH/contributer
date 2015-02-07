@@ -10,6 +10,9 @@ Author URI: http://www.mersed.info
 //including modules
 require_once( 'framework/modules/sensei-options/sensei-options.php' );
 
+//including shortcode renderers
+require_once( 'framework/classes/ContributerProfile.php' );
+
 //including other files
 require_once( 'Contributer.php' );
 

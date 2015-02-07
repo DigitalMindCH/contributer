@@ -11,6 +11,7 @@ class Contributer {
 
 		$this->plugin_directory = plugin_dir_path( $file );
 		$this->plugin_url = plugin_dir_url( $file );
+		
 
 		//enque js scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_js' ) );
@@ -22,6 +23,9 @@ class Contributer {
 		add_action( 'template_redirect', array( $this, 'redirect' ) );
 		
 		add_shortcode( 'contributer_login', array( $this, 'render_login_form' ) );
+		
+		$profile_renderer = new ContributerProfile();
+		add_shortcode( 'contributer_profile', array( $profile_renderer, 'render_contributer_profile' ) );
 
 		new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
 	}
