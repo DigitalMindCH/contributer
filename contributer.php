@@ -7,11 +7,16 @@ Version: 1.0
 Author URI: http://www.mersed.info
  */
 
+//defining plugin path and plugin url
+define( 'CONTR_DIR_PATH', plugin_dir_path( __FILE__ ) );
+define( 'CONTR_URL_PATH', plugin_dir_url( __FILE__ )  );
+
 //including modules
 require_once( 'framework/modules/sensei-options/sensei-options.php' );
 
 //including shortcode renderers
 require_once( 'framework/classes/ContributerProfile.php' );
+require_once( 'framework/classes/ContributerContribute.php' );
 
 //including other files
 require_once( 'Contributer.php' );

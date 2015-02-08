@@ -26,6 +26,9 @@ class Contributer {
 		
 		$profile_renderer = new ContributerProfile();
 		add_shortcode( 'contributer_profile', array( $profile_renderer, 'render_contributer_profile' ) );
+		
+		$contribute_renderer = new ContributerContribute();
+		add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'render_contributer_contribute' ) );
 
 		new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
 	}

@@ -7,13 +7,15 @@
 
 section .content,
 #menu,.pagination {
-	display:block !important;
+	display:block;
 	position:relative;
 	margin:0 auto;
 }
 
-.profile_container .content {
+.profile_container .content,
+.newpost_container .content {
 	width: 100%;
+	display:block !important;
 }
 
 .group {

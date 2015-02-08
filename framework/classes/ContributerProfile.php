@@ -7,10 +7,10 @@ class ContributerProfile {
 		ob_start();
 		?>
 		<section class="profile_container">
-			<form>
+			<form id="profile-form">
 				<div class="content">
 					<h1>Profile Information</h1>
-					<div class="img"><img src="img/profile-pic.jpg"><a href="#"><i class="fa fa-pencil"></i> Edit</a></div>
+					<div class="img"><img src="<?php echo CONTR_URL_PATH; ?>/assets/img/default-profile-pic.jpg"><a href="#"><i class="fa fa-pencil"></i> Edit</a></div>
 					<div class="group">
 						<textarea id="bio"></textarea>
 						<span class="bar"></span>
