@@ -2,7 +2,22 @@
 
 class ContributerContribute {
 	
+	
+	public function contributer_contribute() {
+
+		if ( is_user_logged_in() ) {
+			return $this->render_contributer_contribute();
+		}
+		else {
+			$contributer_login_rendered = new ContributerLogin();
+			return $contributer_login_rendered->render_contributer_login();
+		}
+		
+	}
+	
+	
 	public function render_contributer_contribute() {
+		
 		ob_start();
 		?>
 		<section class="newpost_container">
@@ -53,7 +68,7 @@ class ContributerContribute {
 		$html_output = ob_get_clean();
 		return $html_output;
 	
-		}
+	}
 
 	
 }

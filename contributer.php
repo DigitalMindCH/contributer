@@ -17,6 +17,7 @@ require_once( 'framework/modules/sensei-options/sensei-options.php' );
 //including shortcode renderers
 require_once( 'framework/classes/ContributerProfile.php' );
 require_once( 'framework/classes/ContributerContribute.php' );
+require_once( 'framework/classes/ContributerLogin.php' );
 
 //including other files
 require_once( 'Contributer.php' );

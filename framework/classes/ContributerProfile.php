@@ -3,7 +3,21 @@
 class ContributerProfile {
 	
 	
+	public function contributer_profile() {
+
+		if ( is_user_logged_in() ) {
+			return $this->render_contributer_profile();
+		}
+		else {
+			$contributer_login_rendered = new ContributerLogin();
+			return $contributer_login_rendered->render_contributer_login();
+		}
+		
+	}
+	
+	
 	public function render_contributer_profile() {
+		
 		ob_start();
 		?>
 		<section class="profile_container">
