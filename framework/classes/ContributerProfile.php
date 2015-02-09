@@ -18,6 +18,8 @@ class ContributerProfile {
 	
 	public function render_contributer_profile() {
 		
+		$user = wp_get_current_user();
+		
 		ob_start();
 		?>
 		<section class="profile_container">
@@ -31,17 +33,17 @@ class ContributerProfile {
 						<label for="bio">Bio</label>
 					</div>
 					<div class="group">
-						<input required id="mail" type="text">
+						<input required id="mail" type="text" value="<?php echo $user->user_email; ?>">
 						<span class="bar"></span>
 						<label for="mail">Email</label>
 					</div>
 					<div class="group">
-						<input required id="dn" type="text">
+						<input required id="dn" type="text" value="<?php echo $user->display_name; ?>">
 						<span class="bar"></span>
 						<label for="dn">Display Name</label>
 					</div>
 					<div class="group">
-						<input id="site" type="text">
+						<input id="site" type="text" value="<?php echo $user->user_url; ?>" >
 						<span class="bar"></span>
 						<label for="site">Website URL</label>
 					</div>
