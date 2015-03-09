@@ -31,6 +31,7 @@ class Contributer {
 		add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
 
 		new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
+		$this->register_user_custom_fields();
 	}
 
 
@@ -138,6 +139,36 @@ class Contributer {
 	}
 
 
+	private function register_user_custom_fields() {
+		$fields = array( 
+			array(
+				'title' => 'Social Links',
+				'fields' => array(
+					array(
+						'label' => 'Facebook',
+						'id' => 'facebook',
+						'type' => 'text',
+						'desc' => 'Please enter your facebook link.'
+					),
+					array(
+						'label' => 'Twitter',
+						'id' => 'twitter',
+						'type' => 'text',
+						'desc' => 'Please enter your twitter link.'
+					),
+					array(
+						'label' => 'Flickr',
+						'id' => 'flickr',
+						'type' => 'text',
+						'desc' => 'Please enter your flickr link.'
+					),
+				),
+			), 
+		);
+		new UserCustomFields( $fields );
+	}
+	
+	
 	public static function anyone_can_register() {
 		return true;
 	}
