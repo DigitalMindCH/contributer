@@ -2,10 +2,13 @@
 
 class ContributerProfile {
 	
+	public $user;
+	
 	
 	public function contributer_profile() {
 
 		if ( is_user_logged_in() ) {
+			$this->user = wp_get_current_user();
 			return $this->render_contributer_profile();
 		}
 		else {
@@ -17,8 +20,6 @@ class ContributerProfile {
 	
 	
 	public function render_contributer_profile() {
-		
-		$user = wp_get_current_user();
 		
 		ob_start();
 		?>
@@ -33,32 +34,32 @@ class ContributerProfile {
 						<label for="bio">Bio</label>
 					</div>
 					<div class="group">
-						<input required id="mail" type="text" value="<?php echo $user->user_email; ?>">
+						<input required id="mail" type="text" value="<?php echo $this->user->user_email; ?>">
 						<span class="bar"></span>
 						<label for="mail">Email</label>
 					</div>
 					<div class="group">
-						<input required id="dn" type="text" value="<?php echo $user->display_name; ?>">
+						<input required id="dn" type="text" value="<?php echo $this->user->display_name; ?>">
 						<span class="bar"></span>
 						<label for="dn">Display Name</label>
 					</div>
 					<div class="group">
-						<input id="site" type="text" value="<?php echo $user->user_url; ?>" >
+						<input id="site" type="text" value="<?php echo $this->user->user_url; ?>" >
 						<span class="bar"></span>
 						<label for="site">Website URL</label>
 					</div>
 					<div class="group">
-						<input id="fb" type="text">
+						<input id="fb" value="<?php echo esc_attr( get_the_author_meta( 'facebook', $this->user->ID ) ); ?>" type="text" />
 						<span class="bar"></span>
 						<label for="fb"><i class="fa fa-facebook"></i> Facebook URL</label>
 					</div>
 					<div class="group">
-						<input id="twitter" type="text">
+						<input id="twitter" value="<?php echo esc_attr( get_the_author_meta( 'twitter', $this->user->ID ) ); ?>" type="text">
 						<span class="bar"></span>
 						<label for="twitter"><i class="fa fa-twitter"></i> Twitter URL</label>
 					</div>
 					<div class="group">
-						<input id="flickr" type="text">
+						<input id="flickr" value="<?php echo esc_attr( get_the_author_meta( 'flickr', $this->user->ID ) ); ?>" type="text">
 						<span class="bar"></span>
 						<label for="flickr"><i class="fa fa-flickr"></i> Flickr URL</label>
 					</div>
