@@ -41,7 +41,7 @@ class Contributer {
 
 
 	public function load_js() {
-		wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
 
 		$sensei_options = SenseiOptions::get_instance();
 		$redirect_after_login = $sensei_options->get_option( 'redirect_login_url' );
