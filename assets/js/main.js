@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
 	
+	
 	//when form for saving option is submited
 	$( "#profile-form" ).submit(function( event ) {
         
@@ -18,19 +19,40 @@ jQuery(document).ready(function($) {
         });
 		
 		event.preventDefault();
-	});		
+	});
 	
-});
-
-
-
-jQuery(document).ready(function($){
-    
-    $("#profile-image-upload").on("change", function() {
+	
+	
+	//when form for saving post is submited
+	$( "#contributer-editor" ).submit(function( event ) {
+		
+        $.ajax({
+            type: "POST",
+            url: contributer_object.ajaxurl,
+            data: $( "#contributer-editor" ).serialize(),
+            success: function(data) {               
+                if( data.status ) {
+                    alert( data.message );
+					post_fields_cleanup();
+                }
+                else {
+                    alert( data.message );
+                }
+            }
+        });
+		
+		event.preventDefault();
+	});
+	
+	
+	//submit on profile image change
+	$("#profile-image-upload").on("change", function() {
         $("#file_form").submit();
     });
-    
-    var form_data = {};
+	
+	
+	//handling upload of profile image (nr)
+	var form_data = {};
     $('#file_form').find('input').each(function(){
         form_data[this.name] = $(this).val();
     });
@@ -49,28 +71,34 @@ jQuery(document).ready(function($){
             }
         }
     });
+	
 });
+
+
+function post_fields_cleanup() {
+	
+}
 
 
 jQuery(document).ready( function($) {
     var standard = $('.contributer-editor input[type="radio"]'),
-        featimg = $('.contributer-editor #feat-img-field');
+	featimg = $('.contributer-editor #feat-img-field');
 
     show_hide(['gallery-field','video-field']);
     
     standard.on('change', function(){
         switch($(this).val()) {
-            case 'Standard':
+            case 'standard':
                 show_hide(['gallery-field','video-field']);
                 break;
-            case 'Image':
+            case 'image':
                 show_hide(['gallery-field','video-field']);
                 // also: make featured image required
                 break;
-            case 'Video':
+            case 'video':
                 show_hide(['gallery-field']);
                 break;
-            case 'Gallery':
+            case 'gallery':
                 show_hide(['video-field']);
                 break;
             default:
