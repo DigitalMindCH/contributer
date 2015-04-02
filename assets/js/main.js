@@ -50,3 +50,43 @@ jQuery(document).ready(function($){
         }
     });
 });
+
+
+jQuery(document).ready( function($) {
+    var standard = $('.contributer-editor input[type="radio"]'),
+        featimg = $('.contributer-editor #feat-img-field');
+
+    show_hide(['gallery-field','video-field']);
+    
+    standard.on('change', function(){
+        switch($(this).val()) {
+            case 'Standard':
+                show_hide(['gallery-field','video-field']);
+                break;
+            case 'Image':
+                show_hide(['gallery-field','video-field']);
+                // also: make featured image required
+                break;
+            case 'Video':
+                show_hide(['gallery-field']);
+                break;
+            case 'Gallery':
+                show_hide(['video-field']);
+                break;
+            default:
+                show_hide(['gallery-field','video-field']);
+        }       
+    });
+    
+});
+
+function show_hide( trigger ){
+    jQuery('.field').each(function(){
+        if( jQuery.inArray( jQuery(this).attr('id'), trigger ) !== -1 ){
+            jQuery(this).slideUp();
+        }
+        else{
+            jQuery(this).slideDown();
+        }
+    });
+}
