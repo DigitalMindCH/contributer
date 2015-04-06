@@ -9,40 +9,39 @@ class Contributer {
 
 	public function __construct( $file ) {
 
-		$this->plugin_directory = plugin_dir_path( $file );
-		$this->plugin_url = plugin_dir_url( $file );
-		
+            $this->plugin_directory = plugin_dir_path( $file );
+            $this->plugin_url = plugin_dir_url( $file );
 
-		//enque js scripts
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_js' ) );
+            //enque js scripts
+            add_action( 'wp_enqueue_scripts', array( $this, 'load_js' ) );
 
-		//enqeue css styles
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_css' ) );
-		
-		//handling redirects
-		add_action( 'template_redirect', array( $this, 'redirect' ) );
-		
-		add_shortcode( 'contributer_login', array( $this, 'render_login_form' ) );
-		
-		$profile_renderer = new ContributerProfile();
-		add_shortcode( 'contributer_profile', array( $profile_renderer, 'contributer_profile' ) );
-		
-		$contribute_renderer = new ContributerContribute();
-		add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
+            //enqeue css styles
+            add_action( 'wp_enqueue_scripts', array( $this, 'load_css' ) );
 
-		new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
-		$this->register_user_custom_fields();
+            //handling redirects
+            add_action( 'template_redirect', array( $this, 'redirect' ) );
+
+            add_shortcode( 'contributer_login', array( $this, 'render_login_form' ) );
+
+            $profile_renderer = new ContributerProfile();
+            add_shortcode( 'contributer_profile', array( $profile_renderer, 'contributer_profile' ) );
+
+            $contribute_renderer = new ContributerContribute();
+            add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
+
+            new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
+            $this->register_user_custom_fields();
 	}
 
 
 	public function load_css() {
-		wp_enqueue_style( 'contributer_login', $this->plugin_url.'/assets/css/main.css', false, '1.0' );
+            wp_enqueue_style( 'contributer_login', $this->plugin_url.'/assets/css/main.css', false, '1.0' );
 	}
 
 
 	public function load_js() {
 		wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
-
+                
 		$sensei_options = SenseiOptions::get_instance();
 		$redirect_after_login = $sensei_options->get_option( 'redirect_login_url' );
 		if ( empty( $redirect_after_login ) ) {
@@ -50,32 +49,32 @@ class Contributer {
 		}
 
 		wp_localize_script( 'contributer_login', 'contributer_object', array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'redirect_login_url' => $sensei_options->get_option( 'redirect_login_url' ),
-			'redirect_registration_url' => $sensei_options->get_option( 'redirect_registration_url' )
+                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                    'redirect_login_url' => $sensei_options->get_option( 'redirect_login_url' ),
+                    'redirect_registration_url' => $sensei_options->get_option( 'redirect_registration_url' )
 		));
 	}
 
 
 	public function redirect() {
-		if ( ! is_singular() ) {
-			return;
-		}
-		
-		// if user is registered and logged in, and if user wants to visit page where login form resides, 
-		//in that case we are going to redirect user to the homepage
-		global $post;
-		if ( ! empty( $post->post_content ) ) {
-			$regex = get_shortcode_regex();
-			preg_match_all( '/'.$regex.'/', $post->post_content, $matches );
-			if ( 
-				! empty( $matches[2] ) && 
-				in_array( 'contributer_login', $matches[2] ) && 
-				is_user_logged_in() 
-			){
-				wp_redirect( home_url() );
-			}
-		}
+            if ( ! is_singular() ) {
+                return;
+            }
+
+            // if user is registered and logged in, and if user wants to visit page where login form resides, 
+            //in that case we are going to redirect user to the homepage
+            global $post;
+            if ( ! empty( $post->post_content ) ) {
+                    $regex = get_shortcode_regex();
+                    preg_match_all( '/'.$regex.'/', $post->post_content, $matches );
+                    if ( 
+                            ! empty( $matches[2] ) && 
+                            in_array( 'contributer_login', $matches[2] ) && 
+                            is_user_logged_in() 
+                    ){
+                            wp_redirect( home_url() );
+                    }
+            }
 	}
 
 

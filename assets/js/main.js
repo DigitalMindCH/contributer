@@ -1,9 +1,9 @@
 jQuery(document).ready(function($) {
 	
 	
-	//when form for saving option is submited
-	$( "#profile-form" ).submit(function( event ) {
-        
+    //when form for saving option is submited
+    $( "#profile-form" ).submit(function( event ) {
+
         $.ajax({
             type: "POST",
             url: contributer_object.ajaxurl,
@@ -17,46 +17,68 @@ jQuery(document).ready(function($) {
                 }
             }
         });
-		
-		event.preventDefault();
-	});
-	
-	
-	
-	//when form for saving post is submited
-	$( "#contributer-editor" ).submit(function( event ) {
-		
+
+        event.preventDefault();
+    });
+    
+    
+    
+    //when form for saving option is submited
+    $( "#contributer-editor" ).submit(function( event ) {
+
+        var ce_data = new FormData();
+        
+        $('#contributer-editor').find('input').each(function(){
+            ce_data.append( this.name, $(this).val() );
+        });
+
+        $.each($('#gallery-images')[0].files, function(i, file) {
+            ce_data.append('gallery-image-'+i, file);
+        });
+        
+        $.each($('#featured-image')[0].files, function(i, file) {
+            ce_data.append('featured-image', file);
+        });
+        
+        ce_data.append( 'cat', jQuery('#cat').val()); //hack for dropdown
+
         $.ajax({
-            type: "POST",
             url: contributer_object.ajaxurl,
-            data: $( "#contributer-editor" ).serialize(),
-            success: function(data) {               
+            data: ce_data,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            //clearForm: true,
+            success: function( data ){
                 if( data.status ) {
                     alert( data.message );
-					post_fields_cleanup();
+                    post_fields_cleanup();
                 }
                 else {
                     alert( data.message );
                 }
             }
         });
-		
-		event.preventDefault();
-	});
-	
-	
-	//submit on profile image change
-	$("#profile-image-upload").on("change", function() {
-        $("#file_form").submit();
+
+        event.preventDefault();
     });
+ 
+        
+    //when form for saving post is submited
+    //handling upload of profile image (nr)
+
+    
 	
-	
-	//handling upload of profile image (nr)
-	var form_data = {};
+    //submit on profile image change
+    $("#profile-image-upload").on("change", function() {
+        $("#file_form").submit();
+    });	
+    //handling upload of profile image (nr)
+    var form_data = {};
     $('#file_form').find('input').each(function(){
         form_data[this.name] = $(this).val();
     });
-    
     $('#file_form').ajaxForm({
         url: contributer_object.ajaxurl,
         data: form_data,
