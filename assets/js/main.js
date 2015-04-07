@@ -27,20 +27,20 @@ jQuery(document).ready(function($) {
     $( "#contributer-editor" ).submit(function( event ) {
 
         var ce_data = new FormData();
-        
-        $('#contributer-editor').find('input').each(function(){
+                
+        $('#contributer-editor').find('#action, #title, #cat, #content, #vid-url, #tags').each(function(){
             ce_data.append( this.name, $(this).val() );
+        });
+        
+        ce_data.append( 'post-format', $("input[name=post-format]:checked").val() );
+        
+        $.each($('#featured-image')[0].files, function(i, file) {
+            ce_data.append('featured-image', file);
         });
 
         $.each($('#gallery-images')[0].files, function(i, file) {
             ce_data.append('gallery-image-'+i, file);
         });
-        
-        $.each($('#featured-image')[0].files, function(i, file) {
-            ce_data.append('featured-image', file);
-        });
-        
-        ce_data.append( 'cat', jQuery('#cat').val()); //hack for dropdown
 
         $.ajax({
             url: contributer_object.ajaxurl,

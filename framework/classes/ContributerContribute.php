@@ -30,7 +30,7 @@ class ContributerContribute {
 
         <form id="contributer-editor" class="contributer-editor">
 
-            <input type="hidden" name="action" value="add_post" />
+            <input type="hidden" id="action" name="action" value="add_post" />
 
             <!-- post title -->
             <p>
