@@ -25,7 +25,8 @@ jQuery(document).ready(function($) {
     
     //when form for saving option is submited
     $( "#contributer-editor" ).submit(function( event ) {
-
+        $(".message-handler").hide();
+        
         var ce_data = new FormData();
                 
         $('#contributer-editor').find('#action, #title, #cat, #content, #vid-url, #tags').each(function(){
@@ -52,21 +53,20 @@ jQuery(document).ready(function($) {
             //clearForm: true,
             success: function( data ){
                 if( data.status ) {
-                    alert( data.message );
+                    $("#contributer-success").html( data.message );
+                    $("#contributer-success").show();
                     post_fields_cleanup();
                 }
                 else {
-                    alert( data.message );
+                    $("#contributer-failure").html( data.message );
+                    $("#contributer-failure").show();
                 }
+                $("html, body").animate( { scrollTop: 0 }, "slow" );
             }
         });
 
         event.preventDefault();
     });
- 
-        
-    //when form for saving post is submited
-    //handling upload of profile image (nr)
 
     
 	
@@ -98,7 +98,7 @@ jQuery(document).ready(function($) {
 
 
 function post_fields_cleanup() {
-	
+    jQuery("#title").val("");
 }
 
 

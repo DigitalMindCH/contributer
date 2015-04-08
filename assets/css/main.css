@@ -175,3 +175,46 @@ input[type='file'].hidden-upload {
     -moz-opacity: 0;
     filter: Alpha(Opacity=0);
 }
+
+.contributer-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: .9em;
+}
+.contributer-close:hover {
+  cursor: pointer;
+}
+
+.contributer-failure {
+  position: relative;
+  padding: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  background: #fedfe1;
+  color: #d40a17;
+  border: 1px solid #f97e86;
+}
+
+.contributer-success {
+  position: relative;
+  padding: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  background: #e0e8d0;
+  color: #4c5a2c;
+  border: 1px solid #93ad58;
+}
+
+.contributer-notification {
+  position: relative;
+  padding: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  background: #bfcbe4;
+  color: #314673;
+  border: 1px solid #7890c5;
+}
+.message-handler {
+    display:none;
+}

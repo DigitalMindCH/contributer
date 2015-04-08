@@ -28,6 +28,10 @@ class ContributerContribute {
         ob_start();
         ?>
 
+        <p id="contributer-failure" class="message-handler contributer-failure"></p>
+        <p id="contributer-success" class="message-handler contributer-success"></p>
+        <p id="contributer-notification" class="message-handler contributer-notification"></p>
+
         <form id="contributer-editor" class="contributer-editor">
 
             <input type="hidden" id="action" name="action" value="add_post" />
@@ -126,7 +130,7 @@ class ContributerContribute {
     }
 	
 	
-
+    
     public function add_post() {
 
         $post_format = 'standard';
@@ -165,19 +169,19 @@ class CCStandardFormat {
     public function __construct() {
         
         if ( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) ) {
-            $this->post_title = $_POST['title'];
+            $this->post_title = wp_strip_all_tags( $_POST['title'] );
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = $_POST['content'];
+            $this->post_content = wp_strip_all_tags( $_POST['content'] );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
-            $this->post_category = array( $_POST['cat'] );
+            $this->post_category = array( wp_strip_all_tags ( $_POST['cat'] ) );
         }
 
         if ( isset( $_POST['tags'] ) && ! empty( $_POST['tags'] ) ) {
-            $this->post_tags = array( $_POST['tags'] );
+            $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
         
     }
@@ -274,19 +278,19 @@ class CCImageFormat {
     public function __construct() {
         
         if ( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) ) {
-            $this->post_title = $_POST['title'];
+            $this->post_title = wp_strip_all_tags( $_POST['title'] );
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = $_POST['content'];
+            $this->post_content = wp_strip_all_tags( $_POST['content'] );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
-            $this->post_category = array( $_POST['cat'] );
+            $this->post_category = array( wp_strip_all_tags ( $_POST['cat'] ) );
         }
 
         if ( isset( $_POST['tags'] ) && ! empty( $_POST['tags'] ) ) {
-            $this->post_tags = array( $_POST['tags'] );
+            $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
         
     }
@@ -387,23 +391,23 @@ class CCVideoFormat {
     public function __construct() {
         
         if ( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) ) {
-            $this->post_title = $_POST['title'];
+            $this->post_title = wp_strip_all_tags( $_POST['title'] );
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = $_POST['content'];
+            $this->post_content = wp_strip_all_tags( $_POST['content'] );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
-            $this->post_category = array( $_POST['cat'] );
+            $this->post_category = array( wp_strip_all_tags ( $_POST['cat'] ) );
         }
 
         if ( isset( $_POST['tags'] ) && ! empty( $_POST['tags'] ) ) {
-            $this->post_tags = array( $_POST['tags'] );
+            $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
         
         if ( isset( $_POST['video_url'] ) && ! empty( $_POST['video_url'] ) ) {
-            $this->video_url = $_POST['video_url'];
+            $this->video_url = wp_strip_all_tags( $_POST['video_url'] );
         }
         
     }
@@ -503,19 +507,19 @@ class CCGalleryFormat {
     public function __construct() {
         
         if ( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) ) {
-            $this->post_title = $_POST['title'];
+            $this->post_title = wp_strip_all_tags( $_POST['title'] );
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = $_POST['content'];
+            $this->post_content = wp_strip_all_tags( $_POST['content'] );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
-            $this->post_category = array( $_POST['cat'] );
+            $this->post_category = array( wp_strip_all_tags ( $_POST['cat'] ) );
         }
 
         if ( isset( $_POST['tags'] ) && ! empty( $_POST['tags'] ) ) {
-            $this->post_tags = array( $_POST['tags'] );
+            $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
         
     }
