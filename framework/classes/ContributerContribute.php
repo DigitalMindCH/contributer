@@ -452,7 +452,7 @@ class CCVideoFormat {
         $message = '';
         $current_user = wp_get_current_user();
         $arguments = array(
-            'post_content' => '<p>'.$this->video_url.'</p>'.$this->post_content,
+            'post_content' => wp_oembed_get( $this->video_url ). ' <div>' . $this->post_content .'</div>',
             'post_title' =>  $this->post_title,
             'post_status' => 'publish',
             'post_type' => 'post',
