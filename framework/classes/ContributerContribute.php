@@ -301,6 +301,17 @@ class CCImageFormat {
         $status = true;
         $message = '';
         $current_user = wp_get_current_user();
+        
+        if ( empty( $this->post_title ) ) {
+            $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
+        }
+        
+        if ( ! isset( $_FILES['featured-image'] ) ) {
+            $this->send_json_output( false, 'Featured image is required for image posts.' );
+        }
+            
+        
+        
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
@@ -368,6 +379,16 @@ class CCImageFormat {
                 
     }
     
+    
+    private function send_json_output( $status, $message ) {
+        $return_array = array(
+            'status' => $status,
+            'message' => $message,
+        );
+
+        wp_send_json( $return_array );
+    }
+    
 }
 
 
@@ -414,6 +435,14 @@ class CCVideoFormat {
     
     
     public function insert_post() {
+        
+        if ( empty( $this->post_title ) ) {
+            $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
+        }
+        
+        if ( empty( $this->video_url ) ) {
+            $this->send_json_output( false, 'Video url is empty. Please insert video url and try again.' );
+        }
         
         $status = true;
         $message = '';
@@ -486,6 +515,17 @@ class CCVideoFormat {
                 
     }
     
+    
+    
+    private function send_json_output( $status, $message ) {
+        $return_array = array(
+            'status' => $status,
+            'message' => $message,
+        );
+
+        wp_send_json( $return_array );
+    }
+    
 }
 
 
@@ -526,6 +566,15 @@ class CCGalleryFormat {
     
     
     public function insert_post() {
+        
+        if ( empty( $this->post_title ) ) {
+            $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
+        }
+        
+        if ( ! isset( $_FILES['gallery-image-0'] ) ) {
+            $this->send_json_output( false, 'You need to upload at least one image in order to publish gallery.' );
+        }
+            
 
         $status = true;
         $message = '';
@@ -646,6 +695,16 @@ class CCGalleryFormat {
 
         }
                 
+    }
+    
+    
+    private function send_json_output( $status, $message ) {
+        $return_array = array(
+            'status' => $status,
+            'message' => $message,
+        );
+
+        wp_send_json( $return_array );
     }
     
 }
