@@ -35,6 +35,9 @@ class ContributerProfile {
         ob_start();
         ?>
 
+        <p id="contributer-failure" class="message-handler contributer-failure"></p>
+        <p id="contributer-success" class="message-handler contributer-success"></p>
+        <p id="contributer-notification" class="message-handler contributer-notification"></p>
 
         <p class="contributer-profile-picture">
             <h2 class="contributer-title contributer-image-title">Profile Picture</h2>
@@ -69,7 +72,7 @@ class ContributerProfile {
 
             <p>
               <label for="dn">Display Name</label>
-              <input id="dn" name="dn" type="text" value="<?php echo $this->user->display_name; ?>" />
+              <input id="dn" required="required" name="dn" type="text" value="<?php echo $this->user->display_name; ?>" />
             </p>
 
             <p>
@@ -111,6 +114,9 @@ class ContributerProfile {
         $email = '';
         $display_name = '';
         $website_url = '';
+        $fb_url = '';
+        $twitter_url = '';
+        $flickr_url = '';
         $current_user = wp_get_current_user();
 
         //email check
@@ -129,6 +135,42 @@ class ContributerProfile {
         }
         else {
             $display_name = $displayname_check['dn'];
+        }
+        
+        //website check
+        $site_url_check = $this->url_check( 'site' );
+        if ( ! $site_url_check['status'] ) {
+            $this->send_json_output( $site_url_check['status'], $site_url_check['message'] );
+        }
+        else {
+            $website_url = $site_url_check['url'];
+        }
+        
+        //fb url check
+        $fb_url_check = $this->url_check( 'facebook' );
+        if ( ! $fb_url_check['status'] ) {
+            $this->send_json_output( $fb_url_check['status'], $fb_url_check['message'] );
+        }
+        else {
+            $fb_url = $fb_url_check['url'];
+        }
+        
+        //twitter url check
+        $twitter_url_check = $this->url_check( 'twitter' );
+        if ( ! $twitter_url_check['status'] ) {
+            $this->send_json_output( $twitter_url_check['status'], $twitter_url_check['message'] );
+        }
+        else {
+            $twitter_url = $twitter_url_check['url'];
+        }
+        
+        //twitter url check
+        $flickr_url_check = $this->url_check( 'flickr' );
+        if ( ! $flickr_url_check['status'] ) {
+            $this->send_json_output( $flickr_url_check['status'], $flickr_url_check['message'] );
+        }
+        else {
+            $flickr_url = $flickr_url_check['url'];
         }
 
         //saving user properties
@@ -149,10 +191,10 @@ class ContributerProfile {
         
         if ( isset( $_POST['bio'] ) && $_POST['bio'] != $current_user->description ) {
             $update_user_properties = true;
-            $args['description'] = $_POST['bio'];
+            $args['description'] = wp_strip_all_tags( $_POST['bio'] );
         }
         
-        if ( isset( $_POST['site'] ) && $_POST['site'] != $current_user->user_url ) {
+        if ( $website_url != $current_user->user_url ) {
             $update_user_properties = true;
             $args['user_url'] = $_POST['site'];
         }
@@ -163,9 +205,9 @@ class ContributerProfile {
 
 
         //saving user metadata
-        update_user_meta( $current_user->ID, 'facebook', $_POST['facebook'] ); 
-        update_user_meta( $current_user->ID, 'twitter', $_POST['twitter'] ); 
-        update_user_meta( $current_user->ID, 'flickr', $_POST['flickr'] ); 
+        update_user_meta( $current_user->ID, 'facebook', $fb_url ); 
+        update_user_meta( $current_user->ID, 'twitter', $twitter_url ); 
+        update_user_meta( $current_user->ID, 'flickr', $flickr_url ); 
 
         $this->send_json_output( true, 'User updated' );
     }
@@ -311,16 +353,26 @@ class ContributerProfile {
 	
     private function url_check( $field_name ) {
 
-        $url = filter_input( INPUT_POST, $field_name, FILTER_VALIDATE_URL );
+        $message_parameters = array(
+            'site' => 'Website URL',
+            'facebook' => 'Facebook URL',
+            'twitter' => 'Twitter URL',
+            'flickr' => 'Flickr URL'
+        );
+        
+        if ( ! empty( $_POST[ $field_name ] ) ) {
+            
+            $url = filter_input( INPUT_POST, $field_name, FILTER_VALIDATE_URL );
 
-        //check is url valid
-        if ( FALSE === $url ) {
-            return array( 
-                'status' => false, 
-                'message'=> 'Invalid url. Please insert valid url and try again.' 
-            );
+            //check is url valid
+            if ( FALSE === $url ) {
+                return array( 
+                    'status' => false, 
+                    'message'=> 'Invalid ' . $message_parameters[$field_name] . '. Please insert valid url and try again.' 
+                );
+            }
         }
-
+        
         return array(
                 'status' => true,
                 'message' => '',

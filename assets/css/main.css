@@ -126,7 +126,8 @@
   white-space: nowrap;
   width: 150px;
 }
-.contributer-profile-container label[for="mail"]:after {
+.contributer-profile-container label[for="mail"]:after,
+.contributer-profile-container label[for="dn"]:after{
   content: "*";
   color: red;
 }

@@ -3,18 +3,21 @@ jQuery(document).ready(function($) {
 	
     //when form for saving option is submited
     $( "#profile-form" ).submit(function( event ) {
-
+        $(".message-handler").hide();
         $.ajax({
             type: "POST",
             url: contributer_object.ajaxurl,
             data: $( "#profile-form" ).serialize(),
             success: function(data) {                
                 if( data.status ) {
-                    alert( data.message );
+                    $("#contributer-success").html( data.message );
+                    $("#contributer-success").show();
                 }
                 else {
-                    alert( data.message );
+                    $("#contributer-failure").html( data.message );
+                    $("#contributer-failure").show();
                 }
+                $("html, body").animate( { scrollTop: 0 }, "slow" );
             }
         });
 
