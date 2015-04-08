@@ -150,7 +150,7 @@ class ContributerContribute {
 
 
 //CLASSES BELLOW ARE JUST LIKE HELPERS
-//RIGHT NOW THEY ARE PRETTY MUCH SAME, BUT WE ARE GOING TO SEPARATE IT RIGHT NOW, BECAUSE
+//RIGHT NOW THEY ARE PRETTY MUCH THE SAME, BUT WE ARE GOING TO SEPARATE THEM LITTLE BT LATER BECAUSE
 //DIFFERENCE WILL INCREASE WITH VERSIONS
 /**
  * Standard format class
@@ -444,11 +444,15 @@ class CCVideoFormat {
             $this->send_json_output( false, 'Video url is empty. Please insert video url and try again.' );
         }
         
+        if ( wp_oembed_get( $this->video_url ) === false ) {
+            $this->send_json_output( false, 'Invalid video url. Please insert valid video url and try again.' );
+        }
+        
         $status = true;
         $message = '';
         $current_user = wp_get_current_user();
         $arguments = array(
-            'post_content' => $this->post_content,
+            'post_content' => '<p>'.$this->video_url.'</p>'.$this->post_content,
             'post_title' =>  $this->post_title,
             'post_status' => 'publish',
             'post_type' => 'post',
