@@ -101,7 +101,9 @@ jQuery(document).ready(function($) {
 
 
 function post_fields_cleanup() {
-    jQuery("#title").val("");
+    jQuery("#title, #content, #featured-image, #tags, #vid-url, #gallery-images").val('');
+    jQuery("#standard").attr( 'checked', 'checked' );
+    jQuery('#cat').val( '-1' );
 }
 
 
