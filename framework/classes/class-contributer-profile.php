@@ -1,13 +1,13 @@
 <?php
 
-class ContributerProfile {
+class Contributer_Profile {
 	
     public $user;
 
 
     public function __construct() {
         add_action( 'wp_ajax_update_profile', array( $this, 'update_profile' ) );
-        add_action( 'wp_ajax_update_profile_image', array( $this, 'update_profile_image' ) );
+        add_action( 'wp_ajax_update_profile_image', array( $this, 'ajax_update_profile_image' ) );
     }
 
 
@@ -27,9 +27,12 @@ class ContributerProfile {
 	
     public function render_contributer_profile() {
 
-        $profile_image_url = get_user_meta( $this->user->ID, 'profile_image_url', true );
-        if ( empty( $profile_image_url ) ) {
+        $profile_image_id = get_user_meta( $this->user->ID, 'profile_image_attachment_id', true );
+        if ( empty( $profile_image_id ) ) {
             $profile_image_url = CONTR_URL_PATH . '/assets/img/default-profile-pic.jpg'; 
+        }
+        else {
+            $profile_image_url = wp_get_attachment_url($profile_image_id  );
         }
         
         ob_start();
@@ -40,25 +43,24 @@ class ContributerProfile {
         <p id="contributer-notification" class="message-handler contributer-notification"></p>
 
         <p class="contributer-profile-picture">
-            <h2 class="contributer-title contributer-image-title">Profile Picture</h2>
-            
-            
-            <form id="file_form">
+            <h2 class="contributer-title contributer-image-title">Profile Picture</h2>  
+            <form id="file_form" action="" method="POST">
                 <input type="hidden" name="action" value="update_profile_image">
+                <?php wp_nonce_field( 'update-user'.$this->user->ID ); ?>
                 <div class="profile-image-container">
                     <img id="profile-image" src="<?php echo $profile_image_url; ?>" />
                     <input type="file" id="profile-image-upload" name="profile-image-upload" class="hidden-upload" >
                 </div>
             </form>
-            
             <p class="notice">Make sure to upload a square image for best-looking results.</p>
         </p>
         <!-- profile pic end-->
 
         <h2 class="contributer-title contributer-form-title">Profile Information</h2>
-        <form id="profile-form" class="contributer-profile-container">
+        <form id="profile-form" class="contributer-profile-container" method="POST" action="">
 
             <input type="hidden" name="action" value="update_profile" />
+            <?php wp_nonce_field( 'update-user'.$this->user->ID ); ?>
 
             <p>
               <label for="bio">Bio</label>
@@ -96,12 +98,11 @@ class ContributerProfile {
             </p>
 
             <p>
-              <input type="submit" value="Save" />
+                <input type="submit" value="Save" />
             </p>
 
         </form>
         <!-- form alt end -->
-
 
         <?php
         $html_output = ob_get_clean();
@@ -213,73 +214,100 @@ class ContributerProfile {
     }
     
     
-    
-    public function update_profile_image() {
+    /**
+     * Upadting profile image using ajax
+     * 
+     * @uses object $wpdb
+     * @uses wp_upload_dir()
+     * @uses is_writeable()
+     * @uses send_json_output()
+     * @uses wp_handle_upload()
+     * @uses wp_get_image_editor()
+     * @uses is_wp_error()
+     * @uses wp_get_current_user()
+     * @uses update_user_meta()
+     * 
+     * @return type
+     */
+    public function ajax_update_profile_image() {
 
         $status = true;
         $message = '';
         $image_url = '';
+        $upload_dir = wp_upload_dir();
+        global $wpdb;
         
+        //checking ajax
         if ( ! ( is_array( $_POST ) && is_array( $_FILES ) && defined( 'DOING_AJAX' ) && DOING_AJAX ) ){
             return;
         }
 
+        //loading wp_handle_upload if not
         if ( ! function_exists( 'wp_handle_upload' ) ){
             require_once( ABSPATH . 'wp-admin/includes/file.php' );
         }
-
-        add_filter( 'upload_dir', array( $this, 'profile_image_upload_dir' ) );
         
-        //in this case we know that we will have only one image
-        foreach( $_FILES as $file ){
+        
+        if ( ! is_writeable( $upload_dir['path'] ) ) {
+            $this->send_json_output( false, 'Upload directory is not writeable. Please update your permissions and try again.' );
+        }
+        
+        foreach( $_FILES as $file ) {
                  
+            if ( empty( $file['type'] ) || ! preg_match('/(jpe?g|gif|png)$/i', $file['type'] ) ) {
+                $this->send_json_output( false, 'Invalid image format. Jpg, gif and png are allowed.' );
+            }
+            
             $file_info = wp_handle_upload( $file, array('test_form' => false) );
+
             if ( $file_info && ! isset( $file_info['error'] ) ) {
                 $status = true;
                 
-                //resigin image
+                //resizing image
                 $image = wp_get_image_editor( $file_info['file'] );
                 if ( ! is_wp_error( $image ) ) {
                     $image->resize( 150, 150, true );
                     $image->save( $file_info['file'] );
                 }
                 
-                $current_user = wp_get_current_user();
-                $profile_image_dir = get_user_meta( $current_user->ID, 'profile_image_dir', true );
-                if ( ! empty( $profile_image_dir ) ) {
-                    unlink( $profile_image_dir );
-                }
+                $attachment = array(
+                    'guid'           => $file_info['url'],
+                    'post_mime_type' => $file_info['type'],
+                    'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_info['file'] ) ),
+                    'post_content'   => ""
+                );
                 
-                $image_url = $file_info['url'];
-                update_user_meta( $current_user->ID, 'profile_image_url', $image_url );
-                update_user_meta( $current_user->ID, 'profile_image_dir', $file_info['file'] );
-            } 
+                if ( isset( $attachment['ID'] ) ) {
+                  unset( $attachment['ID'] );
+                }
+
+                $attach_id = wp_insert_attachment( $attachment,  $file_info['file'] );
+                
+                if( ! is_wp_error( $attach_id ) ) {
+
+                    $attach_metadata = wp_generate_attachment_metadata( $attach_id, $file_info['file'] );
+                    wp_update_attachment_metadata( $attach_id, $attach_metadata );
+                    $current_user = wp_get_current_user();
+                    update_user_meta( $current_user->ID, 'profile_image_attachment_id', $attach_id );
+                } 
+                else {
+                    $status = false;
+                    $message = 'Uploading service is currently unavailable. Please try again later.';
+                }
+            }
             else {
                 $status = false;
                 $message = $file_info['error'];
             }
         }
-        
-         // Set everything back to normal.
-         remove_filter( 'upload_dir', array( $this, 'profile_image_upload_dir' ) );
 
         $return_array = array(
             'status' => $status,
             'message' => $message,
-            'image_url' => $image_url
+            'image_url' => $file_info['url']
         );
 
         wp_send_json( $return_array );
-    }
-    
-    
-    
-    public function profile_image_upload_dir( $dir ) {
-        return array(
-            'path'   => $dir['basedir'] . '/profile-images',
-            'url'    => $dir['baseurl'] . '/profile-images',
-            'subdir' => '/profile-images',
-        ) + $dir;
     }
 	
 	
