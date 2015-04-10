@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
         
         var ce_data = new FormData();
                 
-        $('#contributer-editor').find('#action, #title, #cat, #content, #vid-url, #tags').each(function(){
+        $('#contributer-editor').find('#action, #title, #cat, #post-content, #vid-url, #tags').each(function(){
             ce_data.append( this.name, $(this).val() );
         });
         
@@ -101,9 +101,10 @@ jQuery(document).ready(function($) {
 
 
 function post_fields_cleanup() {
-    jQuery("#title, #content, #featured-image, #tags, #vid-url, #gallery-images").val('');
+    jQuery("#title, #post-content, #featured-image, #tags, #vid-url, #gallery-images").val('');
     jQuery("#standard").attr( 'checked', 'checked' );
     jQuery('#cat').val( '-1' );
+    set_tinymce_content()
 }
 
 
@@ -144,4 +145,22 @@ function show_hide( trigger ){
             jQuery(this).slideDown();
         }
     });
+}
+
+function get_tinymce_content() {
+    if ( jQuery("#wp-content-wrap").hasClass("tmce-active")) {
+        return tinyMCE.activeEditor.getContent();
+    } 
+    else {
+        return jQuery('#post-content').val();
+    }
+}
+
+function set_tinymce_content() {
+    if ( jQuery("#wp-content-wrap").hasClass("tmce-active")) {
+        tinyMCE.activeEditor.setContent('');
+    } 
+    else {
+        jQuery('#post-content').val("");
+    } 
 }

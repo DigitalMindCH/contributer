@@ -94,8 +94,16 @@ class ContributerContribute {
 		
             <!-- post content -->
             <p>
-                <label for="content">Content</label>
-                <textarea id="content" name="content" type="text"></textarea>
+                <label for="post-content">Content</label>
+                <?php
+                wp_editor( '', 'post-content', array(
+                    'wpautop'       => true,
+                    'media_buttons' => false,
+                    'textarea_name' => 'content',
+                    'textarea_rows' => 10,
+                    'teeny'         => true
+                ) );
+                ?>
             </p>
             
             <!-- post tags -->
@@ -119,7 +127,7 @@ class ContributerContribute {
                 ); ?>
             </p>
 
-            <input type="submit" value="Save"/>
+            <input type="submit" value="Save draft"/>
 
         </form>
          <!-- form editor end -->
@@ -173,7 +181,7 @@ class CCStandardFormat {
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = wp_strip_all_tags( $_POST['content'] );
+            $this->post_content = strip_tags( $_POST['content'], '<strong><p><div><em><a><blockquote><del><ins><img><ul><li><ol><!--more--><code>' );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
@@ -194,7 +202,7 @@ class CCStandardFormat {
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
-            'post_status' => 'publish',
+            'post_status' => 'draft',
             'post_type' => 'post',
             'post_author' => $current_user->ID,
             'tags_input' => $this->post_tags,
@@ -282,7 +290,7 @@ class CCImageFormat {
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = wp_strip_all_tags( $_POST['content'] );
+            $this->post_content = strip_tags( $_POST['content'], '<strong><p><div><em><a><blockquote><del><ins><img><ul><li><ol><!--more--><code>' );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
@@ -416,7 +424,7 @@ class CCVideoFormat {
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = wp_strip_all_tags( $_POST['content'] );
+            $this->post_content = strip_tags( $_POST['content'], '<strong><p><div><em><a><blockquote><del><ins><img><ul><li><ol><!--more--><code>' );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {
@@ -555,7 +563,7 @@ class CCGalleryFormat {
         }
 
         if ( isset( $_POST['content'] ) && ! empty( $_POST['content'] ) ) {
-            $this->post_content = wp_strip_all_tags( $_POST['content'] );
+            $this->post_content = strip_tags( $_POST['content'], '<strong><p><div><em><a><blockquote><del><ins><img><ul><li><ol><!--more--><code>' );
         }
         
         if ( isset( $_POST['cat'] ) && ! empty( $_POST['cat'] ) && $_POST['cat'] != -1 ) {

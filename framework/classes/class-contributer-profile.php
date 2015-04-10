@@ -36,6 +36,7 @@ class Contributer_Profile {
         }
         
         ob_start();
+        
         ?>
 
         <p id="contributer-failure" class="message-handler contributer-failure"></p>
