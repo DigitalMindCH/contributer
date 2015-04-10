@@ -15,7 +15,7 @@ class ContributerContribute {
             return $this->render_contributer_contribute();
         }
         else {
-            $contributer_login_rendered = new ContributerLogin();
+            $contributer_login_rendered = new Contributer_Login();
             return $contributer_login_rendered->render_contributer_login();
         }
 

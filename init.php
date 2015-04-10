@@ -18,7 +18,7 @@ require_once( 'framework/modules/user-custom-fields/init.php' );
 //including shortcode renderers
 require_once( 'framework/classes/class-contributer-profile.php' );
 require_once( 'framework/classes/ContributerContribute.php' );
-require_once( 'framework/classes/ContributerLogin.php' );
+require_once( 'framework/classes/class-contributer-login.php' );
 
 //including other files
 require_once( 'Contributer.php' );
