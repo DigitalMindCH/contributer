@@ -1,6 +1,6 @@
 <?php
 
-class ContributerContribute {
+class Contributer_Contribute {
 	
 	
     public function __construct() {
@@ -70,8 +70,12 @@ class ContributerContribute {
             <!-- featured image -->
             <div id="feat-img-field" class="field">
                 <span>featured image</span>
-                <div class="contributer-upload"> 
-                    <p>drag 'n' drop <br/>
+                <div id="featured-image-upload-area" class="contributer-upload"> 
+                    <div id="featured-image-upload-holder">
+                        <div id="featured-image-uploaded"></div>
+                        <div id="featured-image-upload-different">Click here to upload different image</div>
+                    </div>
+                    <p id="featured-image-upload-here">drag 'n' drop <br/>
                         <input type="file" id="featured-image" name="featured-image" class="files" />
                     </p>
                 </div>
