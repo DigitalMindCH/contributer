@@ -73,7 +73,7 @@ class Contributer_Contribute {
                 <div id="featured-image-upload-area" class="contributer-upload"> 
                     <div id="featured-image-upload-holder">
                         <div id="featured-image-uploaded"></div>
-                        <div id="featured-image-upload-different">Click here to upload different image</div>
+                        <div id="featured-image-upload-different">Click to select different image</div>
                     </div>
                     <p id="featured-image-upload-here">drag 'n' drop <br/>
                         <input type="file" id="featured-image" name="featured-image" class="files" />
@@ -82,11 +82,18 @@ class Contributer_Contribute {
             </div>
 			
             <!-- gallery images -->
-            <div id="gallery-field" class="field"><span>gallery images</span>
-                <div class="contributer-upload"> 
-                    <p>drag 'n' drop <br/>
-                        <input type="file" id="gallery-images" name="gallery-images" class="files" multiple />
-                    </p>
+            <div id="gallery-field" class="field">
+                <span>gallery images</span>
+                <div id="gallery-images-upload-area" class="contributer-upload">
+                    <div id="gallery-images-upload-holder">
+                        <div id="gallery-images-uploaded"></div>
+                        <div id="gallery-images-upload-different">Click to select different images</div>
+                    </div>
+                    <div id="gallery-images-upload-here"> 
+                        <p>drag 'n' drop <br/>
+                            <input type="file" id="gallery-images" name="gallery-images" class="files" multiple />
+                        </p>
+                    </div>
                 </div>
             </div>
 		
@@ -220,8 +227,13 @@ class CCStandardFormat {
             $message = $post_id->get_error_message();
         }
         else {
-            $this->upload_featured_image( $post_id );
-            $message = 'Post published';
+            $upload_response = $this->upload_featured_image( $post_id );
+            if ( $upload_response['status'] ) {
+                $message = 'Post published';
+            }
+            else {
+                $message = $upload_response['message'];
+            }
         }
         
         $return_array = array(
@@ -237,6 +249,10 @@ class CCStandardFormat {
     
     private function upload_featured_image( $post_id ) {
         
+        $return_array = array(
+            'status' => true,
+            'message' => ''
+        );
         $wp_upload_dir = wp_upload_dir();
         
         //in this case we know that it will be only one
@@ -258,15 +274,19 @@ class CCStandardFormat {
             );
             
             $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
-            $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
-            
-            $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
-            
-            wp_update_attachment_metadata( $attach_id, $attach_data );
-            add_post_meta( $post_id, '_thumbnail_id', $attach_id );
-
-        }
-                
+            if ( $upload && ! isset( $upload['error'] ) ) {
+                $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
+                $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
+                wp_update_attachment_metadata( $attach_id, $attach_data );
+                add_post_meta( $post_id, '_thumbnail_id', $attach_id );
+            }
+            else {
+                $return_array['status'] = false;
+                $return_array['message'] = 'Post published with warnings <br /> Image: ' . $file['name'] . '--' . $upload['error'];
+            }
+        }    
+        
+        return $return_array;
     }
     
 }
@@ -320,14 +340,12 @@ class CCImageFormat {
         
         if ( ! isset( $_FILES['featured-image'] ) ) {
             $this->send_json_output( false, 'Featured image is required for image posts.' );
-        }
-            
-        
+        } 
         
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
-            'post_status' => 'publish',
+            'post_status' => 'draft',
             'post_type' => 'post',
             'post_author' => $current_user->ID,
             'tags_input' => $this->post_tags,
@@ -341,9 +359,16 @@ class CCImageFormat {
             $message = $post_id->get_error_message();
         }
         else {
-            $this->upload_featured_image( $post_id );
-            set_post_format( $post_id, 'image' );
-            $message = 'Post published';
+            $upload_response = $this->upload_featured_image( $post_id );
+            if ( $upload_response['status'] ) {
+                set_post_format( $post_id, 'image' );
+                $message = 'Post published';
+            }
+            else {
+                wp_delete_post( $post_id, true );
+                $status = false;
+                $message = 'We were not able to upload your image. <br/ > Error: '.$upload_response['message'];
+            }
         }
         
         $return_array = array(
@@ -359,6 +384,10 @@ class CCImageFormat {
     
     private function upload_featured_image( $post_id ) {
         
+        $return_array = array(
+            'status' => true,
+            'message' => ''
+        );
         $wp_upload_dir = wp_upload_dir();
         
         //in this case we know that it will be only one
@@ -380,15 +409,19 @@ class CCImageFormat {
             );
             
             $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
-            $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
-            
-            $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
-            
-            wp_update_attachment_metadata( $attach_id, $attach_data );
-            add_post_meta( $post_id, '_thumbnail_id', $attach_id );
-
+            if ( $upload && ! isset( $upload['error'] ) ) {
+                $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
+                $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
+                wp_update_attachment_metadata( $attach_id, $attach_data );
+                add_post_meta( $post_id, '_thumbnail_id', $attach_id );
+            }
+            else {
+                $return_array['status'] = false;
+                $return_array['message'] = $upload['error'];
+            }
         }
-                
+             
+        return $return_array;
     }
     
     
@@ -466,7 +499,7 @@ class CCVideoFormat {
         $arguments = array(
             'post_content' => wp_oembed_get( $this->video_url ). ' <div>' . $this->post_content .'</div>',
             'post_title' =>  $this->post_title,
-            'post_status' => 'publish',
+            'post_status' => 'draft',
             'post_type' => 'post',
             'post_author' => $current_user->ID,
             'tags_input' => $this->post_tags,
@@ -480,10 +513,15 @@ class CCVideoFormat {
             $message = $post_id->get_error_message();
         }
         else {
-            $this->upload_featured_image( $post_id );
+            $upload_response = $this->upload_featured_image( $post_id );
             set_post_format( $post_id, 'video' );
-            update_post_meta( $post_id, 'video_url', $this->video_url );
-            $message = 'Post published';
+            update_post_meta( $post_id, 'video_url', $this->video_url );          
+            if ( $upload_response['status'] ) {
+                $message = 'Post published';
+            }
+            else {
+                $message = $upload_response['message'];
+            }
         }
         
         $return_array = array(
@@ -499,6 +537,10 @@ class CCVideoFormat {
     
     private function upload_featured_image( $post_id ) {
         
+        $return_array = array(
+            'status' => true,
+            'message' => ''
+        );
         $wp_upload_dir = wp_upload_dir();
         
         //in this case we know that it will be only one
@@ -520,15 +562,21 @@ class CCVideoFormat {
             );
             
             $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
-            $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
-            
-            $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
-            
-            wp_update_attachment_metadata( $attach_id, $attach_data );
-            add_post_meta( $post_id, '_thumbnail_id', $attach_id );
+            if ( $upload && ! isset( $upload['error'] ) ) {
+                $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
+                $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
+                wp_update_attachment_metadata( $attach_id, $attach_data );
+                add_post_meta( $post_id, '_thumbnail_id', $attach_id );
+            }
+            else {
+                $return_array['status'] = false;
+                $return_array['message'] = 'Post published with warnings <br /> Image: ' . $file['name'] . '--' . $upload['error'];
+            }
 
         }
-                
+          
+        return $return_array;
+        
     }
     
     
@@ -583,13 +631,16 @@ class CCGalleryFormat {
     
     public function insert_post() {
         
+        //required, post title needs to be set
         if ( empty( $this->post_title ) ) {
             $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
         }
         
+        //required, at least one image needs to be set
         if ( ! isset( $_FILES['gallery-image-0'] ) ) {
             $this->send_json_output( false, 'You need to upload at least one image in order to publish gallery.' );
         }
+        
             
 
         $status = true;
@@ -598,7 +649,7 @@ class CCGalleryFormat {
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
-            'post_status' => 'publish',
+            'post_status' => 'draft',
             'post_type' => 'post',
             'post_author' => $current_user->ID,
             'tags_input' => $this->post_tags,
@@ -612,18 +663,39 @@ class CCGalleryFormat {
             $message = $post_id->get_error_message();
         }
         else {
-            $this->upload_featured_image( $post_id );
-            $attachments = $this->upload_images( $post_id );
-            $additional_content = implode( ',', $attachments );
-            set_post_format( $post_id, 'gallery' );
             
-            $arguments = array(
-                'ID' => $post_id,
-                'post_content' => $this->post_content . '<br />' . '[gallery ids="' . $additional_content . '"]'
-            ); 
-            wp_update_post( $arguments, true );
-            
-            $message = 'Post published';
+            //upload feature image
+            $featured_image_array = $this->upload_featured_image( $post_id );
+
+            //uploading gallery images
+            $attachments_array = $this->upload_images( $post_id );     
+            if ( $attachments_array['status'] ) {
+                $additional_content = implode( ',', $attachments_array['attachments'] );
+                set_post_format( $post_id, 'gallery' );
+
+                $arguments = array(
+                    'ID' => $post_id,
+                    'post_content' => $this->post_content . '<br />' . '[gallery ids="' . $additional_content . '"]'
+                ); 
+                wp_update_post( $arguments, true );
+                
+                if ( ! empty ( $attachments_array['warning_message'] ) ) {
+                    $message = 'Post published with warnings: <br />' . $attachments_array['warning_message'].$featured_image_array['message'];
+                }
+                else {
+                    if ( $featured_image_array['status'] ) {
+                        $message = 'Post published <br />';
+                    }
+                    else {
+                        $message = 'Post published with warnings <br />'.$featured_image_array['message'];
+                    }
+                }
+            }
+            else {
+                $status = false;
+                wp_delete_post( $post_id, true );
+                $message = $attachments_array['error_message'];
+            }
         }
         
         $return_array = array(
@@ -639,10 +711,14 @@ class CCGalleryFormat {
     
     private function upload_images( $post_id ) {
         
+        $return_array = array(
+            'error_message' => '',
+            'warning_message' => '',
+            'status' => true
+        );
         $wp_upload_dir = wp_upload_dir();
         $attachments = array();
-        
-        //in this case we know that it will be only one
+        $succeed_uploads = 0;
         
         for ( $i = 0; $i <= 20; $i++ ) {
             
@@ -664,23 +740,36 @@ class CCGalleryFormat {
             );
             
             $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
-            $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
-            $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
-            wp_update_attachment_metadata( $attach_id, $attach_data );
-            $attachments[] = $attach_id;
-            
+            if ( $upload && ! isset( $upload['error'] ) ) {
+                $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
+                $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
+                wp_update_attachment_metadata( $attach_id, $attach_data );
+                $attachments[] = $attach_id;
+                $succeed_uploads++;
+            }
+            else {
+                $return_array['warning_message'] = $return_array['warning_message'] . 'Image: ' . $_FILES['gallery-image-'.$i]['name'] . '--' . $upload['error'] . '<br />';
+            }  
         }
         
-   
+        $return_array['attachments'] = $attachments;
         
-        return $attachments;
-                
+        if ( $succeed_uploads == 0 ) {
+            $return_array['error_message'] = 'Upload of images failed';
+            $return_array['status'] = false;
+        }
+        
+        return $return_array;     
     }
     
     
     
     private function upload_featured_image( $post_id ) {
         
+        $return_array = array(
+            'status' => true,
+            'message' => ''
+        );
         $wp_upload_dir = wp_upload_dir();
         
         //in this case we know that it will be only one
@@ -702,16 +791,23 @@ class CCGalleryFormat {
             );
             
             $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
-            $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
-            
-            $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
-            
-            wp_update_attachment_metadata( $attach_id, $attach_data );
-            add_post_meta( $post_id, '_thumbnail_id', $attach_id );
+            if ( $upload && ! isset( $upload['error'] ) ) {
+                $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
+                $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
+                wp_update_attachment_metadata( $attach_id, $attach_data );
+                add_post_meta( $post_id, '_thumbnail_id', $attach_id );
+            }
+            else {
+                $return_array['status'] = false;
+                $return_array['message'] = 'Featured image: ' . $file['name'] . '--' . $upload['error'] . '<br />';
+            }
 
         }
+        
+        return $return_array;
                 
     }
+    
     
     
     private function send_json_output( $status, $message ) {

@@ -1,6 +1,7 @@
 jQuery(document).ready(function($) {  
     
     var featured_image_data_raw = {};
+    var gallery_image_data_raw = {};
 	
     //when form for saving option is submited
     $( "#profile-form" ).submit(function( event ) {
@@ -44,10 +45,14 @@ jQuery(document).ready(function($) {
         });
 
         $.each($('#gallery-images')[0].files, function(i, file) {
-            ce_data.append('gallery-image-'+i, file);
+            gallery_image_data_raw["gallery-image-"+i] = file;
         });
         
         ce_data.append('featured-image', featured_image_data_raw["image"]);
+        
+        for ( var key in gallery_image_data_raw ) {
+            ce_data.append(key, gallery_image_data_raw[key]);
+        }
 
         $.ajax({
             url: contributer_object.ajaxurl,
@@ -62,6 +67,7 @@ jQuery(document).ready(function($) {
                     $("#contributer-success").html( data.message );
                     $("#contributer-success").show();
                     post_fields_cleanup();
+                    show_featured_image_field();
                 }
                 else {
                     $("#contributer-failure").html( data.message );
@@ -100,11 +106,11 @@ jQuery(document).ready(function($) {
     });
    
     
+    //featured image drag and drop handlers
     $('#featured-image-upload-area').on('dragover', function (e) {
         e.stopPropagation();
         e.preventDefault();
     });
-    
     $("#featured-image-upload-area").bind( "drop", function(e) {
         var files = e.originalEvent.dataTransfer.files;
         
@@ -114,6 +120,25 @@ jQuery(document).ready(function($) {
                 featured_image_data_raw["image"] = files[f];
             }
             hide_featured_image_field( featured_image_data_raw );
+        }
+        
+        e.stopPropagation();
+        e.preventDefault(); 
+    });
+    
+    //gallery images drag and drop handlers
+    $('#gallery-images-upload-area').on('dragover', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    });
+    $("#gallery-images-upload-area").bind( "drop", function(e) {
+        var files = e.originalEvent.dataTransfer.files;
+        gallery_image_data_raw  = {};
+        if( files.length > 0 ) { // checks if any files were dropped
+            for(var f = 0; f < files.length; f++) {
+                gallery_image_data_raw ["gallery-image-"+f] = files[f];
+            }
+            hide_gallery_image_field( files.length );
         }
         
         e.stopPropagation();
@@ -132,8 +157,22 @@ jQuery(document).ready(function($) {
         hide_featured_image_field( featured_image_data_raw );
     });
     
+    $('#gallery-images').on('change', function(){
+        gallery_image_data_raw = {};
+        var number_of_gallery_images = 0;
+        $.each($('#gallery-images')[0].files, function(i, file) {
+            gallery_image_data_raw["gallery-image-"+i] = file;
+            number_of_gallery_images++;
+        });
+        hide_gallery_image_field( number_of_gallery_images );
+    });
+    
     $('#featured-image-upload-different').on('click', function() {
         show_featured_image_field();
+    });
+    
+    $('#gallery-images-upload-different').on('click', function() {
+        show_gallery_image_field();
     });
 	
 });
@@ -232,3 +271,16 @@ function show_featured_image_field() {
     jQuery("#featured-image-upload-here").show();
 }
 
+
+function hide_gallery_image_field( number_of_images ) {
+    jQuery("#gallery-images-uploaded").html( "Images selected: " + number_of_images );
+    jQuery("#gallery-images-upload-holder").show();
+    jQuery("#gallery-images-upload-here").hide();
+}
+
+
+function show_gallery_image_field() {
+    jQuery("#gallery-images-uploaded").html( "" );
+    jQuery("#gallery-images-upload-holder").hide();
+    jQuery("#gallery-images-upload-here").show();
+}

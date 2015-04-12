@@ -220,7 +220,8 @@ input[type='file'].hidden-upload {
     display:none;
 }
 
-#featured-image-upload-holder {
+#featured-image-upload-holder,
+#gallery-images-upload-holder{
     display:none;
     text-align: center;
     position: absolute;
