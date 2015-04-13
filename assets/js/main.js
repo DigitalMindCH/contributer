@@ -6,6 +6,7 @@ jQuery(document).ready(function($) {
     //when form for saving option is submited
     $( "#profile-form" ).submit(function( event ) {
         $(".message-handler").hide();
+        $("#profile-loader").removeClass('hidden_loader');
         $.ajax({
             type: "POST",
             url: contributer_object.ajaxurl,
@@ -20,6 +21,7 @@ jQuery(document).ready(function($) {
                     $("#contributer-failure").show();
                 }
                 $("html, body").animate( { scrollTop: 0 }, "slow" );
+                $("#profile-loader").addClass('hidden_loader');
             }
         });
 
@@ -54,6 +56,8 @@ jQuery(document).ready(function($) {
             ce_data.append(key, gallery_image_data_raw[key]);
         }
 
+        $("#publish-loader").removeClass('hidden_loader');
+
         $.ajax({
             url: contributer_object.ajaxurl,
             data: ce_data,
@@ -74,6 +78,7 @@ jQuery(document).ready(function($) {
                     $("#contributer-failure").show();
                 }
                 $("html, body").animate( { scrollTop: 0 }, "slow" );
+                $("#publish-loader").addClass('hidden_loader');
             }
         });
 
@@ -102,6 +107,10 @@ jQuery(document).ready(function($) {
             else {
                 alert( data.message );
             }
+            $("#profile-loader").addClass('hidden_loader');
+        },
+        beforeSubmit: function( data ) {
+            $("#profile-loader").removeClass('hidden_loader');
         }
     });
    

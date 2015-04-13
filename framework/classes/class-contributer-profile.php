@@ -39,6 +39,15 @@ class Contributer_Profile {
         
         ?>
 
+        <div id="profile-loader" class="overlay hidden_loader">
+            <div class="loader">
+                  <div class="ball"></div>
+                  <div class="ball"></div>
+                  <div class="ball"></div>
+                  <span>Updating profile</span>
+            </div>
+        </div>
+
         <p id="contributer-failure" class="message-handler contributer-failure"></p>
         <p id="contributer-success" class="message-handler contributer-success"></p>
         <p id="contributer-notification" class="message-handler contributer-notification"></p>
@@ -382,6 +391,8 @@ class Contributer_Profile {
 	
     private function url_check( $field_name ) {
 
+        $url = '';
+        
         $message_parameters = array(
             'site' => 'Website URL',
             'facebook' => 'Facebook URL',

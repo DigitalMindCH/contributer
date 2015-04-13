@@ -28,6 +28,15 @@ class Contributer_Contribute {
         ob_start();
         ?>
 
+        <div id="publish-loader" class="overlay hidden_loader">
+            <div class="loader">
+                  <div class="ball"></div>
+                  <div class="ball"></div>
+                  <div class="ball"></div>
+                  <span>Publishing</span>
+            </div>
+        </div>
+
         <p id="contributer-failure" class="message-handler contributer-failure"></p>
         <p id="contributer-success" class="message-handler contributer-success"></p>
         <p id="contributer-notification" class="message-handler contributer-notification"></p>
@@ -207,6 +216,7 @@ class CCStandardFormat {
     
     
     public function insert_post() {
+
         $status = true;
         $message = '';
         $current_user = wp_get_current_user();
