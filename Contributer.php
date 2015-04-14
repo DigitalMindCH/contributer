@@ -24,12 +24,13 @@ class Contributer {
             //add filter for custom avatars
             add_filter( 'get_avatar' , array( $this, 'contributer_avatar' ) , 1 , 5 );
 
-            add_shortcode( 'contributer_login', array( $this, 'render_login_form' ) );
+            $login_renderer = new Contributer_Login( $this->plugin_directory );
+            add_shortcode( 'contributer_login', array( $login_renderer, 'contributer_login' ) );
 
-            $profile_renderer = new Contributer_Profile();
+            $profile_renderer = new Contributer_Profile( $this->plugin_directory );
             add_shortcode( 'contributer_profile', array( $profile_renderer, 'contributer_profile' ) );
 
-            $contribute_renderer = new Contributer_Contribute();
+            $contribute_renderer = new Contributer_Contribute( $this->plugin_directory );
             add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
 
             new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
@@ -77,7 +78,13 @@ class Contributer {
 
 
 	public function load_js() {
-		wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
+            
+                if ( is_user_logged_in() ) {
+                    wp_enqueue_script( 'contributer_main', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
+                }
+                else {
+                    wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/login.js', array( 'jquery' ), '1.0', true );
+                }
                 
 		$sensei_options = SenseiOptions::get_instance();
 		$redirect_after_login = $sensei_options->get_option( 'redirect_login_url' );

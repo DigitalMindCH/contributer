@@ -2,18 +2,28 @@
 
 class Contributer_Login {
 	
-    public function render_contributer_login() {
+    private $plugin_dir;
+    
+    
+    public function __construct( $plugin_dir ) {
+        $this->plugin_dir = $plugin_dir;
+        add_action( 'wp_ajax_nopriv_facebook_login', array( $this, 'facebook_login' ) );
+        add_action( 'wp_ajax_facebook_login', array( $this, 'facebook_login' ) );
+    }
+    
+    
+    public function contributer_login() {
         ob_start();
         ?>
 
         <div class="contributer-signup">
             
-            <a href="#" class="contributer-connect contributer-facebook-login-button">
+            <div id="face-button" class="contributer-connect contributer-facebook-login-button">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="facebook-logo" x="0px" y="0px" viewBox="0 0 113.62199 218.79501">
                     <path id="f" d="m 73.750992,218.795 v -99.803 h 33.498998 l 5.016,-38.895 H 73.750992 V 55.265 c 0,-11.261 3.127,-18.935 19.275,-18.935 L 113.62199,36.321 V 1.533 C 110.05999,1.059 97.833992,0 83.609992,0 c -29.695,0 -50.025,18.126 -50.025,51.413 V 80.097 H -8.1786701e-6 v 38.895 H 33.584992 v 99.803 h 40.166 z" style="fill:#fff;" />
                 </svg>
                 Login with Facebook
-            </a>
+            </div>
             
             <a href="#" class="contributer-connect contributer-google-login-button">   
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="google-icon" x="0px" y="0px" viewBox="0 0 82.578992 84.937998">
@@ -43,6 +53,83 @@ class Contributer_Login {
         <?php
         $html_output = ob_get_clean();
         return $html_output;
+    }
+    
+    
+    public function facebook_login() {
+        
+        require $this->plugin_dir . '/framework/classes/facebook/facebook.php';
+        
+        //initialize facebook sdk
+        $facebook = new Facebook(array(
+            'appId' => '677795652326648',
+            'secret' => '4f4a4d90b7b2f14bfa317baaeb527571',
+        ));
+        $fbuser = $facebook->getUser();
+        
+        if ( $fbuser ) {
+            try {
+                // Proceed knowing you have a logged in user who's authenticated.
+                $me = $facebook->api('/me'); //user
+            }
+            catch ( FacebookApiException $e ) {
+                //echo error_log($e);
+                $fbuser = null;
+            }
+        }
+        
+        if ( ! $fbuser ){
+            $this->send_json_output( false, 'Something weird happened. Please try again1.' );
+        }
+        
+        //user details
+        $email = $me['email'];
+        
+        if ( email_exists( $email ) ) {
+            $user_info = get_user_by( 'email', $email );
+            wp_set_current_user( $user_info->ID, $user_info->user_login );
+            wp_set_auth_cookie( $user_info->ID );
+            do_action( 'wp_login', $user_info->user_login );
+        }
+        else {
+            $random_password = wp_generate_password( 20 );
+            $user_id = wp_create_user( $email, $random_password, $email );
+
+            if ( ! is_wp_error( $user_id ) ) {
+                $wp_user_object = new WP_User( $user_id );
+                $wp_user_object->set_role('subscriber');
+                
+                $creds['user_login'] = $email;
+                $creds['user_password'] = $random_password;
+                $creds['remember'] = false;
+                $user = wp_signon( $creds, false );
+                
+                if ( ! is_wp_error( $user ) ) {
+                    $this->send_json_output( false, 'Something weird happened. Please try again2.' );
+                }
+            }
+            else {
+                $this->send_json_output( false, 'Something weird happened. Please try again3.' );
+            }
+        }
+        
+        //if we are here, we are in
+        $return_array = array(
+            'status' => true,
+            'message' => ''
+        );
+
+        wp_send_json( $return_array );
+    }
+    
+    
+    private function send_json_output( $status, $message ) {
+        $return_array = array(
+            'status' => $status,
+            'message' => $message,
+        );
+
+        wp_send_json( $return_array );
     }
 	
 }

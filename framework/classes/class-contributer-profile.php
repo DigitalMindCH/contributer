@@ -3,9 +3,11 @@
 class Contributer_Profile {
 	
     public $user;
+    private $plugin_dir;
 
 
-    public function __construct() {
+    public function __construct( $plugin_dir  ) {
+        $this->plugin_dir = $plugin_dir;
         add_action( 'wp_ajax_update_profile', array( $this, 'update_profile' ) );
         add_action( 'wp_ajax_update_profile_image', array( $this, 'ajax_update_profile_image' ) );
     }
@@ -18,8 +20,8 @@ class Contributer_Profile {
             return $this->render_contributer_profile();
         }
         else {
-            $contributer_login_rendered = new Contributer_Login();
-            return $contributer_login_rendered->render_contributer_login();
+            $contributer_login_rendered = new Contributer_Login( $this->plugin_dir );
+            return $contributer_login_rendered->contributer_login();
         }
 
     }
