@@ -45,7 +45,6 @@ jQuery(document).ready(function($) {
                 });
             } 
         }, {scope: 'public_profile,email'});
-
     });
     
     $( "#email-sign-in" ).submit(function( event ) {
@@ -66,6 +65,12 @@ jQuery(document).ready(function($) {
         });
 
         event.preventDefault();
+    });
+
+    $('.signup-container').hide();
+    $('.signlink').click(function(){
+        $('.signup-container').slideToggle('swing');
+        $('.login-container').slideToggle('swing');
     });
 });
 
