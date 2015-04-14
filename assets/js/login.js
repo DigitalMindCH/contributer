@@ -9,18 +9,27 @@ window.fbAsyncInit = function() {
 };
 
 (function(d, s, id){
- var js, fjs = d.getElementsByTagName(s)[0];
- if (d.getElementById(id)) {return;}
- js = d.createElement(s); js.id = id;
- js.src = "//connect.facebook.net/en_US/sdk.js";
- fjs.parentNode.insertBefore(js, fjs);
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+
+
+(function() {
+    var po = document.createElement('script');
+    po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://plus.google.com/js/client:plusone.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(po, s);
+})();
 
 
 jQuery(document).ready(function($) { 
     
     $("#face-button").click(function () {
-        
+        $("#login-loader").removeClass('hidden_loader');
         //login
         FB.login(function ( response ) {
             if ( response.status === 'connected' ) {
@@ -37,6 +46,26 @@ jQuery(document).ready(function($) {
             } 
         }, {scope: 'public_profile,email'});
 
+    });
+    
+    $( "#email-sign-in" ).submit(function( event ) {
+        $("#login-loader").removeClass('hidden_loader');
+        $.ajax({
+            type: "POST",
+            url: contributer_object.ajaxurl,
+            data: $( "#email-sign-in" ).serialize(),
+            success: function(data) {                
+                if( data.status ) {
+                    window.location.replace( contributer_object.redirect_login_url );
+                }
+                else {
+                    alert( data.message );
+                    $("#login-loader").addClass('hidden_loader');
+                }
+            }
+        });
+
+        event.preventDefault();
     });
 });
 
@@ -57,6 +86,17 @@ function facebook_login( accessToken  ) {
             else {
                 alert( data.message )
             }
+            $("#login-loader").addClass('hidden_loader');
         }
     });
+}
+
+
+function google_plus_login( auth_result ) {
+    if ( auth_result['access_token'] ) {
+      //ajax
+    } 
+    else if ( auth_result ) {
+        //alert( auth_result['error'] + "testiranje" );
+    }
 }
