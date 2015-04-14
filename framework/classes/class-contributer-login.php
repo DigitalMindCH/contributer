@@ -62,8 +62,8 @@ class Contributer_Login {
         
         //initialize facebook sdk
         $facebook = new Facebook(array(
-            'appId' => '677795652326648',
-            'secret' => '4f4a4d90b7b2f14bfa317baaeb527571',
+            'appId' => SenseiOptions::get_instance()->get_option( 'facebook_app_id' ),
+            'secret' => SenseiOptions::get_instance()->get_option( 'facebook_app_secret' )
         ));
         $fbuser = $facebook->getUser();
         
@@ -79,7 +79,7 @@ class Contributer_Login {
         }
         
         if ( ! $fbuser ){
-            $this->send_json_output( false, 'Something weird happened. Please try again1.' );
+            $this->send_json_output( false, 'We were not able to retrieve facebook user. Please try again.' );
         }
         
         //user details
@@ -104,12 +104,12 @@ class Contributer_Login {
                 $creds['remember'] = false;
                 $user = wp_signon( $creds, false );
                 
-                if ( ! is_wp_error( $user ) ) {
-                    $this->send_json_output( false, 'Something weird happened. Please try again2.' );
+                if ( is_wp_error( $user ) ) {
+                    $this->send_json_output( false,  $user->get_error_message() );
                 }
             }
             else {
-                $this->send_json_output( false, 'Something weird happened. Please try again3.' );
+                $this->send_json_output( false, 'Registration failed. Please try again.' );
             }
         }
         

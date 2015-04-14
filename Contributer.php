@@ -81,22 +81,18 @@ class Contributer {
             
                 if ( is_user_logged_in() ) {
                     wp_enqueue_script( 'contributer_main', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
+                    wp_localize_script( 'contributer_main', 'contributer_object', array(
+                        'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                    ));
                 }
                 else {
                     wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/login.js', array( 'jquery' ), '1.0', true );
+                    wp_localize_script( 'contributer_login', 'contributer_object', array(
+                        'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                        'redirect_login_url' => SenseiOptions::get_instance()->get_option( 'redirect_login_url' ),
+                        'facebook_app_id' => SenseiOptions::get_instance()->get_option( 'facebook_app_id' )
+                    ));
                 }
-                
-		$sensei_options = SenseiOptions::get_instance();
-		$redirect_after_login = $sensei_options->get_option( 'redirect_login_url' );
-		if ( empty( $redirect_after_login ) ) {
-			$redirect_after_login = home_url();
-		}
-
-		wp_localize_script( 'contributer_login', 'contributer_object', array(
-                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                    'redirect_login_url' => $sensei_options->get_option( 'redirect_login_url' ),
-                    'redirect_registration_url' => $sensei_options->get_option( 'redirect_registration_url' )
-		));
 	}
 
 
@@ -133,53 +129,56 @@ class Contributer {
 	}
 	
 
-	public function define_page_options() {
-		return array(
-			'page' => array(
-				'page_title' => 'Contributer Panel',
-				'menu_title' => 'Contributer Panel',
-				'capability' => 'manage_options',
-				'menu_slug' => 'contributer',
-				'icon_url' => false,
-			),
-			'tabs' => array(
-				//tab login
-				array(
-					'title' => 'Login',
-					'id' => 'login',
-					'icon' => '',
-					'options' => array(
-						array(
-							'name' => 'Redirect after login',
-							'id' => 'redirect_login_url',
-							'desc'  => 'Redirect url is place where user will be transfered after loggin is successfull. Homepage is default.',
-							'type'  => 'text',
-							'value'   => home_url(),
-						),
-					)
-				),
-				//tab registration
-				array(
-					'title' => 'Registration',
-					'id' => 'registration',
-					'icon' => '',
-					'options' => array(
-						array(
-							'name' => 'Redirect after registration',
-							'id' => 'redirect_registration_url',
-							'desc'  => 'Redirect url is place where user will be transfered after registration. Homepage is default.',
-							'type'  => 'text',
-							'value'   => home_url(),
-							'condition' => array(
-								'type' => 'custom',
-								'value' => array( 'Contributer', 'anyone_can_register' ),
-							),
-						),
-					)
-				),
-			)
-		);
-	}
+    public function define_page_options() {
+        return array(
+            'page' => array(
+                'page_title' => 'Contributer Panel',
+                'menu_title' => 'Contributer Panel',
+                'capability' => 'manage_options',
+                'menu_slug' => 'contributer',
+                'icon_url' => false,
+            ),
+            'tabs' => array(
+                //tab general
+                array(
+                    'title' => 'General',
+                    'id' => 'login',
+                    'icon' => '',
+                    'options' => array(
+                        array(
+                            'name' => 'Redirect after login',
+                            'id' => 'redirect_login_url',
+                            'desc'  => 'Redirect url is place where user will be transfered after loggin is successfull. Homepage is default.',
+                            'type'  => 'text',
+                            'value'   => home_url(),
+                        ),
+                    )
+                ),
+                //tab registration
+                array(
+                    'title' => 'Socials',
+                    'id' => 'socials',
+                    'icon' => '',
+                    'options' => array(
+                        array(
+                            'name' => 'Facebok APP id',
+                            'id' => 'facebook_app_id',
+                            'desc'  => 'Please insert your facebook app id if you want to use facebook login.',
+                            'type'  => 'text',
+                            'value'   => ''
+                        ),
+                        array(
+                            'name' => 'Facebok APP secret',
+                            'id' => 'facebook_app_secret',
+                            'desc'  => 'Please insert your facebook app secret if you want to use facebook login.',
+                            'type'  => 'text',
+                            'value'   => ''
+                        ),
+                    )
+                ),
+            )
+        );
+    }
 
 
 	private function register_user_custom_fields() {

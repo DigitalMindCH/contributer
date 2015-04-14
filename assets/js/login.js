@@ -1,8 +1,10 @@
 window.fbAsyncInit = function() {
     FB.init({
-      appId      : '677795652326648',
+      appId      : contributer_object.facebook_app_id,
       xfbml      : true,
-      version    : 'v2.3'
+      version    : 'v2.3',
+      cookie:true,    
+      oauth : true
     });
 };
 
@@ -18,14 +20,6 @@ window.fbAsyncInit = function() {
 jQuery(document).ready(function($) { 
     
     $("#face-button").click(function () {
-        
-        /*FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-                var uid = response.authResponse.userID;
-                var accessToken = response.authResponse.accessToken;
-                alert(accessToken);
-            }
-        });*/
         
         //login
         FB.login(function ( response ) {
@@ -58,7 +52,7 @@ function facebook_login( accessToken  ) {
         }, 
         success: function (data) {
             if ( data.status ) {
-                
+                window.location.replace( contributer_object.redirect_login_url );
             }
             else {
                 alert( data.message )
