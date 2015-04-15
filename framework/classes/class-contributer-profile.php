@@ -458,15 +458,13 @@ class Contributer_Profile {
         }
 
 
-        if ( $gClient->getAccessToken() ) {
-            ?>
-            <script type="text/javascript">
-                jQuery(document).ready(function($) { 
-                    google_plus_login('<?php echo $_GET['code']; ?>');
-                });
-            </script>
-            <?php
-        }
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) { 
+                google_plus_login('<?php echo $_GET['code']; ?>');
+            });
+        </script>
+        <?php
     }
 	
 	
