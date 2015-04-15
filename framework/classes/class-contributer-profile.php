@@ -490,8 +490,11 @@ class Contributer_Profile {
             return;
         }
         
-        wp_redirect( SenseiOptions::get_instance()->get_option( 'redirect_login_url' ) );
-        exit();
+        ?>
+        <script type="text/javascript">
+            window.location.replace( '<?php echo $google_redirect_url;  ?>' );
+        </script>
+        <?php
         
     }
 	
