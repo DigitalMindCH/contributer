@@ -450,10 +450,12 @@ class Contributer_Profile {
 
         $google_oauthV2 = new Google_Service_OAuth2( $gClient );
 
-        /*if ( isset( $_GET['code'] ) ) { 
+        if ( isset( $_GET['code'] ) ) { 
             $gClient->authenticate( $_GET['code'] );
+        }
+        else {
             return;
-        }*/
+        }
 
 
         if ($gClient->getAccessToken()) {
