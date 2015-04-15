@@ -464,6 +464,7 @@ class Contributer_Profile {
             $email                = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
 
             //preform registration
+            $in_db = false;
             if ( email_exists( $email ) ) {
                 $user_info = get_user_by( 'email', $email );
                 wp_set_current_user( $user_info->ID, $user_info->user_login );
@@ -477,11 +478,6 @@ class Contributer_Profile {
                 if ( ! is_wp_error( $user_id ) ) {
                     $wp_user_object = new WP_User( $user_id );
                     $wp_user_object->set_role('subscriber');
-
-                    $creds['user_login'] = $email;
-                    $creds['user_password'] = $random_password;
-                    $creds['remember'] = false;
-                    $user = wp_signon( $creds, false );
                 }
             }
               
@@ -492,7 +488,27 @@ class Contributer_Profile {
         
         ?>
         <script type="text/javascript">
-            window.location.replace( '<?php echo $google_redirect_url;  ?>' );
+            jQuery(document).ready(function($) {
+		$("#login-loader").removeClass('hidden_loader');
+        	    $.ajax({
+                    type: "POST",
+                    url: contributer_object.ajaxurl,
+                    data: {
+			action: 'email_login',
+	                username: '<?php echo $email; ?>',
+                        password: '<?php echo $random_password; ?>',
+	            },
+           	    success: function(data) {                
+                	if( data.status ) {
+                            window.location.replace( contributer_object.redirect_login_url );
+                	}
+                	else {
+                            alert( data.message );
+                            $("#login-loader").addClass('hidden_loader');
+                       }
+                    }
+                });
+	    });
         </script>
         <?php
         
