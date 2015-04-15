@@ -66,6 +66,26 @@ jQuery(document).ready(function($) {
 
         event.preventDefault();
     });
+    
+    $( "#email-sign-up" ).submit(function( event ) {
+        $("#login-loader").removeClass('hidden_loader');
+        $.ajax({
+            type: "POST",
+            url: contributer_object.ajaxurl,
+            data: $( "#email-sign-up" ).serialize(),
+            success: function(data) {               
+                if( data.status ) {
+                    window.location.replace( contributer_object.redirect_login_url );
+                }
+                else {
+                    alert( data.message );
+                    $("#login-loader").addClass('hidden_loader');
+                }
+            }
+        });
+
+        event.preventDefault();
+    });
 
     $('.signup-container').hide();
     $('.signlink').click(function(){
@@ -96,12 +116,41 @@ function facebook_login( accessToken  ) {
     });
 }
 
+/*var auth_res = null;
+var intervalID = setInterval( function(){ 
+    if ( auth_res != null ) {
+        clearInterval( intervalID );
+        google_plus_login( auth_res );
+        auth_res = null;
+    }
+}, 1000 );
 
-function google_plus_login( auth_result ) {
-    if ( auth_result['access_token'] ) {
-      //ajax
-    } 
-    else if ( auth_result ) {
-        //alert( auth_result['error'] + "testiranje" );
+function google_plus_callback( auth_result ) {
+    if ( auth_result['status']['signed_in'] && auth_result['status']['method'] == 'PROMPT' ) {
+        auth_res = auth_result;
     }
 }
+
+
+function google_plus_login( auth_result ) {
+    jQuery("#login-loader").removeClass('hidden_loader');
+    jQuery.ajax({
+        type: 'post',
+        cache:  false,
+        url: contributer_object.ajaxurl, 
+        dataType: 'json',
+        data:{
+            action: "google_login",
+            access_token: auth_result
+        }, 
+        success: function (data) {
+            if ( data.status ) {
+                window.location.replace( contributer_object.redirect_login_url );
+            }
+            else {
+                alert( data.message )
+            }
+            jQuery("#login-loader").addClass('hidden_loader');
+        }
+    });
+}*/

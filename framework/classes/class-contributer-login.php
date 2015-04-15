@@ -8,7 +8,9 @@ class Contributer_Login {
     public function __construct( $plugin_dir ) {
         $this->plugin_dir = $plugin_dir;
         add_action( 'wp_ajax_nopriv_facebook_login', array( $this, 'facebook_login' ) );
+        add_action( 'wp_ajax_nopriv_google_login', array( $this, 'google_login' ) );
         add_action( 'wp_ajax_nopriv_email_login', array( $this, 'email_login' ) );
+        add_action( 'wp_ajax_nopriv_email_sign_up', array( $this, 'email_sign_up' ) );
     }
     
     
@@ -34,12 +36,38 @@ class Contributer_Login {
                     Login with Facebook
                 </div>
 
-                <div class="contributer-connect contributer-google-login-button g-signin"
+                
+                <?php
+                    //WE ALL KNOW THAT THIS IS BAD IDEA
+                    ########## Google Settings.. Client ID, Client Secret from https://cloud.google.com/console #############
+                    $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
+                    $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
+                    $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
+
+
+                    //include google api files
+                    require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
+                    require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
+
+                    $gClient = new Google_Client();
+                    $gClient->setApplicationName( 'Login to ' . home_url() );
+                    $gClient->setClientId( $google_client_id );
+                    $gClient->setClientSecret( $google_client_secret );
+                    $gClient->setRedirectUri( $google_redirect_url );
+                    $gClient->setScopes(array(
+                        'https://www.googleapis.com/auth/plus.login',
+                        'profile',
+                        'email',
+                        'openid',
+                   ));
+                    $authUrl = $gClient->createAuthUrl();
+                ?>
+                <a href="<?php echo $authUrl; ?>" class="contributer-connect contributer-google-login-button g-signin"
                     data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email"
                     data-requestvisibleactions="http://schemas.google.com/AddActivity"
                     data-clientId="<?php echo SenseiOptions::get_instance()->get_option( 'google_app_id' ); ?>"
                     data-accesstype="offline"
-                    data-callback="google_plus_login"
+                    data-callback="google_plus_callback"
                     data-theme="dark"
                     data-cookiepolicy="single_host_origin">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="google-icon" x="0px" y="0px" viewBox="0 0 82.578992 84.937998">
@@ -49,7 +77,7 @@ class Contributer_Login {
                         </g>
                     </svg>
                     Login with Google
-                </div>
+                </a>
 
                 <form id="email-sign-in">
                     <input type="hidden" name="action" value="email_login" />
@@ -69,7 +97,8 @@ class Contributer_Login {
                 <p>Don't have an account yet? <a href="#signup" class="signlink">Sign Up.</a></p>
             </div>
             <div class="signup-container sign-toggle-container">
-                <form id="email-sign-up">
+                <form id="email-sign-up" >
+                    <input type="hidden" name="action" value="email_sign_up" />
                     <p>
                         <label for="email">E-Mail</label>
                         <input id="email" name="email" required="required" type="text"/>
@@ -171,7 +200,79 @@ class Contributer_Login {
     }
     
     
-    function email_login() {
+    
+    public function google_login() {
+        
+        require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
+        require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
+        
+        $access_token = '';
+        if ( isset( $_POST['access_token'] ) && ! empty( $_POST['access_token'] ) ) {
+            $access_token = json_encode( $_POST['access_token'] );
+        }
+        else {
+            $this->send_json_output( false, 'Access token is invalid!' );
+        }
+        
+        $g_client = new Google_Client();
+        $g_client->setApplicationName('Login to ' . home_url() );
+        $g_client->setClientId( SenseiOptions::get_instance()->get_option( 'google_app_id' ) );
+        $g_client->setClientSecret( SenseiOptions::get_instance()->get_option( 'google_app_secret' ));
+
+        $google_oauth = new Google_Service_OAuth2 ( $g_client );
+        $g_client->setAccessToken( $access_token );
+        
+        if ( $g_client->isAccessTokenExpired() ) {
+            $g_client->authenticate();
+            $new_access_token = json_decode( $g_client->getAccessToken() );
+            $g_client->refreshToken( $new_access_token->refresh_token );
+        }
+        
+        if ( $g_client->getAccessToken() ) {
+            //For logged in user, get details from google using access token
+            $g_user = $google_oauth->userinfo->get();
+            $email = filter_var( $g_user['email'], FILTER_SANITIZE_EMAIL );
+            
+            if ( email_exists( $email ) ) {
+                $user_info = get_user_by( 'email', $email );
+                wp_set_current_user( $user_info->ID, $user_info->user_login );
+                wp_set_auth_cookie( $user_info->ID );
+                do_action( 'wp_login', $user_info->user_login );
+            }
+            else {
+                $random_password = wp_generate_password( 20 );
+                $user_id = wp_create_user( $email, $random_password, $email );
+
+                if ( ! is_wp_error( $user_id ) ) {
+                    $wp_user_object = new WP_User( $user_id );
+                    $wp_user_object->set_role('subscriber');
+
+                    $creds['user_login'] = $email;
+                    $creds['user_password'] = $random_password;
+                    $creds['remember'] = false;
+                    $user = wp_signon( $creds, false );
+
+                    if ( is_wp_error( $user ) ) {
+                        $this->send_json_output( false,  $user->get_error_message() );
+                    }
+                }
+                else {
+                    $this->send_json_output( false, 'Registration failed. Please try again.' );
+                }
+            }
+            
+        }
+        else {
+            //For Guest user, get google login url
+            $this->send_json_output( false, 'Access token is not available!' );
+        }
+        
+        $this->send_json_output( true, '' );
+    }
+    
+    
+    
+    public function email_login() {
         
         $status = false;
         $remember_me = false;
@@ -198,6 +299,88 @@ class Contributer_Login {
         }
         $this->send_json_output( $status,  $message );
         
+    }
+    
+    
+    
+    public function email_sign_up() {
+        
+        $message = '';
+        $status = true;
+        $username = '';
+        $email = '';
+        $password = '';
+        $password2 = '';
+
+        //email checks
+        if ( isset( $_POST['email'] ) && ! empty( $_POST['email'] ) ) {
+            $email = $_POST['email'];
+        }
+        else {
+            $this->send_json_output( false, 'Email field is empty. Please insert email and try again' );
+        }
+        
+        $email =  filter_input( INPUT_POST, 'email', FILTER_VALIDATE_EMAIL );
+
+        if ( FALSE === $email ) {
+            $this->send_json_output( false, 'Invalid email. Please insert valid email and try again.' );
+        }
+        
+        if ( email_exists( $email ) ) {
+            $this->send_json_output( false, 'Email you inserted already exists. Please insert another email and try again.' );
+        }
+        
+        //username checks
+        if ( isset( $_POST['username'] ) && ! empty( $_POST['username'] ) ) {
+            $username = $_POST['username'];
+        }
+        else {
+            $this->send_json_output( false, 'Username field is empty. Please insert username and try again' );
+        }
+
+        if ( ! validate_username( $username ) ) {
+            $this->send_json_output( false, 'Invalid username. Please try again.' );
+        }
+        
+        if ( username_exists( $username ) ) {
+            $this->send_json_output( false, 'Username you inserted already exists. Please insert another username and try again.' );
+        }
+        
+        //password checks
+        if ( isset( $_POST['password'] ) && ! empty( $_POST['password'] ) && strlen( $_POST['password'] ) > 3 ) {
+            $password = $_POST['password'];
+        }
+        else {
+            $this->send_json_output( false, 'Your password needs to contain at least 4 characters' );
+        }
+        
+        $password2 = $_POST['password'];
+        
+        if ( $password != $password2 ) {
+            $this->send_json_output( false, 'The password and confirmation password do not match.' );
+        }
+        
+        //register user
+    	$user_data = array(
+            'user_login' => $username,
+            'user_email' => $email,
+            'user_pass' => $password,
+        );
+        $user_id = wp_create_user( $username, $password, $email );
+    	if ( is_wp_error( $user_id ) ) {
+           $this->send_json_output( false, 'Something wrong happened. Please try again later.' ); 
+        } 
+        else {
+            $wp_user_object = new WP_User( $user_id );
+            $wp_user_object->set_role('subscriber');
+            $creds = array();
+            $creds['user_login'] = $username;
+            $creds['user_password'] = $password;
+            $creds['remember'] = false;
+            $user = wp_signon( $creds, false );
+        }
+                
+        $this->send_json_output( true, '' );
     }
     
     

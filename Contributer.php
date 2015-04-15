@@ -90,7 +90,8 @@ class Contributer {
             wp_localize_script( 'contributer_login', 'contributer_object', array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'redirect_login_url' => SenseiOptions::get_instance()->get_option( 'redirect_login_url' ),
-                'facebook_app_id' => SenseiOptions::get_instance()->get_option( 'facebook_app_id' )
+                'facebook_app_id' => SenseiOptions::get_instance()->get_option( 'facebook_app_id' ),
+                'google_app_id' => SenseiOptions::get_instance()->get_option( 'google_app_id' )
             ));
         }
     }
@@ -167,6 +168,13 @@ class Contributer {
                             'name' => 'Google APP id',
                             'id' => 'google_app_id',
                             'desc'  => 'Please insert your google app id if you want to use google+ login.',
+                            'type'  => 'text',
+                            'value'   => ''
+                        ),
+                        array(
+                            'name' => 'Google APP secret',
+                            'id' => 'google_app_secret',
+                            'desc'  => 'Please insert your google app secret if you want to use google+ login.',
                             'type'  => 'text',
                             'value'   => ''
                         ),
