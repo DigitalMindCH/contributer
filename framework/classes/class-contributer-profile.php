@@ -14,8 +14,6 @@ class Contributer_Profile {
 
 
     public function contributer_profile() {
-
-        $this->google_plus_sign_in();
         
         if ( is_user_logged_in() ) {
             $this->user = wp_get_current_user();
@@ -424,95 +422,5 @@ class Contributer_Profile {
         );
 
     }
-    
-    
-    public function google_plus_sign_in() {
-        
-        $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
-        $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
-        $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
-        
-        //include google api files
-        require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
-        require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
-        
-        $gClient = new Google_Client();
-        $gClient->setApplicationName( 'Login to ' . home_url() );
-        $gClient->setClientId( $google_client_id );
-        $gClient->setClientSecret( $google_client_secret );
-        $gClient->setRedirectUri( $google_redirect_url );
-        $gClient->setScopes(array(
-            'https://www.googleapis.com/auth/plus.login',
-            'profile',
-            'email',
-            'openid',
-        ));
-
-        $google_oauthV2 = new Google_Service_OAuth2( $gClient );
-
-        if ( isset( $_GET['code'] ) ) { 
-            $gClient->authenticate( $_GET['code'] );
-        }
-        else {
-            return;
-        }
-
-
-        if ( $gClient->getAccessToken() ) {
-            //For logged in user, get details from google using access token
-            $user                 = $google_oauthV2->userinfo->get();
-            $email                = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
-
-            //preform registration
-            $in_db = false;
-            if ( email_exists( $email ) ) {
-                $user_info = get_user_by( 'email', $email );
-                wp_set_current_user( $user_info->ID, $user_info->user_login );
-                wp_set_auth_cookie( $user_info->ID );
-                do_action( 'wp_login', $user_info->user_login );
-            }
-            else {
-                $random_password = wp_generate_password( 20 );
-                $user_id = wp_create_user( $email, $random_password, $email );
-
-                if ( ! is_wp_error( $user_id ) ) {
-                    $wp_user_object = new WP_User( $user_id );
-                    $wp_user_object->set_role('subscriber');
-                }
-            }
-              
-        } 
-        else {
-            return;
-        }
-        
-        ?>
-        <script type="text/javascript">
-            jQuery(document).ready(function($) {
-		$("#login-loader").removeClass('hidden_loader');
-        	    $.ajax({
-                    type: "POST",
-                    url: contributer_object.ajaxurl,
-                    data: {
-			action: 'email_login',
-	                username: '<?php echo $email; ?>',
-                        password: '<?php echo $random_password; ?>',
-	            },
-           	    success: function(data) {                
-                	if( data.status ) {
-                            window.location.replace( contributer_object.redirect_login_url );
-                	}
-                	else {
-                            alert( data.message );
-                            $("#login-loader").addClass('hidden_loader');
-                       }
-                    }
-                });
-	    });
-        </script>
-        <?php
-        
-    }
-	
 	
 }

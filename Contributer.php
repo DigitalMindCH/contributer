@@ -35,6 +35,7 @@ class Contributer {
 
         new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
         $this->register_user_custom_fields();
+        $this->temp_google_login();
     }
 
         
@@ -218,6 +219,75 @@ class Contributer {
 	public static function anyone_can_register() {
 		return true;
 	}
+        
+        
+        public function temp_google_login() {
+            
+            $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
+            $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
+            $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
+
+            //include google api files
+            require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
+            require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
+
+            $gClient = new Google_Client();
+            $gClient->setApplicationName( 'Login to ' . home_url() );
+            $gClient->setClientId( $google_client_id );
+            $gClient->setClientSecret( $google_client_secret );
+            $gClient->setRedirectUri( $google_redirect_url );
+            $gClient->setScopes(array(
+                'https://www.googleapis.com/auth/plus.login',
+                'profile',
+                'email',
+                'openid',
+            ));
+
+            $google_oauthV2 = new Google_Service_OAuth2( $gClient );
+
+            if ( isset( $_GET['code'] ) ) { 
+                $gClient->authenticate( $_GET['code'] );
+            }
+            else {
+                return;
+            }
+
+
+            if ( $gClient->getAccessToken() ) {
+                //For logged in user, get details from google using access token
+                $user                 = $google_oauthV2->userinfo->get();
+                $email                = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+
+                //preform registration
+                if ( email_exists( $email ) ) {
+                    $user_info = get_user_by( 'email', $email );
+                    wp_set_current_user( $user_info->ID, $user_info->user_login );
+                    wp_set_auth_cookie( $user_info->ID );
+                    do_action( 'wp_login', $user_info->user_login );
+                }
+                else {
+                    $random_password = wp_generate_password( 20 );
+                    $user_id = wp_create_user( $email, $random_password, $email );
+
+                    if ( ! is_wp_error( $user_id ) ) {
+                        $wp_user_object = new WP_User( $user_id );
+                        $wp_user_object->set_role('subscriber');
+                        
+                        $creds = array();
+                        $creds['user_login'] = $email;
+                        $creds['user_password'] = $random_password;
+                        $creds['remember'] = false;
+                        $user_id = wp_signon( $creds, false );
+                    }
+                }
+
+            } 
+            else {
+                return;
+            }
+
+            ?>
+        }
 
 }
 
