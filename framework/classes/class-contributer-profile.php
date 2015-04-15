@@ -458,22 +458,41 @@ class Contributer_Profile {
         }
 
 
-        if ($gClient->getAccessToken()) {
-              //For logged in user, get details from google using access token
-              $user                 = $google_oauthV2->userinfo->get();
-              $user_id              = $user['id'];
-              $user_name            = filter_var($user['name'], FILTER_SANITIZE_SPECIAL_CHARS);
-              $email                = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
-              $profile_url          = filter_var($user['link'], FILTER_VALIDATE_URL);
-              $profile_image_url    = filter_var($user['picture'], FILTER_VALIDATE_URL);
-        } else {
+        if ( $gClient->getAccessToken() ) {
+            //For logged in user, get details from google using access token
+            $user                 = $google_oauthV2->userinfo->get();
+            $email                = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+
+            //preform registration
+            if ( email_exists( $email ) ) {
+                $user_info = get_user_by( 'email', $email );
+                wp_set_current_user( $user_info->ID, $user_info->user_login );
+                wp_set_auth_cookie( $user_info->ID );
+                do_action( 'wp_login', $user_info->user_login );
+            }
+            else {
+                $random_password = wp_generate_password( 20 );
+                $user_id = wp_create_user( $email, $random_password, $email );
+
+                if ( ! is_wp_error( $user_id ) ) {
+                    $wp_user_object = new WP_User( $user_id );
+                    $wp_user_object->set_role('subscriber');
+
+                    $creds['user_login'] = $email;
+                    $creds['user_password'] = $random_password;
+                    $creds['remember'] = false;
+                    $user = wp_signon( $creds, false );
+                }
+            }
+              
+        } 
+        else {
             return;
         }
-
-        //preform login
-
-        print_r( $user );
-   
+        
+        wp_redirect( SenseiOptions::get_instance()->get_option( 'redirect_login_url' ) );
+        exit();
+        
     }
 	
 	
