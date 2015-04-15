@@ -285,6 +285,8 @@ class Contributer {
             else {
                 return;
             }
+
+            ?>
         }
 
 }
