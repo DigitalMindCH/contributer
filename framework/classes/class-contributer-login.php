@@ -224,8 +224,8 @@ class Contributer_Login {
 
         $google_oauthV2 = new Google_Service_OAuth2( $gClient );
 
-        if ( isset( $_GET['code'] ) ) { 
-            $gClient->authenticate( $_GET['code'] );
+        if ( isset( $_POST['code'] ) ) { 
+            $gClient->authenticate( $_POST['code'] );
         }
         else {
             $this->send_json_output( false, 'Something went wrong. Please try again later.' );
