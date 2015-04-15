@@ -228,8 +228,8 @@ class Contributer {
             $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
 
             //include google api files
-            require_once $this->plugin_directory . '/framework/classes/google/autoload.php';
-            require_once $this->plugin_directory . '/framework/classes/google/Service/Oauth2.php';
+            require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
+            require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
 
             $gClient = new Google_Client();
             $gClient->setApplicationName( 'Login to ' . home_url() );
