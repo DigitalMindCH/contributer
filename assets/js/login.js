@@ -116,23 +116,7 @@ function facebook_login( accessToken  ) {
     });
 }
 
-/*var auth_res = null;
-var intervalID = setInterval( function(){ 
-    if ( auth_res != null ) {
-        clearInterval( intervalID );
-        google_plus_login( auth_res );
-        auth_res = null;
-    }
-}, 1000 );
-
-function google_plus_callback( auth_result ) {
-    if ( auth_result['status']['signed_in'] && auth_result['status']['method'] == 'PROMPT' ) {
-        auth_res = auth_result;
-    }
-}
-
-
-function google_plus_login( auth_result ) {
+function google_plus_login( code ) {
     jQuery("#login-loader").removeClass('hidden_loader');
     jQuery.ajax({
         type: 'post',
@@ -141,7 +125,7 @@ function google_plus_login( auth_result ) {
         dataType: 'json',
         data:{
             action: "google_login",
-            access_token: auth_result
+            code: code
         }, 
         success: function (data) {
             if ( data.status ) {
@@ -153,4 +137,4 @@ function google_plus_login( auth_result ) {
             jQuery("#login-loader").addClass('hidden_loader');
         }
     });
-}*/
+}

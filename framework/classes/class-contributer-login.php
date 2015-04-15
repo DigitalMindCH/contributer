@@ -206,33 +206,38 @@ class Contributer_Login {
         require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
         require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
         
-        $access_token = '';
-        if ( isset( $_POST['access_token'] ) && ! empty( $_POST['access_token'] ) ) {
-            $access_token = json_encode( $_POST['access_token'] );
+        $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
+        $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
+        $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
+        
+        $gClient = new Google_Client();
+        $gClient->setApplicationName( 'Login to ' . home_url() );
+        $gClient->setClientId( $google_client_id );
+        $gClient->setClientSecret( $google_client_secret );
+        $gClient->setRedirectUri( $google_redirect_url );
+        $gClient->setScopes(array(
+            'https://www.googleapis.com/auth/plus.login',
+            'profile',
+            'email',
+            'openid',
+        ));
+
+        $google_oauthV2 = new Google_Service_OAuth2( $gClient );
+
+        if ( isset( $_GET['code'] ) ) { 
+            $gClient->authenticate( $_GET['code'] );
         }
         else {
-            $this->send_json_output( false, 'Access token is invalid!' );
+            $this->send_json_output( false, 'Something went wrong. Please try again later.' );
         }
-        
-        $g_client = new Google_Client();
-        $g_client->setApplicationName('Login to ' . home_url() );
-        $g_client->setClientId( SenseiOptions::get_instance()->get_option( 'google_app_id' ) );
-        $g_client->setClientSecret( SenseiOptions::get_instance()->get_option( 'google_app_secret' ));
 
-        $google_oauth = new Google_Service_OAuth2 ( $g_client );
-        $g_client->setAccessToken( $access_token );
-        
-        if ( $g_client->isAccessTokenExpired() ) {
-            $g_client->authenticate();
-            $new_access_token = json_decode( $g_client->getAccessToken() );
-            $g_client->refreshToken( $new_access_token->refresh_token );
-        }
-        
-        if ( $g_client->getAccessToken() ) {
+
+        if ( $gClient->getAccessToken() ) {
             //For logged in user, get details from google using access token
-            $g_user = $google_oauth->userinfo->get();
-            $email = filter_var( $g_user['email'], FILTER_SANITIZE_EMAIL );
-            
+            $user = $google_oauthV2->userinfo->get();
+            $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+
+            //preform registration
             if ( email_exists( $email ) ) {
                 $user_info = get_user_by( 'email', $email );
                 wp_set_current_user( $user_info->ID, $user_info->user_login );
@@ -259,12 +264,10 @@ class Contributer_Login {
                 else {
                     $this->send_json_output( false, 'Registration failed. Please try again.' );
                 }
-            }
-            
-        }
+            }  
+        } 
         else {
-            //For Guest user, get google login url
-            $this->send_json_output( false, 'Access token is not available!' );
+            return;
         }
         
         $this->send_json_output( true, '' );
