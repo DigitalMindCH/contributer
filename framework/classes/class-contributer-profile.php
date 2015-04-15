@@ -14,8 +14,6 @@ class Contributer_Profile {
 
 
     public function contributer_profile() {
-
-        $this->google_plus_sign_in();
         
         if ( is_user_logged_in() ) {
             $this->user = wp_get_current_user();
