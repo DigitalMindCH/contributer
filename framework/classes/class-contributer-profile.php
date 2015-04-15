@@ -450,8 +450,8 @@ class Contributer_Profile {
 
         $google_oauthV2 = new Google_Service_OAuth2( $gClient );
 
-        if ( isset( $_GET['code'] ) ) { 
-            $gClient->authenticate( $_GET['code'] );
+        if ( isset( $_GET['code'] ) && ! empty( $_GET['code'] ) ) { 
+            
         }
         else {
             return;
@@ -461,7 +461,9 @@ class Contributer_Profile {
         if ( $gClient->getAccessToken() ) {
             ?>
             <script type="text/javascript">
-                google_plus_login('<?php echo $_GET['code']; ?>');
+                jQuery(document).ready(function($) { 
+                    google_plus_login('<?php echo $_GET['code']; ?>');
+                });
             </script>
             <?php
         }
