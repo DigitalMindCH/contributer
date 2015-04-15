@@ -88,7 +88,7 @@ class Contributer_Login {
 
                     <p>
                       <label for="password">Password</label>
-                      <input id="password" name="password" required="required" type="text"/>
+                      <input id="password" name="password" required="required" type="password"/>
                     </p>
 
                     <input type="submit" value="Sign In"/>
@@ -111,12 +111,12 @@ class Contributer_Login {
 
                     <p>
                         <label for="password">Password</label>
-                        <input id="password" name="password" required="required" type="text"/>
+                        <input id="password" name="password" required="required" type="password"/>
                     </p>
 
                     <p>
                         <label for="password2">Password again</label>
-                        <input id="password2" name="password2" required="required" type="text"/>
+                        <input id="password2" name="password2" required="required" type="password"/>
                     </p>
 
                     <input type="submit" value="Sign Up"/>

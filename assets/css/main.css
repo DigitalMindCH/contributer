@@ -52,7 +52,8 @@
 .contributer-signup .contributer-google-login-button:hover {
   background: #bf3322;
 }
-.contributer-signup input[type="text"] {
+.contributer-signup input[type="text"],
+.contributer-signup input[type="password"] {
   width: 100%;
 }
 
@@ -120,7 +121,8 @@
   height: 120px;
 }
 .contributer-profile-container textarea,
-.contributer-profile-container input[type="text"] {
+.contributer-profile-container input[type="text"],
+.contributer-profile-container input[type="password"]{
   width: calc(100% - 160px);
 }
 .contributer-profile-container label {
@@ -138,6 +140,7 @@
   height: 120px;
 }
 .contributer-editor input[type="text"],
+.contributer-editor input[type="password"],
 .contributer-editor textarea,
 .contributer-editor select {
   width: 100%;

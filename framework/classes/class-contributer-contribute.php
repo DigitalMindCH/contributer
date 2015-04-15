@@ -35,7 +35,7 @@ class Contributer_Contribute {
                   <div class="ball"></div>
                   <div class="ball"></div>
                   <div class="ball"></div>
-                  <span>Publishing</span>
+                  <span>Saving</span>
             </div>
         </div>
 
@@ -84,7 +84,7 @@ class Contributer_Contribute {
                 <div id="featured-image-upload-area" class="contributer-upload"> 
                     <div id="featured-image-upload-holder">
                         <div id="featured-image-uploaded"></div>
-                        <div id="featured-image-upload-different">Click to select different image</div>
+                        <div id="featured-image-upload-different">Click to select a different image</div>
                     </div>
                     <p id="featured-image-upload-here">drag 'n' drop <br/>
                         <input type="file" id="featured-image" name="featured-image" class="files" />
@@ -241,7 +241,7 @@ class CCStandardFormat {
         else {
             $upload_response = $this->upload_featured_image( $post_id );
             if ( $upload_response['status'] ) {
-                $message = 'Post published';
+                $message = 'Your draft was saved and will be reviewed';
             }
             else {
                 $message = $upload_response['message'];
@@ -650,7 +650,7 @@ class CCGalleryFormat {
         
         //required, at least one image needs to be set
         if ( ! isset( $_FILES['gallery-image-0'] ) ) {
-            $this->send_json_output( false, 'You need to upload at least one image in order to publish gallery.' );
+            $this->send_json_output( false, 'You need to upload at least one image in order to publish a gallery.' );
         }
         
             
