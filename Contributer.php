@@ -33,7 +33,7 @@ class Contributer {
         $contribute_renderer = new Contributer_Contribute( $this->plugin_directory );
         add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
 
-        new SenseiAdminPanel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
+        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
         $this->register_user_custom_fields();
     }
 

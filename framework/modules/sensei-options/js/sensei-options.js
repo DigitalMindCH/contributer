@@ -1,36 +1,42 @@
 jQuery(document).ready(function($) {
 	
-	//tab click (switching tabs)
-	$( ".sensei-tab" ).click(function() {
-		$( ".sensei-tab" ).removeClass( "tab-selected" );
-		$( this ).addClass( "tab-selected" );
-		$( ".tab-content" ).hide();
-		$( "#tab-content-" + $(this).attr( "id" ) ).show();
-	});
-	
-	$( ".sensei-reset-tab" ).click(function() {
-		if( ! confirm('Are you sure? This will reset all options for this tab.') ) {
-			return;
-		}
-		
-		var tab_id = $( this ).data('tab');
-		
-		$.ajax({
+    //tab click (switching tabs)
+    $( ".sensei-tab" ).click(function() {
+        $( ".sensei-tab" ).removeClass( "tab-selected" );
+        $( this ).addClass( "tab-selected" );
+        $( ".tab-content" ).hide();
+        $( "#tab-content-" + $(this).attr( "id" ) ).show();
+    });
+    
+    //reseting options for specific tab
+    $( ".sensei-reset-tab" ).click(function() {
+        
+        if( ! confirm('Are you sure? This will reset all options for this tab.') ) {
+            return;
+        }
+
+        var tab_id = $( this ).data('tab');
+
+        $.ajax({
             type: 'post',
             cache: false,
             url: ajaxurl,
-			data: {
-				action: 'reset_options_tab',
-				tab_id: tab_id
-			},
+            data: {
+                action: 'reset_options_tab',
+                tab_id: tab_id,
+                sensei_options_nonce: $( "#sensei_options_nonce" ).val()
+            },
             success: function(data) {
-				if( data.status ) {
-					location.reload();
-				}
-			}
-		});
-		
-	});
+                if( data.status ) {
+                    location.reload();
+                }
+                else {
+                    alert( 'Something is wrong. Please try again later.' );
+                }
+            }
+        });
+
+    });
 	
 	$( ".sensei-reset-all" ).click(function() {
 		if( ! confirm('Are you sure? This will reset all options.') ) {
