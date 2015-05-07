@@ -428,9 +428,9 @@ class Contributer_Profile {
     
     public function google_plus_sign_in() {
         
-        $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
-        $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
-        $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
+        $google_client_id = Sensei_Options::get_instance()->get_option( 'google_app_id' );
+        $google_client_secret = Sensei_Options::get_instance()->get_option( 'google_app_secret' );
+        $google_redirect_url = Sensei_Options::get_instance()->get_option( 'redirect_login_url' );
         
         //include google api files
         require_once $this->plugin_dir . '/framework/classes/google/autoload.php';

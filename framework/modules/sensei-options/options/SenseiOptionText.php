@@ -77,7 +77,7 @@ class SenseiOptionText extends SenseiOptionAbstract {
 
 
 	public static function is_option_condition( $option_id ) {
-		$value = SenseiOptions::get_instance()->get_option( $option_id );
+		$value = Sensei_Options::get_instance()->get_option( $option_id );
 		if ( isset( $value ) && ! empty( $value ) && strlen( trim( $value ) ) > 0 ) {
 			return false;
 		}
@@ -99,7 +99,7 @@ class SenseiOptionText extends SenseiOptionAbstract {
 		</div>
 			
 		<div class="sensei-field-container field-text-container">
-			<input class="sensei-field field-text" type="text" id="<?php echo sanitize_html_class( $this->id ); ?>" name="<?php echo sanitize_key( $this->id ); ?>" value="<?php echo SenseiOptions::get_instance()->get_option( $this->id ); //xss ok ?>" />
+			<input class="sensei-field field-text" type="text" id="<?php echo sanitize_html_class( $this->id ); ?>" name="<?php echo sanitize_key( $this->id ); ?>" value="<?php echo Sensei_Options::get_instance()->get_option( $this->id ); //xss ok ?>" />
 			<p class="sensei-field-description field-text-description">
 				<?php echo esc_html( $this->desc ); ?>
 			</p>

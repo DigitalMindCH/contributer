@@ -89,9 +89,9 @@ class Contributer {
             wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/login.js', array( 'jquery' ), '1.0', true );
             wp_localize_script( 'contributer_login', 'contributer_object', array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'redirect_login_url' => SenseiOptions::get_instance()->get_option( 'redirect_login_url' ),
-                'facebook_app_id' => SenseiOptions::get_instance()->get_option( 'facebook_app_id' ),
-                'google_app_id' => SenseiOptions::get_instance()->get_option( 'google_app_id' )
+                'redirect_login_url' => Sensei_Options::get_instance()->get_option( 'redirect_login_url' ),
+                'facebook_app_id' => Sensei_Options::get_instance()->get_option( 'facebook_app_id' ),
+                'google_app_id' => Sensei_Options::get_instance()->get_option( 'google_app_id' )
             ));
         }
     }

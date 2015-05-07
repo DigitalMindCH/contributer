@@ -83,7 +83,7 @@ class SenseiOptionWysiwyg extends SenseiOptionAbstract {
 
 
 	public static function is_option_condition( $option_id ) {
-		$value = SenseiOptions::get_instance()->get_option( $option_id );
+		$value = Sensei_Options::get_instance()->get_option( $option_id );
 		if ( isset( $value ) && ! empty( $value ) && strlen( trim( $value ) ) > 0 ) {
 			return false;
 		}
@@ -106,7 +106,7 @@ class SenseiOptionWysiwyg extends SenseiOptionAbstract {
 		<div class="sensei-field-container field-wysiwyg-container">
 			<?php
 			wp_editor(
-							SenseiOptions::get_instance()->get_option( $this->id ),
+							Sensei_Options::get_instance()->get_option( $this->id ),
 							$this->id,
 							array(
 								'media_buttons' => false,

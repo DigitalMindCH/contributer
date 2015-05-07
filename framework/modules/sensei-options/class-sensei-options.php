@@ -1,6 +1,6 @@
 <?php
 
-class SenseiOptions {
+class Sensei_Options {
 
 	private $options_column_name;
 
@@ -61,7 +61,7 @@ class SenseiOptions {
 		global $sensei_options;
 
 		if ( null == $sensei_options ) {
-			$sensei_options = new SenseiOptions( $args, $options_column_name );
+			$sensei_options = new Sensei_Options( $args, $options_column_name );
 		}
 
 		return $sensei_options;

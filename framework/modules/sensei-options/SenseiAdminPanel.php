@@ -13,7 +13,7 @@ class SenseiAdminPanel {
 		$this->url = $url;
 		$this->menu_page_parameters = $args['page'];
 		$this->tabs_parameters = $args['tabs'];
-		SenseiOptions::get_instance( $args['tabs'], $this->menu_page_parameters['menu_slug'] );
+		Sensei_Options::get_instance( $args['tabs'], $this->menu_page_parameters['menu_slug'] );
 
 		add_action( 'admin_menu', array( $this, 'register_menu_page' ) );
 	}

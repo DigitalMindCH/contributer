@@ -54,7 +54,7 @@ class SenseiOptionSelect extends SenseiOptionAbstract {
 			$this->options = $args['options'];
 		}
 
-		$this->value = SenseiOptions::get_instance()->get_option( $this->id );
+		$this->value = Sensei_Options::get_instance()->get_option( $this->id );
 
 		if ( isset( $args['disabled'] ) && $args['disabled'] ) {
 			$this->disabled = true;

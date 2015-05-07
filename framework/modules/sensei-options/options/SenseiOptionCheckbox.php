@@ -89,7 +89,7 @@ class SenseiOptionCheckbox extends SenseiOptionAbstract {
 	 * @return bool
 	 */
 	public static function is_option_condition( $option_id ) {
-		return SenseiOptions::get_instance()->get_option( $option_id );
+		return Sensei_Options::get_instance()->get_option( $option_id );
 	}
 
 
@@ -104,7 +104,7 @@ class SenseiOptionCheckbox extends SenseiOptionAbstract {
 			<?php echo esc_html( $this->name ); ?>
 		</div>
 		<div class="sensei-field-container field-checkbox-container">
-			<input class="sensei-field field-checkbox" type="checkbox" <?php if ( SenseiOptions::get_instance()->get_option( $this->id ) ) { ?> checked <?php } ?> id="<?php echo sanitize_html_class( $this->id ); ?>" name="<?php echo sanitize_key( $this->id ); ?>" value="checked" />
+			<input class="sensei-field field-checkbox" type="checkbox" <?php if ( Sensei_Options::get_instance()->get_option( $this->id ) ) { ?> checked <?php } ?> id="<?php echo sanitize_html_class( $this->id ); ?>" name="<?php echo sanitize_key( $this->id ); ?>" value="checked" />
 			<p class="sensei-field-description">
 				<?php echo esc_html( $this->desc ); ?>
 			</p>

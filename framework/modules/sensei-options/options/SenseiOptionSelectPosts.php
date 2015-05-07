@@ -89,7 +89,7 @@ class SenseiOptionSelectPosts extends SenseiOptionAbstract {
 		}
 
 		$this->options = get_posts( $args_post );
-		$this->value = SenseiOptions::get_instance()->get_option( $this->id );
+		$this->value = Sensei_Options::get_instance()->get_option( $this->id );
 
 	}
 
@@ -114,7 +114,7 @@ class SenseiOptionSelectPosts extends SenseiOptionAbstract {
 
 
 	public static function is_option_condition( $option_id ) {
-		$value = SenseiOptions::get_instance()->get_option( $option_id );
+		$value = Sensei_Options::get_instance()->get_option( $option_id );
 		if ( isset( $value ) && ! empty( $value ) && strlen( trim( $value ) ) > 0 ) {
 			return false;
 		}

@@ -40,9 +40,9 @@ class Contributer_Login {
                 <?php
                     //WE ALL KNOW THAT THIS IS BAD IDEA
                     ########## Google Settings.. Client ID, Client Secret from https://cloud.google.com/console #############
-                    $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
-                    $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
-                    $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
+                    $google_client_id = Sensei_Options::get_instance()->get_option( 'google_app_id' );
+                    $google_client_secret = Sensei_Options::get_instance()->get_option( 'google_app_secret' );
+                    $google_redirect_url = Sensei_Options::get_instance()->get_option( 'redirect_login_url' );
 
 
                     //include google api files
@@ -65,7 +65,7 @@ class Contributer_Login {
                 <a href="<?php echo $authUrl; ?>" class="contributer-connect contributer-google-login-button g-signin"
                     data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email"
                     data-requestvisibleactions="http://schemas.google.com/AddActivity"
-                    data-clientId="<?php echo SenseiOptions::get_instance()->get_option( 'google_app_id' ); ?>"
+                    data-clientId="<?php echo Sensei_Options::get_instance()->get_option( 'google_app_id' ); ?>"
                     data-accesstype="offline"
                     data-callback="google_plus_callback"
                     data-theme="dark"
@@ -139,8 +139,8 @@ class Contributer_Login {
         
         //initialize facebook sdk
         $facebook = new Facebook(array(
-            'appId' => SenseiOptions::get_instance()->get_option( 'facebook_app_id' ),
-            'secret' => SenseiOptions::get_instance()->get_option( 'facebook_app_secret' )
+            'appId' => Sensei_Options::get_instance()->get_option( 'facebook_app_id' ),
+            'secret' => Sensei_Options::get_instance()->get_option( 'facebook_app_secret' )
         ));
         $fbuser = $facebook->getUser();
         
@@ -206,9 +206,9 @@ class Contributer_Login {
         require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
         require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
         
-        $google_client_id = SenseiOptions::get_instance()->get_option( 'google_app_id' );
-        $google_client_secret = SenseiOptions::get_instance()->get_option( 'google_app_secret' );
-        $google_redirect_url = SenseiOptions::get_instance()->get_option( 'redirect_login_url' );
+        $google_client_id = Sensei_Options::get_instance()->get_option( 'google_app_id' );
+        $google_client_secret = Sensei_Options::get_instance()->get_option( 'google_app_secret' );
+        $google_redirect_url = Sensei_Options::get_instance()->get_option( 'redirect_login_url' );
         
         $gClient = new Google_Client();
         $gClient->setApplicationName( 'Login to ' . home_url() );

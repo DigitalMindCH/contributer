@@ -15,11 +15,8 @@
  * There is no need to provide any kind of additional explanation, except to provide you demo of $args.
  * Enjoy!
  *
- *
- *
  */
 
-
-require_once( 'SenseiOptions.php' );
+require_once( 'class-sensei-options.php' );
 require_once( 'SenseiOptionsRenderer.php' );
 require_once( 'SenseiAdminPanel.php' );

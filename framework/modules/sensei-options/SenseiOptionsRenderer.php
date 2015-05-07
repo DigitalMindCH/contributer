@@ -24,7 +24,7 @@ class SenseiOptionsRenderer {
 
 		$dynamic_container_classes = $this->get_field_container_css_classes();
 
-		$class_name = SenseiOptions::get_instance()->get_class_name_by_option_type( $this->option_args['type'] );
+		$class_name = Sensei_Options::get_instance()->get_class_name_by_option_type( $this->option_args['type'] );
 		if ( class_exists( $class_name ) ) {
 			$option_object = new $class_name( $this->option_args );
 		}
@@ -67,7 +67,7 @@ class SenseiOptionsRenderer {
 				$dynamic_container_classes .= ' sensei-option-disabled-mark';
 			}
 
-			if ( ! SenseiOptions::get_instance()->is_option_condition_ok( $this->option_args['id'] ) ) {
+			if ( ! Sensei_Options::get_instance()->is_option_condition_ok( $this->option_args['id'] ) ) {
 				if (
 					isset( $this->option_args['condition']['disabled_type'] ) &&
 					'hidden' == $this->option_args['condition']['disabled_type']
