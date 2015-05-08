@@ -281,8 +281,8 @@ class Sensei_Options {
         }
 
         $nonce = '';
-        if ( isset( $_POST['sensei_options_nonce'] ) && ! empty( $_POST['sensei_options_nonce'] ) ) {
-            $nonce = filter_input( INPUT_POST, 'sensei_options_nonce' );
+        if ( isset( $_POST['sensei_options_nonce_' . $tab_id] ) && ! empty( $_POST['sensei_options_nonce_' . $tab_id] ) ) {
+            $nonce = filter_input( INPUT_POST, 'sensei_options_nonce_' . $tab_id );
         }
 
         //these conditions are required in order to proceed with save
@@ -327,10 +327,10 @@ class Sensei_Options {
             $status = false;
         }
 
+        $updated_conditions = array();
         if ( $status ) {
             //check did any of condition values updated (so we can update frontend)
             //TODO: This should be implemented within separate function
-            $updated_conditions = array();
             foreach ( $this->option_conditions as $option_id => $option_condition ) {
                     if ( 'option' == $option_condition['type'] ) {
                             if (
@@ -344,8 +344,8 @@ class Sensei_Options {
         }
         
         $return = array(
-                'status' => $status,
-                'updated_conditions' => $updated_conditions,
+            'status' => $status,
+            'updated_conditions' => $updated_conditions,
         );
 
         wp_send_json( $return );

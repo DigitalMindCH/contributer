@@ -81,7 +81,7 @@ class Sensei_Admin_Panel {
 
                             <input type="hidden" name="tab" value="<?php echo $tab['id']; //xss ok ?>" >
                             <input type="hidden" name="action" value="save_options" />
-                            <?php wp_nonce_field( 'sensei-save-options-'.$tab['id'], 'sensei_options_nonce', false ); ?>
+                            <?php wp_nonce_field( 'sensei-save-options-'.$tab['id'], 'sensei_options_nonce_'.$tab['id'], false ); ?>
 
                             <?php 
                             foreach ( $tab['options'] as $option ) {
