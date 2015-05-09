@@ -24,7 +24,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'reset_options_tab',
                 tab_id: tab_id,
-                sensei_options_nonce: $( "#sensei_options_nonce" ).val()
+                sensei_options_nonce: $( "#sensei_options_nonce_" + tab_id ).val()
             },
             success: function(data) {
                 if( data.status ) {
@@ -40,7 +40,7 @@ jQuery(document).ready(function($) {
     
     //reseting all options
     $( ".sensei-reset-all" ).click(function() {
-        if( ! confirm('Are you sure? This will reset all options.') ) {
+        if( ! confirm( 'Are you sure? This will reset all options.' ) ) {
             return;
         }
 
@@ -49,7 +49,8 @@ jQuery(document).ready(function($) {
             cache: false,
             url: ajaxurl,
             data: {
-                action: 'reset_options_all'
+                action: 'reset_options_all',
+                sensei_nonce_resetall: sensei_js_object.sensei_nonce_resetall
             },
             success: function(data) {
                 if( data.status ) {

@@ -90,36 +90,7 @@ class Sensei_Options {
     }
 
 
-    
-	public function ajax_reset_options_all() {
-		$status = true;
-
-		foreach ( $this->raw_options as $tab ) {
-
-			foreach ( $tab['options'] as $option ) {
-				if ( isset( $option['type'] ) && isset( $option['id'] ) ) {
-					$class = $this->get_class_name_by_option_type( $option['type'] );
-
-					if ( ! class_exists( $class ) ) {
-						continue;
-					}
-
-					$this->options[ $option['id'] ] = $class::get_default_option( $option );
-				}
-			}
-		}
-
-		update_option( $this->options_column_name, $this->options );
-
-		$return = array(
-			'status' => $status,
-		);
-
-		wp_send_json( $return );
-    }
-
-
-    
+  
     /**
      * 
      * If option contains condition, this method will check condition based on option id
@@ -280,13 +251,8 @@ class Sensei_Options {
             $tab_id = filter_input( INPUT_POST, 'tab' );
         }
 
-        $nonce = '';
-        if ( isset( $_POST['sensei_options_nonce_' . $tab_id] ) && ! empty( $_POST['sensei_options_nonce_' . $tab_id] ) ) {
-            $nonce = filter_input( INPUT_POST, 'sensei_options_nonce_' . $tab_id );
-        }
-
         //these conditions are required in order to proceed with save
-        if ( ! empty( $tab_id ) && wp_verify_nonce( $nonce, 'sensei-save-options-'.$tab_id ) ) {
+        if ( ! empty( $tab_id ) && check_ajax_referer( 'sensei-options-nonce-'.$tab_id, 'sensei_options_nonce_'.$tab_id, false ) ) {
             
             // @codingStandardsIgnoreStart
             unset( $_POST['tab'] );
@@ -353,6 +319,9 @@ class Sensei_Options {
     
     
     
+    /**
+     * Ajax method for reseting options specifically for one tab
+     */
     public function ajax_reset_options_tab() {
         $status = true;
 
@@ -360,13 +329,8 @@ class Sensei_Options {
         if ( isset( $_POST['tab_id'] ) && ! empty( $_POST['tab_id'] ) ) {
             $tab_id = filter_input( INPUT_POST, 'tab_id' );
         }
-        
-        $nonce = '';
-        if ( isset( $_POST['sensei_options_nonce'] ) && ! empty( $_POST['sensei_options_nonce'] ) ) {
-            $nonce = filter_input( INPUT_POST, 'sensei_options_nonce' );
-        }
 
-        if ( ! empty( $tab_id ) && wp_verify_nonce( $nonce, 'sensei-save-options-'.$tab_id ) ) {
+        if ( ! empty( $tab_id ) && check_ajax_referer( 'sensei-options-nonce-'.$tab_id, 'sensei_options_nonce', false ) ) {
             foreach ( $this->raw_options as $tab ) {
 
                 if ( $tab_id != $tab['id'] ) {
@@ -394,6 +358,44 @@ class Sensei_Options {
 
         $return = array(
             'status' => $status,
+        );
+
+        wp_send_json( $return );
+    }
+    
+    
+    
+    /**
+     * Ajax method. This method will reset all options to default values.
+     */
+    public function ajax_reset_options_all() {
+        $status = true;
+        
+        if ( check_ajax_referer( 'sensei-nonce-resetall', 'sensei_nonce_resetall', false ) ) {
+            foreach ( $this->raw_options as $tab ) {
+
+                foreach ( $tab['options'] as $option ) {
+                    if ( isset( $option['type'] ) && isset( $option['id'] ) ) {
+                        $class = $this->get_class_name_by_option_type( $option['type'] );
+
+                        if ( ! class_exists( $class ) ) {
+                            continue;
+                        }
+
+                        $this->options[ $option['id'] ] = $class::get_default_option( $option );
+                    }
+                }
+            }
+            
+            update_option( $this->options_column_name, $this->options );
+        }
+        else {
+            $status = false;
+        }
+
+        $return = array(
+            'status' => $status,
+            'aaa' => check_ajax_referer( 'sensei-nonce-resetall', 'sensei-nonce-resetall', false )
         );
 
         wp_send_json( $return );

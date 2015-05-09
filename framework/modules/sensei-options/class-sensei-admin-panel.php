@@ -9,7 +9,13 @@ class Sensei_Admin_Panel {
     private $tabs_parameters = array();
 
     
-    
+    /**
+     * This is where everything starts.
+     * In order to create page/options user needs to create instance of this class
+     * 
+     * @param string $url
+     * @param array $args
+     */
     public function __construct( $url, $args ) {
         //TODO: implement contruct parameters validation (before we assign vars as class properties. If validation fail, we are not going to add 'menu_page' action
         $this->url = $url;
@@ -20,7 +26,9 @@ class Sensei_Admin_Panel {
     }
 
 
-    
+    /**
+     * Registering menu page and adding action for loading scripts
+     */
     public function register_menu_page() {
         $sensei_admin_page = add_menu_page(
             $this->menu_page_parameters['page_title'],
@@ -45,6 +53,9 @@ class Sensei_Admin_Panel {
     
     public function sensei_admin_js() {
         wp_enqueue_script( 'sensei-options', $this->url.'/js/sensei-options.js', array( 'jquery' ), '1.0' );
+        wp_localize_script( 'sensei-options', 'sensei_js_object', array(
+            'sensei_nonce_resetall' => wp_create_nonce( 'sensei-nonce-resetall' ),
+        ));
     }
 
 
@@ -81,7 +92,7 @@ class Sensei_Admin_Panel {
 
                             <input type="hidden" name="tab" value="<?php echo $tab['id']; //xss ok ?>" >
                             <input type="hidden" name="action" value="save_options" />
-                            <?php wp_nonce_field( 'sensei-save-options-'.$tab['id'], 'sensei_options_nonce_'.$tab['id'], false ); ?>
+                            <?php wp_nonce_field( 'sensei-options-nonce-'.$tab['id'], 'sensei_options_nonce_'.$tab['id'], false ); ?>
 
                             <?php 
                             foreach ( $tab['options'] as $option ) {
@@ -94,7 +105,7 @@ class Sensei_Admin_Panel {
                                 <input type="submit" class="sensei-submit" name="save-<?php echo sanitize_key( $tab['id'] ); ?>" value="Save" />
                                 <div class="sensei-reset-buttons">
                                     <span class="sensei-reset-tab sensei-submit" data-tab="<?php echo sanitize_html_class( $tab['id'] ); ?>">Reset tab</span>
-                                    <span class="sensei-submit sensei-reset-all">Reset all</span>
+                                    <span class="sensei-submit sensei-reset-all" data-tab="<?php echo sanitize_html_class( $tab['id'] ); ?>">Reset all</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
