@@ -53,9 +53,9 @@ class Sensei_Option_Select_Posts extends Sensei_Option_Abstract {
         }
 
         if (
-                isset($args['condition']) &&
-                isset($args['condition']['disabled_type']) &&
-                !empty($args['condition']['disabled_type'])
+            isset($args['condition']) &&
+            isset($args['condition']['disabled_type']) &&
+            !empty($args['condition']['disabled_type'])
         ) {
             $this->disabled_type = $args['condition']['disabled_type'];
         }
@@ -138,7 +138,7 @@ class Sensei_Option_Select_Posts extends Sensei_Option_Abstract {
             <select class="sensei-field field-select-posts" name="<?php echo sanitize_key( $this->id ); ?>">
                 <option value="0">Select Post</option>
                 <?php foreach ( $this->options as $option ) { ?>
-                        <option value="<?php echo $option->ID; //xss ok ?>" <?php if ( $option->ID == $this->value ) { echo 'selected'; } ?>><?php echo esc_html( $option->post_title ); ?></option>
+                    <option value="<?php echo $option->ID; //xss ok ?>" <?php if ( $option->ID == $this->value ) { echo 'selected'; } ?>><?php echo esc_html( $option->post_title ); ?></option>
                 <?php } ?>
             </select>
             <p class="sensei-field-description field-select-posts-description">

@@ -68,17 +68,17 @@ class Sensei_Options_Renderer {
             }
 
             if ( ! Sensei_Options::get_instance()->is_option_condition_ok( $this->option_args['id'] ) ) {
-                    if (
-                            isset( $this->option_args['condition']['disabled_type'] ) &&
-                            'hidden' == $this->option_args['condition']['disabled_type']
-                    ){
-                            $dynamic_container_classes .= ' sensei-option-hidden';
-                    }
-                    else {
-                            $dynamic_container_classes .= ' sensei-option-disabled';
-                    }
+                if (
+                    isset( $this->option_args['condition']['disabled_type'] ) &&
+                    'hidden' == $this->option_args['condition']['disabled_type']
+                ){
+                    $dynamic_container_classes .= ' sensei-option-hidden';
+                }
+                else {
+                    $dynamic_container_classes .= ' sensei-option-disabled';
+                }
 
-                    $this->option_args['disabled'] = true;
+                $this->option_args['disabled'] = true;
             }
         }
         return $dynamic_container_classes;

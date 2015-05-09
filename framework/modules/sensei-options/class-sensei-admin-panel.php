@@ -74,7 +74,7 @@ class Sensei_Admin_Panel {
                 <ul>
                     <?php $tab_class = 'tab-selected' ?>
                     <?php foreach ( $this->tabs_parameters as $tab ) { ?>
-                        <li id="<?php echo sanitize_html_class( $tab['id'] ); ?>" class="sensei-tab <?php echo sanitize_html_class( $tab_class ); ?>" >
+                        <li id="<?php echo sanitize_html_class( $tab['id'] ); ?>" class="sensei-tab <?php echo $tab_class; ?>" >
                             <span class="tab-icon"></span>
                             <span class="tab-title"><?php echo esc_html( $tab['title'] ); ?></span>
                         </li>
