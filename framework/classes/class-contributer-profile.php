@@ -14,7 +14,7 @@ class Contributer_Profile {
      * This class will handle updates related with profile (updating profile information)
      */
     public function __construct() {
-        $this->update_response_messages();
+        add_action( 'plugins_loaded', array( $this, 'update_response_messages' ) );
         
         add_action( 'wp_ajax_update_profile', array( $this, 'ajax_update_profile' ) );
         add_action( 'wp_ajax_update_profile_image', array( $this, 'ajax_update_profile_image' ) );
@@ -29,7 +29,7 @@ class Contributer_Profile {
      * TODO: Implement possibility to overide static messages/translations
      *       Add update messages options so user can populate them by himself using wp admin
      */
-    private function update_response_messages() {
+    public function update_response_messages() {
         $this->update_response_messages = array(
             'general_fail' => __( 'Something is wrong. Please try again later.', CONTR_PLUGIN_SLUG ),
             'invalid_email' => __( 'Invalid email. Please insert valid email and try again.', CONTR_PLUGIN_SLUG ),
