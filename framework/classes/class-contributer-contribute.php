@@ -142,7 +142,7 @@ class Contributer_Contribute {
                         'taxonomy' => 'category',
                         'orderby' => 'name', 
                         'hierarchical' => true, 
-                        'show_option_none' => __( 'Choose your Category' ),
+                        'show_option_none' => 'Choose your Category',
                         'name' => 'cat',
                         'id' => 'cat',
                         )

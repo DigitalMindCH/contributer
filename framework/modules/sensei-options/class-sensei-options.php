@@ -215,6 +215,12 @@ class Sensei_Options {
     
     
     
+    public function set_option( $option_id, $option_value ) {
+        $this->options[ $option_id ] = $option_value;
+    }
+    
+    
+    
     /**
      * Each option (checkbox, input, textarea etc..) will have own class which will handle
      * actions related with that option. This method constructs class name based on option type.

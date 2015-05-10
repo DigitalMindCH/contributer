@@ -5,33 +5,33 @@
  * ********************
  * $fields = array(
  * 
- *		array(
- *			'title' => 'Social Links',
- *          'fields' => array(
- *				array(
- *					'label' => 'Facebook',
- *					'id' => 'facebook',
- *					'type' => 'text',
- *					'desc' => 'Some kind of description'
- *				),
- *				array(
- *					'label' => 'Twitter',
- *					'id' => 'twitter',
- *					'type' => 'text',
- *					'desc' => 'Some kind of description'
- *				)
- *				array(
- *					'label' => 'Flickr',
- *					'id' => 'flickr',
- *					'type' => 'text',
- *					'desc' => 'Some kind of description'
- *				)
- *			)
- *		)
+ *  array(
+ *      'title' => 'Social Links',
+ *      'fields' => array(
+ *          array(
+ *              'label' => 'Facebook',
+ *              'id' => 'facebook',
+ *              'type' => 'text',
+ *              'desc' => 'Some kind of description'
+ *          ),
+ *          array(
+ *              'label' => 'Twitter',
+ *              'id' => 'twitter',
+ *              'type' => 'text',
+ *              'desc' => 'Some kind of description'
+ *          )
+ *          array(
+ *              'label' => 'Flickr',
+ *              'id' => 'flickr',
+ *              'type' => 'text',
+ *              'desc' => 'Some kind of description'
+ *          )
+ *	)
+ *  )
  * 
  * );
- * UserCustomFields( $fields );
+ * User_Custom_Fields( $fields );
  */
 
-require_once( 'UserCustomFields.php' );
+require_once( 'class-user-custom-fields.php' );
 

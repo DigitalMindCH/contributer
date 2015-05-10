@@ -3,26 +3,33 @@
 class Contributer_Profile {
 	
     public $user;
-    private $plugin_dir;
 
 
-    public function __construct( $plugin_dir  ) {
-        $this->plugin_dir = $plugin_dir;
+    /**
+     * Contributer Porofile constructore.
+     * This class will handle updates related with profile (updating profile information)
+     */
+    public function __construct() {
         add_action( 'wp_ajax_update_profile', array( $this, 'update_profile' ) );
         add_action( 'wp_ajax_update_profile_image', array( $this, 'ajax_update_profile_image' ) );
     }
 
-
+    
+    
+    /**
+     * This method is going to be invoked by shortcode.
+     * We are going to render profile page or login page if user is not logged in.
+     * 
+     * @return string(html content)
+     */
     public function contributer_profile() {
-
-        $this->google_plus_sign_in();
         
         if ( is_user_logged_in() ) {
             $this->user = wp_get_current_user();
             return $this->render_contributer_profile();
         }
         else {
-            $contributer_login_rendered = new Contributer_Login( $this->plugin_dir );
+            $contributer_login_rendered = new Contributer_Login();
             return $contributer_login_rendered->contributer_login();
         }
 
@@ -36,11 +43,10 @@ class Contributer_Profile {
             $profile_image_url = CONTR_URL_PATH . '/assets/img/default-profile-pic.jpg'; 
         }
         else {
-            $profile_image_url = wp_get_attachment_url($profile_image_id  );
+            $profile_image_url = wp_get_attachment_url( $profile_image_id  );
         }
         
         ob_start();
-        
         ?>
 
         <div id="profile-loader" class="overlay hidden_loader">
@@ -48,7 +54,7 @@ class Contributer_Profile {
                   <div class="ball"></div>
                   <div class="ball"></div>
                   <div class="ball"></div>
-                  <span>Updating profile</span>
+                  <span><?php _e( 'Updating profile', CONTR_PLUGIN_SLUG ) ?></span>
             </div>
         </div>
 
@@ -56,58 +62,65 @@ class Contributer_Profile {
         <p id="contributer-success" class="message-handler contributer-success"></p>
         <p id="contributer-notification" class="message-handler contributer-notification"></p>
 
+        <!-- profile pic starts-->
         <p class="contributer-profile-picture">
-            <h2 class="contributer-title contributer-image-title">Profile Picture</h2>  
+            <h2 class="contributer-title contributer-image-title">
+                <?php _e( 'Profile Picture', CONTR_PLUGIN_SLUG ); ?>
+            </h2>  
             <form id="file_form" action="" method="POST">
                 <input type="hidden" name="action" value="update_profile_image">
-                <?php wp_nonce_field( 'update-user'.$this->user->ID ); ?>
+                <?php wp_nonce_field( 'update-user-image', 'update_user_image_nonce' ); ?>
                 <div class="profile-image-container">
                     <img id="profile-image" src="<?php echo $profile_image_url; ?>" />
-                    <input type="file" id="profile-image-upload" name="profile-image-upload" class="hidden-upload" >
+                    <input type="file" id="profile-image-upload" name="profile-image-upload" class="hidden-upload">
                 </div>
             </form>
-            <p class="notice">Make sure to upload a square image for best-looking results.</p>
+            <p class="notice">
+                <?php _e( 'Make sure to upload a square image for best-looking results.', CONTR_PLUGIN_SLUG ); ?>
+            </p>
         </p>
         <!-- profile pic end-->
 
-        <h2 class="contributer-title contributer-form-title">Profile Information</h2>
+        <h2 class="contributer-title contributer-form-title">
+            <?php _e( 'Profile Information', CONTR_PLUGIN_SLUG ); ?>
+        </h2>
         <form id="profile-form" class="contributer-profile-container" method="POST" action="">
 
             <input type="hidden" name="action" value="update_profile" />
-            <?php wp_nonce_field( 'update-user'.$this->user->ID ); ?>
+            <?php wp_nonce_field( 'update-user', 'update_user_nonce' ); ?>
 
             <p>
-              <label for="bio">Bio</label>
-              <textarea name="bio" id="bio"><?php echo $this->user->description; ?></textarea>
+              <label for="bio"><?php _e( 'Bio', CONTR_PLUGIN_SLUG ); ?></label>
+              <textarea name="bio" id="bio"><?php echo esc_html( $this->user->description ); ?></textarea>
             </p>
 
             <p>
-              <label for="mail">Email</label>
-              <input id="mail" name="mail" required="required" value="<?php echo $this->user->user_email; ?>" type="text"/>
+              <label for="mail"><?php _e( 'Email', CONTR_PLUGIN_SLUG ); ?></label>
+              <input id="mail" name="mail" required="required" value="<?php echo esc_attr( $this->user->user_email ); ?>" type="text"/>
             </p>
 
             <p>
-              <label for="dn">Display Name</label>
-              <input id="dn" required="required" name="dn" type="text" value="<?php echo $this->user->display_name; ?>" />
+              <label for="dn"><?php _e( 'Display Name', CONTR_PLUGIN_SLUG ); ?></label>
+              <input id="dn" required="required" name="dn" type="text" value="<?php echo esc_attr( $this->user->display_name ); ?>" />
             </p>
 
             <p>
-              <label for="site">Website URL</label>
-              <input id="site" name="site" type="text" value="<?php echo $this->user->user_url; ?>" />
+              <label for="site"><?php _e( 'Website URL', CONTR_PLUGIN_SLUG ); ?></label>
+              <input id="site" name="site" type="text" value="<?php echo esc_attr( $this->user->user_url ); ?>" />
             </p>
 
             <p>
-              <label for="facebook">Facebook URL</label>
+              <label for="facebook"><?php _e( 'Facebook URL', CONTR_PLUGIN_SLUG ); ?></label>
               <input id="facebook" name="facebook" type="text" value="<?php echo esc_attr( get_the_author_meta( 'facebook', $this->user->ID ) ); ?>" />
             </p>
 
             <p>
-              <label for="twitter">Twitter URL</label>
+              <label for="twitter"><?php _e( 'Twitter URL', CONTR_PLUGIN_SLUG ); ?></label>
               <input id="twitter" name="twitter" type="text" value="<?php echo esc_attr( get_the_author_meta( 'twitter', $this->user->ID ) ); ?>" />
             </p>
 
             <p>
-              <label for="flickr">Flickr URL</label>
+              <label for="flickr"><?php _e( 'Flickr URL', CONTR_PLUGIN_SLUG ); ?></label>
               <input id="flickr" name="flickr" type="text" value="<?php echo esc_attr( get_the_author_meta( 'flickr', $this->user->ID ) ); ?>" />
             </p>
 
@@ -423,49 +436,5 @@ class Contributer_Profile {
                 'url' => $url
         );
 
-    }
-    
-    
-    public function google_plus_sign_in() {
-        
-        $google_client_id = Sensei_Options::get_instance()->get_option( 'google_app_id' );
-        $google_client_secret = Sensei_Options::get_instance()->get_option( 'google_app_secret' );
-        $google_redirect_url = Sensei_Options::get_instance()->get_option( 'redirect_login_url' );
-        
-        //include google api files
-        require_once $this->plugin_dir . '/framework/classes/google/autoload.php';
-        require_once $this->plugin_dir . '/framework/classes/google/Service/Oauth2.php';
-        
-        $gClient = new Google_Client();
-        $gClient->setApplicationName( 'Login to ' . home_url() );
-        $gClient->setClientId( $google_client_id );
-        $gClient->setClientSecret( $google_client_secret );
-        $gClient->setRedirectUri( $google_redirect_url );
-        $gClient->setScopes(array(
-            'https://www.googleapis.com/auth/plus.login',
-            'profile',
-            'email',
-            'openid',
-        ));
-
-        $google_oauthV2 = new Google_Service_OAuth2( $gClient );
-
-        if ( isset( $_GET['code'] ) && ! empty( $_GET['code'] ) ) { 
-            
-        }
-        else {
-            return;
-        }
-
-
-        ?>
-        <script type="text/javascript">
-            jQuery(document).ready(function($) { 
-                google_plus_login('<?php echo $_GET['code']; ?>');
-            });
-        </script>
-        <?php
-    }
-	
-	
+    }	
 }

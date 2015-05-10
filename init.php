@@ -10,6 +10,7 @@ Author URI: http://www.mersed.info
 //defining plugin path and plugin url
 define( 'CONTR_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CONTR_URL_PATH', plugin_dir_url( __FILE__ )  );
+define( 'CONTR_PLUGIN_SLUG', 'contributer_plugin'  );
 
 //including modules
 require_once( 'framework/modules/sensei-options/sensei-options.php' );

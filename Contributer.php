@@ -11,15 +11,14 @@ class Contributer {
 
         $this->plugin_directory = plugin_dir_path( $file );
         $this->plugin_url = plugin_dir_url( $file );
+        
+        add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
         //enque js scripts
         add_action( 'wp_enqueue_scripts', array( $this, 'load_js' ) );
 
         //enqeue css styles
         add_action( 'wp_enqueue_scripts', array( $this, 'load_css' ) );
-
-        //handling redirects
-        add_action( 'template_redirect', array( $this, 'redirect' ) );
 
         //add filter for custom avatars
         add_filter( 'get_avatar' , array( $this, 'contributer_avatar' ) , 1 , 5 );
@@ -33,11 +32,20 @@ class Contributer {
         $contribute_renderer = new Contributer_Contribute( $this->plugin_directory );
         add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
 
-        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options() );
+        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
+        Sensei_Options::get_instance()->set_option( 'plugin_dir', $this->plugin_directory );
         $this->register_user_custom_fields();
     }
 
-        
+       
+    
+    /**
+     * Load plugin textdomain.
+     */
+    public function load_textdomain() {
+        load_plugin_textdomain( CONTR_PLUGIN_SLUG, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+    }
+    
         
     public function contributer_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
         $user = false;
@@ -77,6 +85,7 @@ class Contributer {
     }
 
 
+    
     public function load_js() {
 
         if ( is_user_logged_in() ) {
@@ -95,28 +104,6 @@ class Contributer {
             ));
         }
     }
-
-
-	public function redirect() {
-            if ( ! is_singular() ) {
-                return;
-            }
-
-            // if user is registered and logged in, and if user wants to visit page where login form resides, 
-            //in that case we are going to redirect user to the homepage
-            global $post;
-            if ( ! empty( $post->post_content ) ) {
-                    $regex = get_shortcode_regex();
-                    preg_match_all( '/'.$regex.'/', $post->post_content, $matches );
-                    if ( 
-                            ! empty( $matches[2] ) && 
-                            in_array( 'contributer_login', $matches[2] ) && 
-                            is_user_logged_in() 
-                    ){
-                            wp_redirect( home_url() );
-                    }
-            }
-	}
 	
 
     public function define_page_options() {
@@ -141,7 +128,7 @@ class Contributer {
                             'desc'  => 'Redirect url is place where user will be transfered after loggin is successfull. Homepage is default.',
                             'type'  => 'text',
                             'value'   => home_url(),
-                        ),
+                        )
                     )
                 ),
                 //tab registration
@@ -185,39 +172,39 @@ class Contributer {
     }
 
 
-	private function register_user_custom_fields() {
-		$fields = array( 
-			array(
-				'title' => 'Social Links',
-				'fields' => array(
-					array(
-						'label' => 'Facebook',
-						'id' => 'facebook',
-						'type' => 'text',
-						'desc' => 'Please enter your facebook link.'
-					),
-					array(
-						'label' => 'Twitter',
-						'id' => 'twitter',
-						'type' => 'text',
-						'desc' => 'Please enter your twitter link.'
-					),
-					array(
-						'label' => 'Flickr',
-						'id' => 'flickr',
-						'type' => 'text',
-						'desc' => 'Please enter your flickr link.'
-					),
-				),
-			), 
-		);
-		new UserCustomFields( $fields );
-	}
+    private function register_user_custom_fields() {
+        $fields = array( 
+            array(
+                'title' => 'Social Links',
+                'fields' => array(
+                    array(
+                        'label' => 'Facebook',
+                        'id' => 'facebook',
+                        'type' => 'text',
+                        'desc' => 'Please enter your facebook link.'
+                    ),
+                    array(
+                        'label' => 'Twitter',
+                        'id' => 'twitter',
+                        'type' => 'text',
+                        'desc' => 'Please enter your twitter link.'
+                    ),
+                    array(
+                        'label' => 'Flickr',
+                        'id' => 'flickr',
+                        'type' => 'text',
+                        'desc' => 'Please enter your flickr link.'
+                    ),
+                ),
+            ), 
+        );
+        new User_Custom_Fields( $fields );
+    }
 	
 	
-	public static function anyone_can_register() {
-		return true;
-	}
+    public static function anyone_can_register() {
+        return true;
+    }
 
 }
 
