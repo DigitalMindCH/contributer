@@ -3,7 +3,8 @@ jQuery(document).ready(function($) {
     var featured_image_data_raw = {};
     var gallery_image_data_raw = {};
 	
-    //when form for saving option is submited
+        
+    //submited profile update
     $( "#profile-form" ).submit(function( event ) {
         $(".message-handler").hide();
         $("#profile-loader").removeClass('hidden_loader');
@@ -28,8 +29,35 @@ jQuery(document).ready(function($) {
         event.preventDefault();
     });
     
+    //submit on profile image change
+    $("#profile-image-upload").on("change", function() {
+        $("#file_form").submit();
+    });
+    $('#file_form').ajaxForm({
+        url: contributer_object.ajaxurl,
+        type: 'POST',
+        contentType: 'json',
+        success: function( data ){
+            if ( data.status ) {
+                $("#profile-image").attr("src", data.image_url );
+                $("#contributer-success").html( data.message );
+                $("#contributer-success").show();
+            }
+            else {
+                $("#contributer-failure").html( data.message );
+                $("#contributer-failure").show();
+            }
+            $("html, body").animate( { scrollTop: 0 }, "slow" );
+            $("#profile-loader").addClass('hidden_loader');
+        },
+        beforeSubmit: function( data ) {
+            $(".message-handler").hide();
+            $("#profile-loader").removeClass('hidden_loader');
+        }
+    });
     
-    //when form for saving option is submited
+    
+    //submited 
     $( "#contributer-editor" ).submit(function( event ) {
         $(".message-handler").hide();
         
@@ -86,33 +114,7 @@ jQuery(document).ready(function($) {
     });
 
     	
-    //submit on profile image change
-    $("#profile-image-upload").on("change", function() {
-        $("#file_form").submit();
-    });	
-    //handling upload of profile image (nr)
-    var form_data = {};
-    $('#file_form').find('input').each(function(){
-        form_data[this.name] = $(this).val();
-    });
-    $('#file_form').ajaxForm({
-        url: contributer_object.ajaxurl,
-        data: form_data,
-        type: 'POST',
-        contentType: 'json',
-        success: function( data ){
-            if ( data.status ) {
-                $("#profile-image").attr("src", data.image_url )
-            }
-            else {
-                alert( data.message );
-            }
-            $("#profile-loader").addClass('hidden_loader');
-        },
-        beforeSubmit: function( data ) {
-            $("#profile-loader").removeClass('hidden_loader');
-        }
-    });
+    
    
     
     //featured image drag and drop handlers

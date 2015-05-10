@@ -10,6 +10,7 @@ class Contributer {
     public function __construct( $file ) {
 
         $this->plugin_directory = plugin_dir_path( $file );
+        $this->plugin_directory_rel = dirname( plugin_basename( $file ) );
         $this->plugin_url = plugin_dir_url( $file );
         
         add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
@@ -43,7 +44,7 @@ class Contributer {
      * Load plugin textdomain.
      */
     public function load_textdomain() {
-        load_plugin_textdomain( CONTR_PLUGIN_SLUG, false, $this->plugin_directory . '/languages' ); 
+        load_plugin_textdomain( CONTR_PLUGIN_SLUG, false, $this->plugin_directory_rel . '/languages/' ); 
     }
     
         

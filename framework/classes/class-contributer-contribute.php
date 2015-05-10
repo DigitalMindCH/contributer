@@ -285,7 +285,7 @@ class CCStandardFormat {
                 'post_status' => 'inherit'
             );
             
-            $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
+            $upload = wp_handle_upload( $file, array( 'test_form' => false, 'mimes' => array( 'gif' => 'image/gif', 'png' => 'image/png', 'jpg|jpeg|jpe' => 'image/jpeg' ) ) );
             if ( $upload && ! isset( $upload['error'] ) ) {
                 $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
                 $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
@@ -420,7 +420,7 @@ class CCImageFormat {
                 'post_status' => 'inherit'
             );
             
-            $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
+            $upload = wp_handle_upload( $file, array( 'test_form' => false, 'mimes' => array( 'gif' => 'image/gif', 'png' => 'image/png', 'jpg|jpeg|jpe' => 'image/jpeg' ) ) );
             if ( $upload && ! isset( $upload['error'] ) ) {
                 $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
                 $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
@@ -573,7 +573,7 @@ class CCVideoFormat {
                 'post_status' => 'inherit'
             );
             
-            $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
+            $upload = wp_handle_upload( $file, array( 'test_form' => false, 'mimes' => array( 'gif' => 'image/gif', 'png' => 'image/png', 'jpg|jpeg|jpe' => 'image/jpeg' ) ) );
             if ( $upload && ! isset( $upload['error'] ) ) {
                 $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
                 $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
@@ -751,7 +751,7 @@ class CCGalleryFormat {
                 'post_status' => 'inherit'
             );
             
-            $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
+            $upload = wp_handle_upload( $file, array( 'test_form' => false, 'mimes' => array( 'gif' => 'image/gif', 'png' => 'image/png', 'jpg|jpeg|jpe' => 'image/jpeg' ) ) );
             if ( $upload && ! isset( $upload['error'] ) ) {
                 $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
                 $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );
@@ -802,7 +802,7 @@ class CCGalleryFormat {
                 'post_status' => 'inherit'
             );
             
-            $upload = wp_handle_upload( $file, array( 'test_form' => false ) );
+            $upload = wp_handle_upload( $file, array( 'test_form' => false, 'mimes' => array( 'gif' => 'image/gif', 'png' => 'image/png', 'jpg|jpeg|jpe' => 'image/jpeg' ) ) );
             if ( $upload && ! isset( $upload['error'] ) ) {
                 $attach_id = wp_insert_attachment( $attachment, $upload['file'] );
                 $attach_data = wp_generate_attachment_metadata( $attach_id, $upload['file'] );

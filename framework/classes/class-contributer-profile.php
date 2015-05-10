@@ -1,17 +1,56 @@
 <?php
 
+//TODO: If email is changed, send update to new email
+//TODO: Implement possibility to add custom user fields dynamicly (for update and display)
 class Contributer_Profile {
 	
     public $user;
+    
+    private $update_response_messages = array();
 
-
+    
     /**
      * Contributer Porofile constructore.
      * This class will handle updates related with profile (updating profile information)
      */
     public function __construct() {
-        add_action( 'wp_ajax_update_profile', array( $this, 'update_profile' ) );
+        $this->update_response_messages();
+        
+        add_action( 'wp_ajax_update_profile', array( $this, 'ajax_update_profile' ) );
         add_action( 'wp_ajax_update_profile_image', array( $this, 'ajax_update_profile_image' ) );
+    }
+    
+    
+    
+    /**
+     * This method will populate $update_response_messages we are going to use when 
+     * someone preform profile update. Placing those in separated method for easier maintainenance
+     * 
+     * TODO: Implement possibility to overide static messages/translations
+     *       Add update messages options so user can populate them by himself using wp admin
+     */
+    private function update_response_messages() {
+        $this->update_response_messages = array(
+            'general_fail' => __( 'Something is wrong. Please try again later.', CONTR_PLUGIN_SLUG ),
+            'invalid_email' => __( 'Invalid email. Please insert valid email and try again.', CONTR_PLUGIN_SLUG ),
+            'email_exists' => __( 'Email you inserted already exists. Please choose another email and try again.', CONTR_PLUGIN_SLUG ),
+            'empty_display_name' => __( 'You did not insert display name. Please insert your display name and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_display_name' => __( 'Invalid display name. Please insert different display name and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_site' => __( 'Invalid site url. Please insert valid site url and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_facebook' => __( 'Invalid facebook url. Please insert valid facebook url and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_twitter' => __( 'Invalid twitter url. Please insert valid twitter url and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_flickr' => __( 'Invalid flickr url. Please insert valid flickr url and try again.', CONTR_PLUGIN_SLUG ),
+            'user_updated' => __( 'User updated.', CONTR_PLUGIN_SLUG ),
+            'upload_dir_permissions' => __( 'Upload directory is not writeable. Please contact administrator.', CONTR_PLUGIN_SLUG ),
+            'upload_service_down' => __( 'Uploading service is currently unavailable. Please try again later.', CONTR_PLUGIN_SLUG ),
+            'image_uploaded' => __( 'Image successfully uploaded.', CONTR_PLUGIN_SLUG )
+        );
+    }
+    
+    
+    
+    private function get_response_message( $key ) {
+        return $this->update_response_messages[ $key ];
     }
 
     
@@ -36,6 +75,13 @@ class Contributer_Profile {
     }
 	
 	
+    
+    /**
+     * This method contains html content which we are going to render
+     * when contributer_profile shortcode is used.
+     * 
+     * @return string - html content
+     */
     public function render_contributer_profile() {
 
         $profile_image_id = get_user_meta( $this->user->ID, 'profile_image_attachment_id', true );
@@ -69,7 +115,7 @@ class Contributer_Profile {
             </h2>  
             <form id="file_form" action="" method="POST">
                 <input type="hidden" name="action" value="update_profile_image">
-                <?php wp_nonce_field( 'update-user-image', 'update_user_image_nonce' ); ?>
+                <?php wp_nonce_field( 'update-user-image-' . $this->user->ID, 'update_user_image_nonce' ); ?>
                 <div class="profile-image-container">
                     <img id="profile-image" src="<?php echo $profile_image_url; ?>" />
                     <input type="file" id="profile-image-upload" name="profile-image-upload" class="hidden-upload">
@@ -87,7 +133,7 @@ class Contributer_Profile {
         <form id="profile-form" class="contributer-profile-container" method="POST" action="">
 
             <input type="hidden" name="action" value="update_profile" />
-            <?php wp_nonce_field( 'update-user', 'update_user_nonce' ); ?>
+            <?php wp_nonce_field( 'update-user-' . $this->user->ID, 'update_user_nonce' ); ?>
 
             <p>
               <label for="bio"><?php _e( 'Bio', CONTR_PLUGIN_SLUG ); ?></label>
@@ -135,9 +181,120 @@ class Contributer_Profile {
         $html_output = ob_get_clean();
         return $html_output;
     }
-	
-	
-    public function update_profile() {
+    
+    
+    
+    /**
+     * This method will validate email, and will return status/message/new email
+     * 
+     * @param string $old_email
+     * @return array
+     */
+    private function check_email( $old_email ) {
+
+        $email =  filter_input( INPUT_POST, 'mail', FILTER_VALIDATE_EMAIL );
+
+        //check is email valid
+        if ( FALSE === $email ) {
+            return array( 
+                'status' => false, 
+                'message'=> $this->get_response_message( 'invalid_email' ) 
+            );
+        }
+
+        //check does email already exists
+        if ( $old_email != $email && email_exists( $email ) ) {
+            return array( 
+                'status' => false, 
+                'message'=> $this->get_response_message( 'email_exists' )
+            );
+        }
+
+        return array(
+            'status' => true,
+            'message' => '',
+            'email' => $email
+        );
+    }
+    
+    
+    
+    /**
+     * This method will validate display name we posted via ajax
+     * 
+     * @return array
+     */
+    private function check_display_name() {
+
+        $display_name = filter_input( INPUT_POST, 'dn' );
+        if ( empty( $display_name ) ) {
+            return array( 
+                'status' => false, 
+                'message'=> $this->get_response_message( 'empty_display_name' ) 
+            );
+        }
+
+        if ( ! preg_match('/^[a-z0-9 .\-]+$/i', $display_name ) ) {
+            return array( 
+                'status' => false, 
+                'message'=> $this->get_response_message( 'invalid_display_name' ) 
+            );
+        }
+
+        return array(
+            'status' => true,
+            'message' => '',
+            'dn' => $display_name
+        );
+
+    }
+    
+    
+    
+    /**
+     * This method will validate url.
+     * 
+     * TODO: Implement separate validation for each of the social links.
+     * 
+     * @param string $field_name
+     * @return array
+     */
+    private function url_check( $field_name ) {
+
+        $url = '';
+        
+        if ( ! empty( $_POST[ $field_name ] ) ) {
+            
+            $url = filter_input( INPUT_POST, $field_name, FILTER_VALIDATE_URL );
+
+            //check is url valid
+            if ( FALSE === $url ) {
+                return array( 
+                    'status' => false, 
+                    'message'=> $this->get_response_message( 'invalid_url_' . $field_name )
+                );
+            }
+        }
+        
+        return array(
+                'status' => true,
+                'message' => '',
+                'url' => $url
+        );
+
+    }
+
+    
+    
+    /************************ AJAX METHODS **************************************/
+    /****************************************************************************/
+    
+
+    
+    /**
+     * Ajax method where we are handling profile update.
+     */
+    public function ajax_update_profile() {
 
         $email = '';
         $display_name = '';
@@ -146,6 +303,11 @@ class Contributer_Profile {
         $twitter_url = '';
         $flickr_url = '';
         $current_user = wp_get_current_user();
+        
+        //before everything, lets check nonce. If that fails do not proceed
+        if ( ! check_ajax_referer( 'update-user-'. $current_user->ID , 'update_user_nonce', false ) ) {
+            $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
+        }
 
         //email check
         $email_check = $this->check_email( $current_user->user_email );
@@ -207,6 +369,7 @@ class Contributer_Profile {
             'ID' => $current_user->ID,
         );
 
+        //update only what changed
         if ( $current_user->user_email != $email ) {
             $update_user_properties = true;
             $args['user_email'] = $email;
@@ -231,31 +394,17 @@ class Contributer_Profile {
             wp_update_user( $args );
         }
 
-
         //saving user metadata
         update_user_meta( $current_user->ID, 'facebook', $fb_url ); 
         update_user_meta( $current_user->ID, 'twitter', $twitter_url ); 
         update_user_meta( $current_user->ID, 'flickr', $flickr_url ); 
 
-        $this->send_json_output( true, 'User updated' );
+        $this->send_json_output( true, $this->get_response_message( 'user_updated' ) );
     }
     
     
-    /**
-     * Upadting profile image using ajax
-     * 
-     * @uses object $wpdb
-     * @uses wp_upload_dir()
-     * @uses is_writeable()
-     * @uses send_json_output()
-     * @uses wp_handle_upload()
-     * @uses wp_get_image_editor()
-     * @uses is_wp_error()
-     * @uses wp_get_current_user()
-     * @uses update_user_meta()
-     * 
-     * @return type
-     */
+
+    //TODO: Improve image uploader. Consider using/adjusting third party scripts with possibility to show progress
     public function ajax_update_profile_image() {
 
         $status = true;
@@ -263,9 +412,15 @@ class Contributer_Profile {
         $image_url = '';
         $upload_dir = wp_upload_dir();
         global $wpdb;
+        $current_user = wp_get_current_user();
+        
+        //before everything, lets check nonce. If that fails do not proceed
+        if ( ! check_ajax_referer( 'update-user-image-'. $current_user->ID , 'update_user_image_nonce', false ) ) {
+            $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
+        }
         
         //checking ajax
-        if ( ! ( is_array( $_POST ) && is_array( $_FILES ) && defined( 'DOING_AJAX' ) && DOING_AJAX ) ){
+        if ( ! ( is_array( $_POST ) && is_array( $_FILES ) ) ){
             return;
         }
 
@@ -274,18 +429,13 @@ class Contributer_Profile {
             require_once( ABSPATH . 'wp-admin/includes/file.php' );
         }
         
-        
         if ( ! is_writeable( $upload_dir['path'] ) ) {
-            $this->send_json_output( false, 'Upload directory is not writeable. Please update your permissions and try again.' );
+            $this->send_json_output( false, $this->get_response_message( 'upload_dir_permissions' ) );
         }
         
         foreach( $_FILES as $file ) {
-                 
-            if ( empty( $file['type'] ) || ! preg_match('/(jpe?g|gif|png)$/i', $file['type'] ) ) {
-                $this->send_json_output( false, 'Invalid image format. Jpg, gif and png are allowed.' );
-            }
             
-            $file_info = wp_handle_upload( $file, array('test_form' => false) );
+            $file_info = wp_handle_upload( $file, array('test_form' => false, 'mimes' => array( 'gif' => 'image/gif', 'png' => 'image/png', 'jpg|jpeg|jpe' => 'image/jpeg' ) ) );
 
             if ( $file_info && ! isset( $file_info['error'] ) ) {
                 $status = true;
@@ -314,24 +464,25 @@ class Contributer_Profile {
 
                     $attach_metadata = wp_generate_attachment_metadata( $attach_id, $file_info['file'] );
                     wp_update_attachment_metadata( $attach_id, $attach_metadata );
-                    $current_user = wp_get_current_user();
                     update_user_meta( $current_user->ID, 'profile_image_attachment_id', $attach_id );
-                } 
+                    $image_url = $file_info['url'];
+                    $message = $this->get_response_message( 'image_uploaded' );
+                }
                 else {
                     $status = false;
-                    $message = 'Uploading service is currently unavailable. Please try again later.';
+                    $message = $this->get_response_message( 'upload_service_down' );
                 }
             }
             else {
                 $status = false;
-                $message = $file_info['error'];
+                $message = $file_info['error']; //non trans. error
             }
         }
 
         $return_array = array(
             'status' => $status,
             'message' => $message,
-            'image_url' => $file_info['url']
+            'image_url' => $image_url
         );
 
         wp_send_json( $return_array );
@@ -347,94 +498,5 @@ class Contributer_Profile {
 
         wp_send_json( $return_array );
     }
-	
-	
-	
-    private function check_email( $old_email ) {
-
-        $email =  filter_input( INPUT_POST, 'mail', FILTER_VALIDATE_EMAIL );
-
-        //check is email valid
-        if ( FALSE === $email ) {
-            return array( 
-                'status' => false, 
-                'message'=> 'Invalid email. Please insert valid email and try again.' 
-            );
-        }
-
-        //check does email already exists
-        if ( $old_email != $email && email_exists( $email ) ) {
-            return array( 
-                'status' => false, 
-                'message'=> 'Email you inserted already exists. Please choose another email and try again.' 
-            );
-        }
-
-        return array(
-            'status' => true,
-            'message' => '',
-            'email' => $email
-        );
-    }
-
-
-
-    private function check_display_name() {
-
-        $display_name = filter_input( INPUT_POST, 'dn' );
-        if ( empty( $display_name ) ) {
-            return array( 
-                'status' => false, 
-                'message'=> 'You did not insert display name. Please insert your display name and try again.' 
-            );
-        }
-
-        if ( ! preg_match('/^[a-z0-9 .\-]+$/i', $display_name ) ) {
-            return array( 
-                'status' => false, 
-                'message'=> 'Invalid display name. Please insert different display name and try again.' 
-            );
-        }
-
-        return array(
-            'status' => true,
-            'message' => '',
-            'dn' => $display_name
-        );
-
-    }
-	
-	
-	
-    private function url_check( $field_name ) {
-
-        $url = '';
-        
-        $message_parameters = array(
-            'site' => 'Website URL',
-            'facebook' => 'Facebook URL',
-            'twitter' => 'Twitter URL',
-            'flickr' => 'Flickr URL'
-        );
-        
-        if ( ! empty( $_POST[ $field_name ] ) ) {
-            
-            $url = filter_input( INPUT_POST, $field_name, FILTER_VALIDATE_URL );
-
-            //check is url valid
-            if ( FALSE === $url ) {
-                return array( 
-                    'status' => false, 
-                    'message'=> 'Invalid ' . $message_parameters[$field_name] . '. Please insert valid url and try again.' 
-                );
-            }
-        }
-        
-        return array(
-                'status' => true,
-                'message' => '',
-                'url' => $url
-        );
-
-    }	
+    
 }
