@@ -43,7 +43,7 @@ class Contributer {
      * Load plugin textdomain.
      */
     public function load_textdomain() {
-        load_plugin_textdomain( CONTR_PLUGIN_SLUG, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+        load_plugin_textdomain( CONTR_PLUGIN_SLUG, false, $this->plugin_directory . '/languages' ); 
     }
     
         
