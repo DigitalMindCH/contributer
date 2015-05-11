@@ -58,12 +58,13 @@ jQuery(document).ready(function($) {
     
     
     //submited 
+    //TODO: Handle submiting more dynamicly. Maybe to implement js objects per option type?
     $( "#contributer-editor" ).submit(function( event ) {
         $(".message-handler").hide();
         
         var ce_data = new FormData();
                 
-        $('#contributer-editor').find('#action, #title, #cat, #post-content, #vid-url, #tags').each(function(){
+        $('#contributer-editor').find('#action, #title, #add_post_nonce, #cat, #post-content, #vid-url, #tags').each(function(){
             ce_data.append( this.name, $(this).val() );
         });
         

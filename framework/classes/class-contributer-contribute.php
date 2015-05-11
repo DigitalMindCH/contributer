@@ -2,9 +2,11 @@
 
 class Contributer_Contribute {
     
+    private $update_response_messages = array();
     
     
     public function __construct() {
+        add_action( 'plugins_loaded', array( $this, 'update_response_messages' ) );
         add_action( 'wp_ajax_add_post', array( $this, 'add_post' ) );
     }
 	
@@ -21,11 +23,33 @@ class Contributer_Contribute {
         }
 
     }
+    
+    
+    
+    /**
+     * This method will populate $update_response_messages we are going to use when 
+     * someone preform profile update. Placing those in separated method for easier maintainenance
+     * 
+     * TODO: Implement possibility to overide static messages/translations
+     *       Add update messages options so user can populate them by himself using wp admin
+     */
+    public function update_response_messages() {
+        $this->update_response_messages = array(
+            'general_fail' => __( 'You are not allowed to add post. Please try again later.', CONTR_PLUGIN_SLUG ),
+        );
+    }
+    
+    
+    
+    private function get_response_message( $key ) {
+        return $this->update_response_messages[ $key ];
+    }
 
     
 	
     public function render_contributer_contribute() {
 
+        $current_user = wp_get_current_user();
         ob_start();
         ?>
 
@@ -45,6 +69,8 @@ class Contributer_Contribute {
         <form id="contributer-editor" class="contributer-editor">
 
             <input type="hidden" id="action" name="action" value="add_post" />
+            
+            <?php wp_nonce_field( 'add-post-' . $current_user->ID, 'add_post_nonce' ); ?>
 
             <!-- post title -->
             <p>
@@ -162,6 +188,17 @@ class Contributer_Contribute {
     
     public function add_post() {
 
+        $current_user = wp_get_current_user();
+        //validate nonce. If that fails, do not proceed
+        if ( ! check_ajax_referer( 'add-post-'. $current_user->ID , 'add_post_nonce', false ) ) {
+            $return_array = array(
+                'status' => false,
+                'message' => $this->get_response_message( 'general_fail' ),
+            );
+
+            wp_send_json( $return_array );
+        }
+        
         $post_format = 'standard';
         $allowed_formats = array( 'standard', 'video', 'image', 'gallery' );
         
