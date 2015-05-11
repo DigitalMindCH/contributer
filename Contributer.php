@@ -131,7 +131,7 @@ class Contributer {
                             'value'   => home_url(),
                         ),
                         array(
-                            'name' => 'Chechbox button test',
+                            'name' => 'Chechbox button, that directs the two underneath',
                             'id' => 'option_id_checkbox',
                             'desc'  => 'Checkbox button description (olala)',
                             'type'  => 'checkbox',
@@ -165,11 +165,18 @@ class Contributer {
                             'id' => 'option_id_select_page',
                             'type' => 'select_posts',
                             'desc' => 'This page will be the page where user will be redirected after he/she clicks on the link which we are going to send to their email.',
-                            'post_type' => 'post',
+                            'post_type' => array('page', 'post'),
                             'condition' => array(
                                 'type' => 'option',
                                 'value' => 'option_id_checkbox'
                             )
+                        ),
+                        array(
+                            'name' => 'Option name (label)',
+                            'id' => 'option_id',
+                            'desc'  => 'Option description',
+                            'type'  => 'wysiwyg',
+                            'value'   => 'test',
                         ),
                     )
                 ),
