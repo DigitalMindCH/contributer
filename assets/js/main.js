@@ -114,9 +114,6 @@ jQuery(document).ready(function($) {
     });
 
     	
-    
-   
-    
     //featured image drag and drop handlers
     $('#featured-image-upload-area').on('dragover', function (e) {
         e.stopPropagation();

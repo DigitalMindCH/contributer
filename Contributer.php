@@ -27,10 +27,10 @@ class Contributer {
         $login_renderer = new Contributer_Login( $this->plugin_directory );
         add_shortcode( 'contributer_login', array( $login_renderer, 'contributer_login' ) );
 
-        $profile_renderer = new Contributer_Profile( $this->plugin_directory );
+        $profile_renderer = new Contributer_Profile();
         add_shortcode( 'contributer_profile', array( $profile_renderer, 'contributer_profile' ) );
 
-        $contribute_renderer = new Contributer_Contribute( $this->plugin_directory );
+        $contribute_renderer = new Contributer_Contribute();
         add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
 
         new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
@@ -129,7 +129,48 @@ class Contributer {
                             'desc'  => 'Redirect url is place where user will be transfered after loggin is successfull. Homepage is default.',
                             'type'  => 'text',
                             'value'   => home_url(),
-                        )
+                        ),
+                        array(
+                            'name' => 'Chechbox button test',
+                            'id' => 'option_id_checkbox',
+                            'desc'  => 'Checkbox button description (olala)',
+                            'type'  => 'checkbox',
+                            'value'   => false,
+                        ),
+                        array(
+                            'name' => 'Checkbox button 2 (depends on chekbox button from above)',
+                            'id' => 'option_id_checkbox2',
+                            'desc'  => 'Checkbox button which depends of other checkbox button',
+                            'type'  => 'checkbox',
+                            'value'   => false,
+                            'condition' => array(
+                                'type' => 'option',
+                                'value' => 'option_id_checkbox',
+                            )
+                        ),
+                        array(
+                            'name' => 'Checkbox button 3 (depends on chekbox button from above with different disabled type)',
+                            'id' => 'option_id_checkbox3',
+                            'desc'  => 'Checkbox button which depends of other checkbox button',
+                            'type'  => 'checkbox',
+                            'value'   => false,
+                            'condition' => array(
+                                'type' => 'option',
+                                'value' => 'option_id_checkbox',
+                                'disabled_type' => 'hidden'
+                            )
+                        ),
+                        array(
+                            'name' => 'Select a page',
+                            'id' => 'option_id_select_page',
+                            'type' => 'select_posts',
+                            'desc' => 'This page will be the page where user will be redirected after he/she clicks on the link which we are going to send to their email.',
+                            'post_type' => 'post',
+                            'condition' => array(
+                                'type' => 'option',
+                                'value' => 'option_id_checkbox'
+                            )
+                        ),
                     )
                 ),
                 //tab registration

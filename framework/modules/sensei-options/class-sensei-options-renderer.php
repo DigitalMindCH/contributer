@@ -31,7 +31,7 @@ class Sensei_Options_Renderer {
 
         if ( is_object( $option_object ) && null != $option_object ) {
             ?>
-            <div class="sensei-option-container <?php echo sanitize_html_class( $dynamic_container_classes ); ?>">
+            <div class="sensei-option-container <?php echo $dynamic_container_classes; ?>">
                 <?php
                     // @codingStandardsIgnoreStart
                     echo $option_object->render();

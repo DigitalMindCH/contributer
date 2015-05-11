@@ -1,15 +1,14 @@
 <?php
 
 class Contributer_Contribute {
-	
-    private $plugin_dir;
     
-    public function __construct( $plugin_dir ) {
-        $this->plugin_dir = $plugin_dir;
+    
+    
+    public function __construct() {
         add_action( 'wp_ajax_add_post', array( $this, 'add_post' ) );
     }
 	
-	
+
     
     public function contributer_contribute() {
 
@@ -17,7 +16,7 @@ class Contributer_Contribute {
             return $this->render_contributer_contribute();
         }
         else {
-            $contributer_login_rendered = new Contributer_Login( $this->plugin_dir );
+            $contributer_login_rendered = new Contributer_Login();
             return $contributer_login_rendered->contributer_login();
         }
 
@@ -35,7 +34,7 @@ class Contributer_Contribute {
                   <div class="ball"></div>
                   <div class="ball"></div>
                   <div class="ball"></div>
-                  <span>Saving</span>
+                  <span><?php _e( 'Saving', CONTR_PLUGIN_SLUG ); ?></span>
             </div>
         </div>
 
