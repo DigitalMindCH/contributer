@@ -31,17 +31,17 @@ class Contributer_Profile {
      */
     public function update_response_messages() {
         $this->update_response_messages = array(
-            'general_fail' => __( 'Something is wrong. Please try again later.', CONTR_PLUGIN_SLUG ),
-            'invalid_email' => __( 'Invalid email. Please insert valid email and try again.', CONTR_PLUGIN_SLUG ),
-            'email_exists' => __( 'Email you inserted already exists. Please choose another email and try again.', CONTR_PLUGIN_SLUG ),
-            'empty_display_name' => __( 'You did not insert display name. Please insert your display name and try again.', CONTR_PLUGIN_SLUG ),
+            'general_fail' => __( 'Something went wrong. Please try again later.', CONTR_PLUGIN_SLUG ),
+            'invalid_email' => __( 'Invalid email. Please insert a valid email address and try again.', CONTR_PLUGIN_SLUG ),
+            'email_exists' => __( 'The email you inserted already exists. Please choose another email address and try again.', CONTR_PLUGIN_SLUG ),
+            'empty_display_name' => __( 'You did not insert a display name. Please insert your display name and try again.', CONTR_PLUGIN_SLUG ),
             'invalid_display_name' => __( 'Invalid display name. Please insert different display name and try again.', CONTR_PLUGIN_SLUG ),
-            'invalid_url_site' => __( 'Invalid site url. Please insert valid site url and try again.', CONTR_PLUGIN_SLUG ),
-            'invalid_url_facebook' => __( 'Invalid facebook url. Please insert valid facebook url and try again.', CONTR_PLUGIN_SLUG ),
-            'invalid_url_twitter' => __( 'Invalid twitter url. Please insert valid twitter url and try again.', CONTR_PLUGIN_SLUG ),
-            'invalid_url_flickr' => __( 'Invalid flickr url. Please insert valid flickr url and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_site' => __( 'Invalid site URL. Please insert a valid site URL and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_facebook' => __( 'Invalid facebook URL. Please insert a valid facebook URL and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_twitter' => __( 'Invalid twitter URL. Please insert a valid twitter URL and try again.', CONTR_PLUGIN_SLUG ),
+            'invalid_url_flickr' => __( 'Invalid flickr URL. Please insert a valid flickr URL and try again.', CONTR_PLUGIN_SLUG ),
             'user_updated' => __( 'User updated.', CONTR_PLUGIN_SLUG ),
-            'upload_dir_permissions' => __( 'Upload directory is not writeable. Please contact administrator.', CONTR_PLUGIN_SLUG ),
+            'upload_dir_permissions' => __( 'Upload directory is not writeable. Please contact an administrator.', CONTR_PLUGIN_SLUG ),
             'upload_service_down' => __( 'Uploading service is currently unavailable. Please try again later.', CONTR_PLUGIN_SLUG ),
             'image_uploaded' => __( 'Image successfully uploaded.', CONTR_PLUGIN_SLUG )
         );
