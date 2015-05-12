@@ -1,5 +1,26 @@
 jQuery(document).ready(function($) {
-	
+    // turn checkboxes into switches
+    $('.field-checkbox').each(function() {
+        $(this).wrap('<div class="switch"></div>');
+    });
+    $('.switch').prepend('<div class="ball"></div>');
+
+    if ($('input[type="checkbox"]').prop('checked')) {
+        $('input[type="checkbox"]:checked').parent().addClass('on');
+    } else {
+        $('input[type="checkbox"]:checked').parent().removeClass('on');
+    }
+
+    $('.switch').click(function() {
+        $(this).children('input[type="checkbox"]:checked').parent().removeClass('on');
+        $(this).children('input[type="checkbox"]').trigger('click');
+        if ($(this).children('input[type="checkbox"]').prop('checked')) {
+            $(this).children('input[type="checkbox"]:checked').parent().addClass('on');
+        } else {
+            $(this).children('input[type="checkbox"]:checked').parent().removeClass('on');
+        }
+    });
+
     //tab click (switching tabs)
     $( ".sensei-tab" ).click(function() {
         $( ".sensei-tab" ).removeClass( "tab-selected" );
