@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: contributer-plugin\n"
 "POT-Creation-Date: 2015-05-11 01:28+0100\n"
-"PO-Revision-Date: 2015-05-11 01:32+0100\n"
+"PO-Revision-Date: 2015-05-12 17:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,112 +16,120 @@ msgstr ""
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:34
 msgid "Something is wrong. Please try again later."
-msgstr "Something is wrong. Please try again later. (german)"
+msgstr "Etwas ist schief gelaufen. Bitte versuche es später noch einmal."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:35
 msgid "Invalid email. Please insert valid email and try again."
-msgstr "Invalid email. Please insert valid email and try again. (german)"
+msgstr ""
+"Ungültige E-Mail Adresse. Gib eine gültige Adresse ein und versuche es "
+"erneut."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:36
 msgid ""
 "Email you inserted already exists. Please choose another email and try again."
 msgstr ""
-"Email you inserted already exists. Please choose another email and try "
-"again. (german)"
+"Die eigegebene E-Mail Adresse existiert bereits. Bitte wähle eine andere "
+"Adresse und versuche es erneut."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:37
 msgid ""
 "You did not insert display name. Please insert your display name and try "
 "again."
 msgstr ""
-"You did not insert display name. Please insert your display name and try "
-"again. (german)"
+"Du hast keinen Anzeigenamen eingegeben. Bitte gib den Namen ein, der "
+"angezeigt werden soll und versuche es erneut."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:38
 msgid ""
 "Invalid display name. Please insert different display name and try again."
 msgstr ""
-"Invalid display name. Please insert different display name and try again. "
-"(german)"
+"Ungültiger Anzeigename. Bitte gib einen anderen ein und versuche es erneut"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:39
 msgid "Invalid site url. Please insert valid site url and try again."
-msgstr "Invalid site url. Please insert valid site url and try again. (german)"
+msgstr ""
+"Ungültige Website URL. Bitte gib eine gültige Webadresse ein und versuche es "
+"erneut"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:40
 msgid "Invalid facebook url. Please insert valid facebook url and try again."
 msgstr ""
-"Invalid facebook url. Please insert valid facebook url and try again. "
-"(german)"
+"Ungültige Facebook URL. Gib eine gültige Facebook URL ein und versuche es "
+"erneut."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:41
 msgid "Invalid twitter url. Please insert valid twitter url and try again."
 msgstr ""
-"Invalid twitter url. Please insert valid twitter url and try again. (german)"
+"Ungültige Twitter URL. Bitte gib eine gültige Twitter URL ein und versuche "
+"es erneut."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:42
 msgid "Invalid flickr url. Please insert valid flickr url and try again."
 msgstr ""
-"Invalid flickr url. Please insert valid flickr url and try again. (german)"
+"Ungültige Flickr URL. Bitte gib eine gültige Flickr URL ein und versuche es "
+"erneut."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:43
 msgid "User updated."
-msgstr "User updated (german)"
+msgstr "Benutzer aktualisiert"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:44
 msgid "Upload directory is not writeable. Please contact administrator."
 msgstr ""
-"Upload directory is not writeable. Please contact administrator. (german)"
+"Upload Ordner kann nicht berabeitet werden. Bitte kontaktiere einen "
+"Administrator."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:45
 msgid "Uploading service is currently unavailable. Please try again later."
 msgstr ""
-"Uploading service is currently unavailable. Please try again later (german)"
+"Uploading Service is im Moment nicht erreichbar. Bitte versuche es später "
+"noch einmal."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:46
 msgid "Image successfully uploaded."
-msgstr "Image succesfully uploaded (german)"
+msgstr "Bild erfolgreich hochgeladen."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:103
 msgid "Updating profile"
-msgstr "Updating profile (german)"
+msgstr "Aktualisiere Profil"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:114
 msgid "Profile Picture"
-msgstr "Profile Picture (german)"
+msgstr "Profilbild"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:125
 msgid "Make sure to upload a square image for best-looking results."
-msgstr "Make sure to upload a square image for best-looking results. (german)"
+msgstr ""
+"Stelle sicher, dass du ein quadratisches Bild hochlädst, für beste Resultate."
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:131
 msgid "Profile Information"
-msgstr "Profile information (german)"
+msgstr "Profil Information"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:139
 msgid "Bio"
-msgstr "Bio (german)"
+msgstr "Bio"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:144
 msgid "Email"
-msgstr "Email (german)"
+msgstr "E-Mail"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:149
 msgid "Display Name"
-msgstr "Display Name (German)"
+msgstr "Anzeigename"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:154
 msgid "Website URL"
-msgstr "Website URL (german)"
+msgstr "Website URL"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:159
 msgid "Facebook URL"
-msgstr "Facebook URL (german)"
+msgstr "Facebook URL"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:164
 msgid "Twitter URL"
-msgstr "Twitter URL (german)"
+msgstr "Twitter URL"
 
 #: C:\wamp\www\quizolo.local\wp-content\plugins\contributer-plugin/framework/classes/class-contributer-profile.php:169
 msgid "Flickr URL"
-msgstr "Flickr URL (german)"
+msgstr "Flickr URL"
