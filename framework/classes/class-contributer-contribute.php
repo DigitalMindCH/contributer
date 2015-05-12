@@ -1,12 +1,14 @@
 <?php
 
+//TODO: upload_images for helpers needs to be more cleaner. Separate it on several methods. Reuse logic.
+
 class Contributer_Contribute {
     
     private $update_response_messages = array();
     
     
     public function __construct() {
-        add_action( 'plugins_loaded', array( $this, 'update_response_messages' ) );
+        add_action( 'plugins_loaded', array( 'Add_Post_Response_Messages', 'get_instance' ) );
         add_action( 'wp_ajax_add_post', array( $this, 'add_post' ) );
     }
 	
@@ -74,12 +76,13 @@ class Contributer_Contribute {
 
             <!-- post title -->
             <p>
-                <label for="title">Title</label>
+                <label for="title"><?php _e( 'Title', CONTR_PLUGIN_SLUG ); ?></label>
                 <input id="title" name="title" type="text" value="" />
             </p>
 		
             <!-- post formats -->
             <?php
+            //TODO: Support all default formats (maybe to add field for format recognition within settings page)
             $plugin_supported_formats = array( 'image', 'video', 'gallery' );
 
             if ( current_theme_supports( 'post-formats' ) ) {
@@ -88,9 +91,9 @@ class Contributer_Contribute {
                 if ( is_array( $post_formats[0] ) ) {
                     ?>
                     <p>
-                        <span>Post Format</span>
+                        <span><?php _e( 'Post Format', CONTR_PLUGIN_SLUG ); ?></span>
                         <input id="standard" type="radio" name="post-format" value="standard" checked="checked" />
-                        <label for="standard">Standard</label>
+                        <label for="standard"><?php _e( 'Standard', CONTR_PLUGIN_SLUG ); ?></label>
                         <?php foreach ( $post_formats[0] as $post_format ) { ?>
                             <?php if ( in_array( $post_format, $plugin_supported_formats ) ) { ?>
                                 <input id="<?php echo $post_format; ?>" type="radio" name="post-format" value="<?php echo $post_format; ?>"/>
@@ -105,13 +108,13 @@ class Contributer_Contribute {
 		
             <!-- featured image -->
             <div id="feat-img-field" class="field">
-                <span>featured image</span>
+                <span><?php _e( 'Featured image', CONTR_PLUGIN_SLUG ); ?></span>
                 <div id="featured-image-upload-area" class="contributer-upload"> 
                     <div id="featured-image-upload-holder">
                         <div id="featured-image-uploaded"></div>
-                        <div id="featured-image-upload-different">Click to select a different image</div>
+                        <div id="featured-image-upload-different"><?php _e( 'Click to select a different image', CONTR_PLUGIN_SLUG ); ?></div>
                     </div>
-                    <p id="featured-image-upload-here">drag 'n' drop <br/>
+                    <p id="featured-image-upload-here"><?php _e( "drag 'n' drop", CONTR_PLUGIN_SLUG ); ?> <br/>
                         <input type="file" id="featured-image" name="featured-image" class="files" />
                     </p>
                 </div>
@@ -119,14 +122,14 @@ class Contributer_Contribute {
 			
             <!-- gallery images -->
             <div id="gallery-field" class="field">
-                <span>gallery images</span>
+                <span><?php _e( 'Gallery images', CONTR_PLUGIN_SLUG ); ?></span>
                 <div id="gallery-images-upload-area" class="contributer-upload">
                     <div id="gallery-images-upload-holder">
                         <div id="gallery-images-uploaded"></div>
-                        <div id="gallery-images-upload-different">Click to select different images</div>
+                        <div id="gallery-images-upload-different"><?php _e( 'Click to select different images', CONTR_PLUGIN_SLUG ); ?></div>
                     </div>
                     <div id="gallery-images-upload-here"> 
-                        <p>drag 'n' drop <br/>
+                        <p><?php _e( "drag 'n' drop", CONTR_PLUGIN_SLUG ); ?> <br/>
                             <input type="file" id="gallery-images" name="gallery-images" class="files" multiple />
                         </p>
                     </div>
@@ -135,13 +138,13 @@ class Contributer_Contribute {
 		
             <!-- post video url -->
             <p id="video-field" class="field">
-                <label for="vid-url">Video URL</label>
+                <label for="vid-url"><?php _e( 'Video URL', CONTR_PLUGIN_SLUG ); ?></label>
                 <input id="vid-url" name="video_url" type="text"/>
             </p>
 		
             <!-- post content -->
             <p>
-                <label for="post-content">Content</label>
+                <label for="post-content"><?php _e( 'Content', CONTR_PLUGIN_SLUG ); ?></label>
                 <?php
                 wp_editor( '', 'post-content', array(
                     'wpautop'       => true,
@@ -155,26 +158,26 @@ class Contributer_Contribute {
             
             <!-- post tags -->
             <p>
-                <label for="tags">Tags</label>
+                <label for="tags"><?php _e( 'Tags', CONTR_PLUGIN_SLUG ); ?></label>
                 <input id="tags" type="text" name="tags" />
             </p>
 
             <!-- post category -->
             <p>
-                <span>Category</span>
+                <span><?php _e( 'Category', CONTR_PLUGIN_SLUG ); ?></span>
                 <?php wp_dropdown_categories( array(
                         'hide_empty' => 0,  
                         'taxonomy' => 'category',
                         'orderby' => 'name', 
                         'hierarchical' => true, 
-                        'show_option_none' => 'Choose your Category',
+                        'show_option_none' => __( 'Choose your Category', CONTR_PLUGIN_SLUG ),
                         'name' => 'cat',
                         'id' => 'cat',
                         )
                 ); ?>
             </p>
 
-            <input type="submit" value="Save draft"/>
+            <input type="submit" value="<?php _e( 'Save draft', CONTR_PLUGIN_SLUG ); ?>"/>
 
         </form>
          <!-- form editor end -->
@@ -231,6 +234,8 @@ class CCStandardFormat {
     
     private $post_tags = array();
     
+    private $update_response_messages = null;
+    
     
     public function __construct() {
         
@@ -249,6 +254,8 @@ class CCStandardFormat {
         if ( isset( $_POST['tags'] ) && ! empty( $_POST['tags'] ) ) {
             $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
+        
+        $this->update_response_messages = Add_Post_Response_Messages::get_instance();
         
     }
     
@@ -277,7 +284,7 @@ class CCStandardFormat {
         else {
             $upload_response = $this->upload_featured_image( $post_id );
             if ( $upload_response['status'] ) {
-                $message = 'Your draft was saved and will be reviewed';
+                $message = $this->update_response_messages->get_response_message( 'draft_saved' );
             }
             else {
                 $message = $upload_response['message'];
@@ -330,9 +337,9 @@ class CCStandardFormat {
             }
             else {
                 $return_array['status'] = false;
-                $return_array['message'] = 'Post published with warnings <br /> Image: ' . $file['name'] . '--' . $upload['error'];
+                $return_array['message'] = $this->update_response_messages->get_response_message( 'saved_with_warnings' ) . '<br />' . $file['name'] . '--' . $upload['error'];
             }
-        }    
+        } 
         
         return $return_array;
     }
@@ -354,6 +361,8 @@ class CCImageFormat {
     
     private $post_tags = array();
     
+    private $update_response_messages = null;
+    
     
     public function __construct() {
         
@@ -373,6 +382,8 @@ class CCImageFormat {
             $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
         
+        $this->update_response_messages = Add_Post_Response_Messages::get_instance();
+
     }
     
     
@@ -383,11 +394,11 @@ class CCImageFormat {
         $current_user = wp_get_current_user();
         
         if ( empty( $this->post_title ) ) {
-            $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_post_title' ) );
         }
         
         if ( ! isset( $_FILES['featured-image'] ) ) {
-            $this->send_json_output( false, 'Featured image is required for image posts.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'featured_image_required' ) );
         } 
         
         $arguments = array(
@@ -410,12 +421,12 @@ class CCImageFormat {
             $upload_response = $this->upload_featured_image( $post_id );
             if ( $upload_response['status'] ) {
                 set_post_format( $post_id, 'image' );
-                $message = 'Post published';
+                $message = $this->update_response_messages->get_response_message( 'draft_saved' );
             }
             else {
                 wp_delete_post( $post_id, true );
                 $status = false;
-                $message = 'We were not able to upload your image. <br/ > Error: '.$upload_response['message'];
+                $message = $this->update_response_messages->get_response_message( 'upload_failed2' ) .'<br/ >';
             }
         }
         
@@ -473,6 +484,7 @@ class CCImageFormat {
     }
     
     
+    
     private function send_json_output( $status, $message ) {
         $return_array = array(
             'status' => $status,
@@ -501,6 +513,8 @@ class CCVideoFormat {
     
     private $video_url = '';
     
+    private $update_response_messages = null;
+    
     
     public function __construct() {
         
@@ -524,21 +538,23 @@ class CCVideoFormat {
             $this->video_url = wp_strip_all_tags( $_POST['video_url'] );
         }
         
+        $this->update_response_messages = Add_Post_Response_Messages::get_instance();
+        
     }
     
     
     public function insert_post() {
         
         if ( empty( $this->post_title ) ) {
-            $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_post_title' ) );
         }
         
         if ( empty( $this->video_url ) ) {
-            $this->send_json_output( false, 'Video url is empty. Please insert video url and try again.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_video_url' ) );
         }
         
         if ( wp_oembed_get( $this->video_url ) === false ) {
-            $this->send_json_output( false, 'Invalid video url. Please insert valid video url and try again.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'invalid_video_url' ) );
         }
         
         $status = true;
@@ -565,7 +581,7 @@ class CCVideoFormat {
             set_post_format( $post_id, 'video' );
             update_post_meta( $post_id, 'video_url', $this->video_url );          
             if ( $upload_response['status'] ) {
-                $message = 'Post published';
+                $message = $this->update_response_messages->get_response_message( 'draft_saved' );
             }
             else {
                 $message = $upload_response['message'];
@@ -618,7 +634,7 @@ class CCVideoFormat {
             }
             else {
                 $return_array['status'] = false;
-                $return_array['message'] = 'Post published with warnings <br /> Image: ' . $file['name'] . '--' . $upload['error'];
+                $return_array['message'] = $this->update_response_messages->get_response_message( 'saved_with_warnings' ) . $file['name'] . '--' . $upload['error'];
             }
 
         }
@@ -655,6 +671,8 @@ class CCGalleryFormat {
     
     private $post_tags = array();
     
+    private $update_response_messages = null;
+    
     
     public function __construct() {
         
@@ -674,23 +692,24 @@ class CCGalleryFormat {
             $this->post_tags = explode( ",", wp_strip_all_tags( $_POST['tags'] ) );
         }
         
+        $this->update_response_messages = Add_Post_Response_Messages::get_instance();
+        
     }
+    
     
     
     public function insert_post() {
         
         //required, post title needs to be set
         if ( empty( $this->post_title ) ) {
-            $this->send_json_output( false, 'Post title is empty. Please insert post title and try again.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_post_title' ) );
         }
         
         //required, at least one image needs to be set
         if ( ! isset( $_FILES['gallery-image-0'] ) ) {
-            $this->send_json_output( false, 'You need to upload at least one image in order to publish a gallery.' );
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'gallery_image_missing' ) );
         }
         
-            
-
         $status = true;
         $message = '';
         $current_user = wp_get_current_user();
@@ -716,7 +735,8 @@ class CCGalleryFormat {
             $featured_image_array = $this->upload_featured_image( $post_id );
 
             //uploading gallery images
-            $attachments_array = $this->upload_images( $post_id );     
+            $attachments_array = $this->upload_images( $post_id );  
+            
             if ( $attachments_array['status'] ) {
                 $additional_content = implode( ',', $attachments_array['attachments'] );
                 set_post_format( $post_id, 'gallery' );
@@ -728,14 +748,14 @@ class CCGalleryFormat {
                 wp_update_post( $arguments, true );
                 
                 if ( ! empty ( $attachments_array['warning_message'] ) ) {
-                    $message = 'Post published with warnings: <br />' . $attachments_array['warning_message'].$featured_image_array['message'];
+                    $message = $this->update_response_messages->get_response_message( 'saved_with_warnings' ) . ' <br />' . $attachments_array['warning_message'].$featured_image_array['message'];
                 }
                 else {
                     if ( $featured_image_array['status'] ) {
-                        $message = 'Post published <br />';
+                        $message = $this->update_response_messages->get_response_message( 'saved' ) . '<br />';
                     }
                     else {
-                        $message = 'Post published with warnings <br />'.$featured_image_array['message'];
+                        $message = $this->update_response_messages->get_response_message( 'saved_with_warnings' ) . ' <br />'.$featured_image_array['message'];
                     }
                 }
             }
@@ -796,14 +816,14 @@ class CCGalleryFormat {
                 $succeed_uploads++;
             }
             else {
-                $return_array['warning_message'] = $return_array['warning_message'] . 'Image: ' . $_FILES['gallery-image-'.$i]['name'] . '--' . $upload['error'] . '<br />';
+                $return_array['warning_message'] = $return_array['warning_message'] . $this->update_response_messages->get_response_message( 'image' ) . ' ' . $_FILES['gallery-image-'.$i]['name'] . '--' . $upload['error'] . '<br />';
             }  
         }
         
         $return_array['attachments'] = $attachments;
         
         if ( $succeed_uploads == 0 ) {
-            $return_array['error_message'] = 'Upload of images failed';
+            $return_array['error_message'] = $this->update_response_messages->get_response_message( 'upload_failed' );
             $return_array['status'] = false;
         }
         
@@ -847,7 +867,7 @@ class CCGalleryFormat {
             }
             else {
                 $return_array['status'] = false;
-                $return_array['message'] = 'Featured image: ' . $file['name'] . '--' . $upload['error'] . '<br />';
+                $return_array['message'] = $this->update_response_messages->get_response_message( 'featured_image' ) . ' ' . $file['name'] . '--' . $upload['error'] . '<br />';
             }
 
         }
@@ -866,5 +886,56 @@ class CCGalleryFormat {
 
         wp_send_json( $return_array );
     }
+    
+}
+
+
+
+class Add_Post_Response_Messages {
+    
+    private $add_post_response_messages = array();
+    
+    
+    public function __construct() {
+        $this->add_post_response_messages();
+    }
+    
+    
+    public static function get_instance(){
+        global $add_post_response_messages;
+
+        if ( null == $add_post_response_messages ) {
+            $add_post_response_messages = new Add_Post_Response_Messages();
+        }
+
+        return $add_post_response_messages;
+    }
+    
+    
+    public function add_post_response_messages() {
+        $this->add_post_response_messages = array(
+            'general_fail' => __( 'You are not allowed to add post. Please try again later.', CONTR_PLUGIN_SLUG ),
+            'empty_post_title' => __( 'Post title is empty. Please insert post title and try again.', CONTR_PLUGIN_SLUG ),
+            'gallery_image_missing' => __( 'You need to upload at least one image in order to publish a gallery.', CONTR_PLUGIN_SLUG ),
+            'saved_with_warnings' => __( 'Post saved with warnings:', CONTR_PLUGIN_SLUG ),
+            'saved' => __( 'Post saved', CONTR_PLUGIN_SLUG ),
+            'upload_failed' => __( 'Upload of images failed', CONTR_PLUGIN_SLUG ),
+            'upload_failed2' => __( 'We were not able to upload your image', CONTR_PLUGIN_SLUG ),
+            'featured_image' => __( 'Featured image:', CONTR_PLUGIN_SLUG ),
+            'image' => __( 'Image:', CONTR_PLUGIN_SLUG ),
+            'draft_saved' => __( 'Your draft was saved and will be reviewed.', CONTR_PLUGIN_SLUG ),
+            'invalid_video_url' => __( 'Invalid video url. Please insert valid video url and try again.', CONTR_PLUGIN_SLUG ),
+            'empty_video_url' => __( 'Video url is empty. Please insert video url and try again.', CONTR_PLUGIN_SLUG ),
+            'featured_image_required' => __( 'Featured image is required for image posts.', CONTR_PLUGIN_SLUG ),
+        );
+    }
+    
+    
+    
+    public function get_response_message( $key ) {
+        return $this->add_post_response_messages[ $key ];
+    }
+    
+    
     
 }
