@@ -13,6 +13,9 @@ class Contributer {
         $this->plugin_directory_rel = dirname( plugin_basename( $file ) );
         $this->plugin_url = plugin_dir_url( $file );
         
+        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
+        Sensei_Options::get_instance()->set_option( 'plugin_dir', $this->plugin_directory );
+        
         add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
         //enque js scripts
@@ -33,8 +36,6 @@ class Contributer {
         $contribute_renderer = new Contributer_Contribute();
         add_shortcode( 'contributer_contribute', array( $contribute_renderer, 'contributer_contribute' ) );
 
-        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
-        Sensei_Options::get_instance()->set_option( 'plugin_dir', $this->plugin_directory );
         $this->register_user_custom_fields();
     }
 

@@ -115,26 +115,3 @@ function facebook_login( accessToken  ) {
         }
     });
 }
-
-function google_plus_login( code ) {
-    jQuery("#login-loader").removeClass('hidden_loader');
-    jQuery.ajax({
-        type: 'post',
-        cache:  false,
-        url: contributer_object.ajaxurl, 
-        dataType: 'json',
-        data:{
-            action: "google_login",
-            code: code
-        }, 
-        success: function (data) {
-            if ( data.status ) {
-                window.location.replace( contributer_object.redirect_login_url );
-            }
-            else {
-                alert( data.message )
-            }
-            jQuery("#login-loader").addClass('hidden_loader');
-        }
-    });
-}
