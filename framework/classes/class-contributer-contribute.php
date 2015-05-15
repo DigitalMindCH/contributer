@@ -253,7 +253,7 @@ class Contributer_Contribute {
         if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
             require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/classes/google-recaptcha/autoload.php' );
             
-            $recaptcha = new ReCaptcha( $google_recaptcha_secret_key );
+            $recaptcha = new \ReCaptcha\ReCaptchaReCaptcha( $google_recaptcha_secret_key );
             $resp = $recaptcha->verify( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] );
             if ( $resp->isSuccess() ) {
                 $return_array = array(
