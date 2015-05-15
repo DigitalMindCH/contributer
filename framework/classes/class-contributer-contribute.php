@@ -248,10 +248,22 @@ class Contributer_Contribute {
     public function add_post_logged_off() {
         
         //recapcha check if recapcha check exists
-        /*if ( ! empty(  ) ) {
+        $google_recaptcha_secret_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_secret_key' );
+        $google_recaptcha_site_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_site_key' );
+        if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
+            require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/classes/google-recaptcha/autoload.php' );
             
-        }*/
-    
+            $recaptcha = ReCaptcha( $google_recaptcha_secret_key );
+            $resp = $recaptcha->verify( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] );
+            if ( $resp->isSuccess() ) {
+                $return_array = array(
+                    'status' => false,
+                    'message' => $this->get_response_message( 'general_fail' ),
+                );
+
+                wp_send_json( $return_array );
+            }
+        }
         
         $post_format = 'standard';
         $allowed_formats = array( 'standard', 'video', 'image', 'gallery' );
