@@ -17,16 +17,7 @@ window.fbAsyncInit = function() {
 }(document, 'script', 'facebook-jssdk'));
 
 
-(function() {
-    var po = document.createElement('script');
-    po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://plus.google.com/js/client:plusone.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(po, s);
-})();
-
-
-jQuery(document).ready(function($) { 
+jQuery(document).ready( function( $ ) {
     
     $("#face-button").click(function () {
         $("#login-loader").removeClass('hidden_loader');
@@ -37,17 +28,24 @@ jQuery(document).ready(function($) {
                 FB.api('/me', function( data ) {
                     console.log( data );
                     if ( data.email == null ) {
-                        alert( "You must allow us to access your email. Please edit your app settings and try again." ); 
+                        $("#contributer-failure").html( 'You must allow us to access your email. Please edit your app settings and try again.' );
+                        $("#contributer-failure").show();
+                        $("html, body").animate( { scrollTop: 0 }, "slow" );
+                        $("#login-loader").addClass('hidden_loader');
                     }
                     else {
-                          facebook_login( response.authResponse.accessToken );
+                        facebook_login( response.authResponse.accessToken );
                     }
                 });
             } 
+            else {
+                $("#login-loader").addClass('hidden_loader');
+            }
         }, {scope: 'public_profile,email'});
     });
     
     $( "#email-sign-in" ).submit(function( event ) {
+        $(".message-handler").hide();
         $("#login-loader").removeClass('hidden_loader');
         $.ajax({
             type: "POST",
@@ -58,7 +56,9 @@ jQuery(document).ready(function($) {
                     window.location.replace( contributer_object.redirect_login_url );
                 }
                 else {
-                    alert( data.message );
+                    $("#contributer-failure").html( data.message );
+                    $("#contributer-failure").show();
+                    $("html, body").animate( { scrollTop: 0 }, "slow" );
                     $("#login-loader").addClass('hidden_loader');
                 }
             }
@@ -78,7 +78,9 @@ jQuery(document).ready(function($) {
                     window.location.replace( contributer_object.redirect_login_url );
                 }
                 else {
-                    alert( data.message );
+                    $("#contributer-failure").html( data.message );
+                    $("#contributer-failure").show();
+                    $("html, body").animate( { scrollTop: 0 }, "slow" );
                     $("#login-loader").addClass('hidden_loader');
                 }
             }
@@ -102,14 +104,18 @@ function facebook_login( accessToken  ) {
         url: contributer_object.ajaxurl, 
         data:{
             action: "facebook_login",
-            access_token: accessToken
+            access_token: accessToken,
+            facebook_login_nonce: contributer_object.facebook_login_nonce
         }, 
         success: function (data) {
             if ( data.status ) {
                 window.location.replace( contributer_object.redirect_login_url );
             }
             else {
-                alert( data.message )
+                jQuery("#contributer-failure").html( data.message );
+                jQuery("#contributer-failure").show();
+                jQuery("html, body").animate( { scrollTop: 0 }, "slow" );
+                jQuery("#login-loader").addClass('hidden_loader');
             }
             $("#login-loader").addClass('hidden_loader');
         }

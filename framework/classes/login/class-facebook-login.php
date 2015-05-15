@@ -42,6 +42,11 @@ class Contributer_Facebook_Login {
     
     public function facebook_login() {
         
+        //if checking nonce fails, there is no need to proceed
+        if ( ! check_ajax_referer( 'facebook-login' , 'facebook_login_nonce', false ) ) {
+            $this->send_json_output( false,  $this->get_response_message( 'try_later' ) );
+        }
+        
         require Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . '/framework/classes/facebook/facebook.php';
         
         //initialize facebook sdk
@@ -119,6 +124,7 @@ class Contributer_Facebook_Login {
         $this->response_messages = array(
             'facebook_user_failed' => __( 'We were not able to retrieve facebook user. Please try again.', CONTR_PLUGIN_SLUG ),
             'registration_failed' => __( 'Registration failed. Please try again.', CONTR_PLUGIN_SLUG ),
+            'try_later' => __( 'Something wrong happened. Please try again later.', CONTR_PLUGIN_SLUG )
         );
     }
     

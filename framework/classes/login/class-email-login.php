@@ -18,6 +18,7 @@ class Contributer_Email_Login {
         ?>
         <form id="email-sign-in">
             <input type="hidden" name="action" value="email_login" />
+            <?php wp_nonce_field( 'email-login', 'email_login_nonce' ); ?>
             <p>
               <label for="username"><?php _e( 'Username', CONTR_PLUGIN_SLUG ) ?></label>
               <input id="username" name="username" required="required" type="text"/>
@@ -45,6 +46,7 @@ class Contributer_Email_Login {
         <div class="signup-container sign-toggle-container">
             <form id="email-sign-up" >
                 <input type="hidden" name="action" value="email_sign_up" />
+                <?php wp_nonce_field( 'email-signup', 'email_signup_nonce' ); ?>
                 <p>
                     <label for="email"><?php _e( 'E-Mail', CONTR_PLUGIN_SLUG ) ?></label>
                     <input id="email" name="email" required="required" type="text"/>
@@ -104,6 +106,11 @@ class Contributer_Email_Login {
     
     public function email_login() {
         
+        //if checking nonce fails, there is no need to proceed
+        if ( ! check_ajax_referer( 'email-login' , 'email_login_nonce', false ) ) {
+            $this->send_json_output( false,  $this->get_response_message( 'try_later' ) );
+        }
+        
         $status = false;
         $remember_me = false;
         $message = '';
@@ -134,6 +141,11 @@ class Contributer_Email_Login {
     
     
     public function email_sign_up() {
+        
+        //if checking nonce fails, there is no need to proceed
+        if ( ! check_ajax_referer( 'email-signup' , 'email_signup_nonce', false ) ) {
+            $this->send_json_output( false,  $this->get_response_message( 'try_later' ) );
+        }
         
         $message = '';
         $status = true;
@@ -184,7 +196,7 @@ class Contributer_Email_Login {
             $this->send_json_output( false, $this->get_response_message( 'weak_password' ) );
         }
         
-        $password2 = $_POST['password'];
+        $password2 = $_POST['password2'];
         
         if ( $password != $password2 ) {
             $this->send_json_output( false, $this->get_response_message( 'password_confirmation_fail' ) );

@@ -234,7 +234,7 @@ class Contributer_Profile {
             );
         }
 
-        if ( ! preg_match('/^[a-z0-9 .\-]+$/i', $display_name ) ) {
+        if ( ! preg_match('/^[a-z0-9 _@.\-]+$/i', $display_name ) ) {
             return array( 
                 'status' => false, 
                 'message'=> $this->get_response_message( 'invalid_display_name' ) 

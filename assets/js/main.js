@@ -59,7 +59,7 @@ jQuery(document).ready(function($) {
     
     //submited 
     //TODO: Handle submiting more dynamicly. Maybe to implement js objects per option type?
-    $( "#contributer-editor" ).submit(function( event ) {
+    $( "#contributer-editor" ).submit( function( event ) {
         $(".message-handler").hide();
         
         var ce_data = new FormData();
@@ -112,7 +112,7 @@ jQuery(document).ready(function($) {
         });
 
         event.preventDefault();
-    });
+    } );
 
     	
     //featured image drag and drop handlers
@@ -134,6 +134,7 @@ jQuery(document).ready(function($) {
         e.stopPropagation();
         e.preventDefault(); 
     });
+    
     
     //gallery images drag and drop handlers
     $('#gallery-images-upload-area').on('dragover', function (e) {
@@ -164,8 +165,7 @@ jQuery(document).ready(function($) {
             featured_image_data_raw["image"] = file;
         });
         hide_featured_image_field( featured_image_data_raw );
-    });
-    
+    });  
     $('#gallery-images').on('change', function(){
         gallery_image_data_raw = {};
         var number_of_gallery_images = 0;
@@ -175,11 +175,9 @@ jQuery(document).ready(function($) {
         });
         hide_gallery_image_field( number_of_gallery_images );
     });
-    
     $('#featured-image-upload-different').on('click', function() {
         show_featured_image_field();
     });
-    
     $('#gallery-images-upload-different').on('click', function() {
         show_gallery_image_field();
     });

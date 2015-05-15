@@ -42,6 +42,11 @@ class Contributer_Login {
                 </div>
             </div>
             
+            
+            <p id="contributer-failure" class="message-handler contributer-failure"></p>
+            <p id="contributer-success" class="message-handler contributer-success"></p>
+            <p id="contributer-notification" class="message-handler contributer-notification"></p>
+            
             <div class="login-container sign-toggle-container">
                 
                 <?php $this->facebook_login->render_button(); ?>

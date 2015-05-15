@@ -1,6 +1,7 @@
 <?php
 
 //TODO: upload_images for helpers needs to be more cleaner. Separate it on several methods. Reuse logic.
+//TODO: Separate on 2 classes, for logged in and not logged in posting.
 
 class Contributer_Contribute {
     
@@ -10,6 +11,7 @@ class Contributer_Contribute {
     public function __construct() {
         add_action( 'plugins_loaded', array( 'Add_Post_Response_Messages', 'get_instance' ) );
         add_action( 'wp_ajax_add_post', array( $this, 'add_post' ) );
+        add_action( 'wp_ajax_nopriv_add_post_logged_off', array( $this, 'add_post_logged_off' ) );
     }
 	
 
@@ -20,8 +22,13 @@ class Contributer_Contribute {
             return $this->render_contributer_contribute();
         }
         else {
-            $contributer_login_rendered = new Contributer_Login();
-            return $contributer_login_rendered->contributer_login();
+            if ( Sensei_Options::get_instance()->get_option( 'post_publish_without_registration' ) ) {
+                echo $this->render_contributer_contribute( false );
+            }
+            else {
+                $contributer_login_rendered = new Contributer_Login();
+                return $contributer_login_rendered->contributer_login();
+            }
         }
 
     }
@@ -48,10 +55,9 @@ class Contributer_Contribute {
     }
 
     
-	
-    public function render_contributer_contribute() {
 
-        $current_user = wp_get_current_user();
+    public function render_contributer_contribute( $logged_in = true ) {
+
         ob_start();
         ?>
 
@@ -70,9 +76,16 @@ class Contributer_Contribute {
 
         <form id="contributer-editor" class="contributer-editor">
 
-            <input type="hidden" id="action" name="action" value="add_post" />
-            
-            <?php wp_nonce_field( 'add-post-' . $current_user->ID, 'add_post_nonce' ); ?>
+            <?php if ( $logged_in ) { ?>
+                <input type="hidden" id="action" name="action" value="add_post" />            
+                <?php 
+                    $current_user = wp_get_current_user();
+                    wp_nonce_field( 'add-post-' . $current_user->ID, 'add_post_nonce' ); 
+                ?>
+            <?php } else { ?>
+                <input type="hidden" id="action" name="action" value="add_post_logged_off" />
+                <?php wp_nonce_field( 'add-post-logged-off', 'add_post_logged_off_nonce' );  ?>
+            <?php } ?>
 
             <!-- post title -->
             <p>
@@ -214,6 +227,26 @@ class Contributer_Contribute {
         $post_creator->insert_post();
     }
     
+    
+    
+    public function add_post_logged_off() {
+        
+        //recapcha check if recapcha check exists
+    
+        
+        $post_format = 'standard';
+        $allowed_formats = array( 'standard', 'video', 'image', 'gallery' );
+        
+        if ( isset( $_POST['post-format'] ) && in_array( $_POST['post-format'], $allowed_formats ) ) {
+            $post_format = $_POST['post-format'];
+        }
+        
+        $class_name = 'CC' . ucfirst( $post_format ) . 'Format';
+        $post_creator = new $class_name();
+        $post_creator->insert_post();
+        
+    }
+    
 }
 
 
@@ -264,13 +297,21 @@ class CCStandardFormat {
 
         $status = true;
         $message = '';
-        $current_user = wp_get_current_user();
+        
+        if ( is_user_logged_in() ) {
+           $user = wp_get_current_user(); 
+        }
+        else {
+            $user = get_user_by( 'id', Sensei_Options::get_instance()->get_option( 'guest_post_author' ) );
+        }
+        
+        
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
             'post_status' => 'draft',
             'post_type' => 'post',
-            'post_author' => $current_user->ID,
+            'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
             'post_category' => $this->post_category
         ); 
@@ -391,7 +432,12 @@ class CCImageFormat {
         
         $status = true;
         $message = '';
-        $current_user = wp_get_current_user();
+        if ( is_user_logged_in() ) {
+           $user = wp_get_current_user(); 
+        }
+        else {
+            $user = get_user_by( 'id', Sensei_Options::get_instance()->get_option( 'guest_post_author' ) );
+        }
         
         if ( empty( $this->post_title ) ) {
             $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_post_title' ) );
@@ -406,7 +452,7 @@ class CCImageFormat {
             'post_title' =>  $this->post_title,
             'post_status' => 'draft',
             'post_type' => 'post',
-            'post_author' => $current_user->ID,
+            'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
             'post_category' => $this->post_category
         ); 
@@ -559,13 +605,20 @@ class CCVideoFormat {
         
         $status = true;
         $message = '';
-        $current_user = wp_get_current_user();
+        
+        if ( is_user_logged_in() ) {
+           $user = wp_get_current_user(); 
+        }
+        else {
+            $user = get_user_by( 'id', Sensei_Options::get_instance()->get_option( 'guest_post_author' ) );
+        }
+        
         $arguments = array(
             'post_content' => wp_oembed_get( $this->video_url ). ' <div>' . $this->post_content .'</div>',
             'post_title' =>  $this->post_title,
             'post_status' => 'draft',
             'post_type' => 'post',
-            'post_author' => $current_user->ID,
+            'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
             'post_category' => $this->post_category
         ); 
@@ -712,13 +765,20 @@ class CCGalleryFormat {
         
         $status = true;
         $message = '';
-        $current_user = wp_get_current_user();
+        
+        if ( is_user_logged_in() ) {
+           $user = wp_get_current_user(); 
+        }
+        else {
+            $user = get_user_by( 'id', Sensei_Options::get_instance()->get_option( 'guest_post_author' ) );
+        }
+        
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
             'post_status' => 'draft',
             'post_type' => 'post',
-            'post_author' => $current_user->ID,
+            'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
             'post_category' => $this->post_category
         ); 

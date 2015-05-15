@@ -102,13 +102,26 @@ class Contributer {
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'redirect_login_url' => Sensei_Options::get_instance()->get_option( 'redirect_login_url' ),
                 'facebook_app_id' => Sensei_Options::get_instance()->get_option( 'facebook_app_id' ),
-                'google_app_id' => Sensei_Options::get_instance()->get_option( 'google_app_id' )
+                'google_app_id' => Sensei_Options::get_instance()->get_option( 'google_app_id' ),
+                'facebook_login_nonce' => wp_create_nonce( 'facebook-login' )
             ));
+            
+            if ( Sensei_Options::get_instance()->get_option( 'post_publish_without_registration' ) ) {
+                wp_enqueue_script( 'contributer_main', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
+            }
         }
     }
 	
 
     public function define_page_options() {
+        
+        $users = get_users( array( 'role' => 'administrator' ) );
+        $users_array = array();
+        foreach ( $users as $user ) {
+            $users_array[ $user->ID ] = $user->user_login;
+        }
+        reset( $users_array );
+        
         return array(
             'page' => array(
                 'page_title' => 'Contributer Panel',
@@ -132,52 +145,45 @@ class Contributer {
                             'value'   => home_url(),
                         ),
                         array(
-                            'name' => 'Chechbox button, that directs the two underneath',
-                            'id' => 'option_id_checkbox',
-                            'desc'  => 'Checkbox button description (olala)',
+                            'name' => 'Allow post publishing without registration/login',
+                            'id' => 'post_publish_without_registration',
+                            'desc'  => 'Allow post publishing without registration/login',
                             'type'  => 'checkbox',
                             'value'   => false,
                         ),
                         array(
-                            'name' => 'Checkbox button 2 (depends on chekbox button from above)',
-                            'id' => 'option_id_checkbox2',
-                            'desc'  => 'Checkbox button which depends of other checkbox button',
-                            'type'  => 'checkbox',
-                            'value'   => false,
+                            'name' => 'Assign Author',
+                            'id' => 'guest_post_author',
+                            'type' => 'select',
+                            'desc' => 'Assign Author',
+                            'options' => $users_array,
+                            'value' => key( $users_array ),
                             'condition' => array(
                                 'type' => 'option',
-                                'value' => 'option_id_checkbox',
+                                'value' => 'post_publish_without_registration'
                             )
                         ),
                         array(
-                            'name' => 'Checkbox button 3 (depends on chekbox button from above with different disabled type)',
-                            'id' => 'option_id_checkbox3',
-                            'desc'  => 'Checkbox button which depends of other checkbox button',
-                            'type'  => 'checkbox',
-                            'value'   => false,
+                            'name' => 'Google reCaptcha Public Key',
+                            'id' => 'google_recaptcha_public_key',
+                            'desc'  => 'Google reCaptcha Public Key (strongly recommended to use google reCapcha if you want to allow public posting.',
+                            'type'  => 'text',
+                            'value'   => '',
                             'condition' => array(
                                 'type' => 'option',
-                                'value' => 'option_id_checkbox',
-                                'disabled_type' => 'hidden'
+                                'value' => 'post_publish_without_registration'
                             )
                         ),
                         array(
-                            'name' => 'Select a page',
-                            'id' => 'option_id_select_page',
-                            'type' => 'select_posts',
-                            'desc' => 'This page will be the page where user will be redirected after he/she clicks on the link which we are going to send to their email.',
-                            'post_type' => array('page', 'post'),
+                            'name' => 'Google reCaptcha Private Key',
+                            'id' => 'google_recaptcha_private_key',
+                            'desc'  => 'Google reCaptcha Private Key (strongly recommended to use google reCapcha if you want to allow public posting.',
+                            'type'  => 'text',
+                            'value'   => '',
                             'condition' => array(
                                 'type' => 'option',
-                                'value' => 'option_id_checkbox'
+                                'value' => 'post_publish_without_registration'
                             )
-                        ),
-                        array(
-                            'name' => 'Option name (label)',
-                            'id' => 'option_id',
-                            'desc'  => 'Option description',
-                            'type'  => 'wysiwyg',
-                            'value'   => 'test',
                         ),
                     )
                 ),
