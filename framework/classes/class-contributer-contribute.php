@@ -189,6 +189,22 @@ class Contributer_Contribute {
                         )
                 ); ?>
             </p>
+            
+            <?php
+            if ( ! $logged_in  ) {
+                
+                $google_recaptcha_secret_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_secret_key' );
+                $google_recaptcha_site_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_site_key' );
+                if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
+                    require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/classes/google-recaptcha/autoload.php' );
+
+                    ?>
+                    <div class="g-recaptcha" data-sitekey="<?php echo $google_recaptcha_site_key; ?>"></div>
+                    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=en"></script>
+                    <?php
+                } 
+            }
+            ?>
 
             <input type="submit" value="<?php _e( 'Save draft', CONTR_PLUGIN_SLUG ); ?>"/>
 
@@ -232,6 +248,9 @@ class Contributer_Contribute {
     public function add_post_logged_off() {
         
         //recapcha check if recapcha check exists
+        /*if ( ! empty(  ) ) {
+            
+        }*/
     
         
         $post_format = 'standard';

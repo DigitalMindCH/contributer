@@ -164,9 +164,9 @@ class Contributer {
                             )
                         ),
                         array(
-                            'name' => 'Google reCaptcha Public Key',
-                            'id' => 'google_recaptcha_public_key',
-                            'desc'  => 'Google reCaptcha Public Key (strongly recommended to use google reCapcha if you want to allow public posting.',
+                            'name' => 'Google reCaptcha Site Key',
+                            'id' => 'google_recaptcha_site_key',
+                            'desc'  => 'Strongly recommended to use google reCapcha if you want to allow public posting. https://www.google.com/recaptcha/admin',
                             'type'  => 'text',
                             'value'   => '',
                             'condition' => array(
@@ -175,9 +175,9 @@ class Contributer {
                             )
                         ),
                         array(
-                            'name' => 'Google reCaptcha Private Key',
-                            'id' => 'google_recaptcha_private_key',
-                            'desc'  => 'Google reCaptcha Private Key (strongly recommended to use google reCapcha if you want to allow public posting.',
+                            'name' => 'Google reCaptcha Secret Key',
+                            'id' => 'google_recaptcha_secret_key',
+                            'desc'  => 'Strongly recommended to use google reCapcha if you want to allow public posting. https://www.google.com/recaptcha/admin',
                             'type'  => 'text',
                             'value'   => '',
                             'condition' => array(
