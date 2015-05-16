@@ -9,7 +9,7 @@ class Contributer_Contribute {
     
     
     public function __construct() {
-        add_action( 'plugins_loaded', array( 'Add_Post_Response_Messages', 'get_instance' ) );
+        add_action( 'plugins_loaded', array( $this, 'update_response_messages' ) );
         add_action( 'wp_ajax_add_post', array( $this, 'add_post' ) );
         add_action( 'wp_ajax_nopriv_add_post_logged_off', array( $this, 'add_post_logged_off' ) );
     }
@@ -219,12 +219,7 @@ class Contributer_Contribute {
         $current_user = wp_get_current_user();
         //validate nonce. If that fails, do not proceed
         if ( ! check_ajax_referer( 'add-post-'. $current_user->ID , 'add_post_nonce', false ) ) {
-            $return_array = array(
-                'status' => false,
-                'message' => $this->get_response_message( 'general_fail' ),
-            );
-
-            wp_send_json( $return_array );
+            $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
         }
         
         $post_format = 'standard';
@@ -247,18 +242,18 @@ class Contributer_Contribute {
         $google_recaptcha_secret_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_secret_key' );
         $google_recaptcha_site_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_site_key' );
         if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
-            require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/classes/google-recaptcha/autoload.php' );
+            require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/modules/recaptcha/recaptchalib.php' );
             
-            $recaptcha = new \ReCaptcha\ReCaptcha( $google_recaptcha_secret_key );
-            $resp = $recaptcha->verify( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] );
-            if ( $resp->isSuccess() ) {
-                $return_array = array(
-                    'status' => false,
-                    'message' => $this->get_response_message( 'general_fail' ),
-                );
-
-                wp_send_json( $return_array );
+            if ( isset( $_POST["recaptcha_challenge_field"] ) && isset( $_POST["recaptcha_response_field"] ) ) {
+                $resp = recaptcha_check_answer ( $google_recaptcha_secret_key, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
+                if ( ! $resp->is_valid) {
+                    $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
+                } 
             }
+            else {
+                $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
+            }
+           
         }
         
         $post_format = 'standard';
@@ -272,6 +267,17 @@ class Contributer_Contribute {
         $post_creator = new $class_name();
         $post_creator->insert_post();
         
+    }
+    
+    
+    
+    private function send_json_output( $status, $message ) {
+        $return_array = array(
+            'status' => $status,
+            'message' => $message,
+        );
+
+        wp_send_json( $return_array );
     }
     
 }
