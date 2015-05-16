@@ -196,12 +196,8 @@ class Contributer_Contribute {
                 $google_recaptcha_secret_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_secret_key' );
                 $google_recaptcha_site_key = Sensei_Options::get_instance()->get_option( 'google_recaptcha_site_key' );
                 if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
-                    require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/classes/google-recaptcha/autoload.php' );
-
-                    ?>
-                    <div class="g-recaptcha" data-sitekey="<?php echo $google_recaptcha_site_key; ?>"></div>
-                    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=en"></script>
-                    <?php
+                    require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/modules/recaptcha/recaptchalib.php' );
+                    echo recaptcha_get_html( $google_recaptcha_site_key );
                 } 
             }
             ?>
@@ -253,7 +249,7 @@ class Contributer_Contribute {
         if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
             require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/classes/google-recaptcha/autoload.php' );
             
-            $recaptcha = new \ReCaptcha\ReCaptchaReCaptcha( $google_recaptcha_secret_key );
+            $recaptcha = new \ReCaptcha\ReCaptcha( $google_recaptcha_secret_key );
             $resp = $recaptcha->verify( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] );
             if ( $resp->isSuccess() ) {
                 $return_array = array(
