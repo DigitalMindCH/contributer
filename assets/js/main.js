@@ -64,7 +64,7 @@ jQuery(document).ready(function($) {
         
         var ce_data = new FormData();
                 
-        $('#contributer-editor').find('#action, #title, #add_post_nonce, #cat, #post-content, #vid-url, #tags').each(function(){
+        $('#contributer-editor').find('#action, #title, #add_post_nonce, #cat, #post-content, #vid-url, #tags, #recaptcha_response_field').each(function(){
             ce_data.append( this.name, $(this).val() );
         });
         
