@@ -334,6 +334,15 @@ class CCStandardFormat {
         $status = true;
         $message = '';
         
+        if ( empty( $this->post_title ) ) {
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_post_title' ) );
+        }
+        
+        $content_to_validate = strip_tags( $this->post_content );
+        if ( empty( $content_to_validate ) ) {
+            $this->send_json_output( false, $this->update_response_messages->get_response_message( 'empty_post_content' ) );
+        }
+        
         if ( is_user_logged_in() ) {
            $user = wp_get_current_user(); 
         }
@@ -419,6 +428,17 @@ class CCStandardFormat {
         } 
         
         return $return_array;
+    }
+    
+    
+    
+    private function send_json_output( $status, $message ) {
+        $return_array = array(
+            'status' => $status,
+            'message' => $message,
+        );
+
+        wp_send_json( $return_array );
     }
     
 }
@@ -1012,6 +1032,7 @@ class Add_Post_Response_Messages {
         $this->add_post_response_messages = array(
             'general_fail' => __( 'You are not allowed to add post. Please try again later.', CONTR_PLUGIN_SLUG ),
             'empty_post_title' => __( 'Post title is empty. Please insert post title and try again.', CONTR_PLUGIN_SLUG ),
+            'empty_post_content' => __( 'Post content is empty. Please insert post content and try again.', CONTR_PLUGIN_SLUG ),
             'gallery_image_missing' => __( 'You need to upload at least one image in order to publish a gallery.', CONTR_PLUGIN_SLUG ),
             'saved_with_warnings' => __( 'Post saved with warnings:', CONTR_PLUGIN_SLUG ),
             'saved' => __( 'Post saved', CONTR_PLUGIN_SLUG ),
