@@ -55,6 +55,9 @@ class Sensei_Admin_Panel {
         wp_enqueue_script( 'sensei-options', $this->url.'/js/sensei-options.js', array( 'jquery' ), '1.0' );
         wp_localize_script( 'sensei-options', 'sensei_js_object', array(
             'sensei_nonce_resetall' => wp_create_nonce( 'sensei-nonce-resetall' ),
+            'sensei_message_are_you_sure_reset_tab' => __( 'Are you sure? This will reset all options for this tab.', SENSEI_OPTIONS_PLUGIN_SLUG ),
+            'sensei_message_something_is_wrong' => __( 'Something is wrong. Please try again later.', SENSEI_OPTIONS_PLUGIN_SLUG ),
+            'sensei_message_are_you_sure_reset' => __( 'Are you sure? This will reset all options.', SENSEI_OPTIONS_PLUGIN_SLUG ),
         ));
     }
 
@@ -102,10 +105,10 @@ class Sensei_Admin_Panel {
 
                             <div class="sensei-option-container">
                                 <div class="spinner"></div>
-                                <input type="submit" class="sensei-submit" name="save-<?php echo sanitize_key( $tab['id'] ); ?>" value="Save" />
+                                <input type="submit" class="sensei-submit" name="save-<?php echo sanitize_key( $tab['id'] ); ?>" value="<?php  _e( 'Save', SENSEI_OPTIONS_PLUGIN_SLUG ); ?>" />
                                 <div class="sensei-reset-buttons">
-                                    <span class="sensei-reset-tab sensei-submit" data-tab="<?php echo sanitize_html_class( $tab['id'] ); ?>">Reset tab</span>
-                                    <span class="sensei-submit sensei-reset-all" data-tab="<?php echo sanitize_html_class( $tab['id'] ); ?>">Reset all</span>
+                                    <span class="sensei-reset-tab sensei-submit" data-tab="<?php echo sanitize_html_class( $tab['id'] ); ?>"><?php  _e( 'Reset tab', SENSEI_OPTIONS_PLUGIN_SLUG ); ?></span>
+                                    <span class="sensei-submit sensei-reset-all" data-tab="<?php echo sanitize_html_class( $tab['id'] ); ?>"><?php  _e( 'Reset all', SENSEI_OPTIONS_PLUGIN_SLUG ); ?></span>
                                 </div>
                                 <div class="clear"></div>
                             </div>

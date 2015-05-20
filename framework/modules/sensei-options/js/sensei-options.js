@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
     //reseting options for specific tab
     $( ".sensei-reset-tab" ).click(function() {
         
-        if( ! confirm('Are you sure? This will reset all options for this tab.') ) {
+        if( ! confirm( sensei_js_object.sensei_message_are_you_sure_reset_tab ) ) {
             return;
         }
 
@@ -52,7 +52,7 @@ jQuery(document).ready(function($) {
                     location.reload();
                 }
                 else {
-                    alert( 'Something is wrong. Please try again later.' );
+                    alert( sensei_js_object.sensei_message_something_is_wrong );
                 }
             }
         });
@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
     
     //reseting all options
     $( ".sensei-reset-all" ).click(function() {
-        if( ! confirm( 'Are you sure? This will reset all options.' ) ) {
+        if( ! confirm( sensei_js_object.sensei_message_are_you_sure_reset ) ) {
             return;
         }
 
@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
                     location.reload();
                 }
                 else {
-                    alert( 'Something is wrong. Please try again later.' );
+                    alert( sensei_js_object.sensei_message_something_is_wrong );
                 }
             }
         });
@@ -118,7 +118,7 @@ jQuery(document).ready(function($) {
                     }
                 }
                 else {
-                    alert( 'Something is wrong. Please try again later.' );
+                    alert( sensei_js_object.sensei_message_something_is_wrong );
                 }
             }
         });

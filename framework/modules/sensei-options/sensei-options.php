@@ -16,6 +16,7 @@
  * Enjoy!
  *
  */
+define( 'SENSEI_OPTIONS_PLUGIN_SLUG', 'contributer_plugin'  );
 
 require_once( 'class-sensei-options.php' );
 require_once( 'class-sensei-options-renderer.php' );

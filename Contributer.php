@@ -140,8 +140,8 @@ class Contributer {
         
         return array(
             'page' => array(
-                'page_title' => 'Contributer Panel',
-                'menu_title' => 'Contributer Panel',
+                'page_title' => __( 'Contributer Panel', CONTR_PLUGIN_SLUG ),
+                'menu_title' => __( 'Contributer Panel', CONTR_PLUGIN_SLUG ),
                 'capability' => 'manage_options',
                 'menu_slug' => 'contributer',
                 'icon_url' => false,
@@ -149,29 +149,29 @@ class Contributer {
             'tabs' => array(
                 //tab general
                 array(
-                    'title' => 'General',
+                    'title' => __( 'General', CONTR_PLUGIN_SLUG ),
                     'id' => 'login',
                     'icon' => '',
                     'options' => array(
                         array(
-                            'name' => 'Redirect after login',
+                            'name' => __( 'Redirect after login', CONTR_PLUGIN_SLUG ),
                             'id' => 'redirect_login_url',
-                            'desc'  => 'Redirect url is place where user will be transfered after loggin is successfull. Homepage is default.',
+                            'desc'  => __( 'Redirect url is place where user will be transfered after loggin is successfull. Homepage is default.', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => home_url(),
                         ),
                         array(
-                            'name' => 'Allow post publishing without registration/login',
+                            'name' => __( 'Allow post publishing without registration/login', CONTR_PLUGIN_SLUG ),
                             'id' => 'post_publish_without_registration',
-                            'desc'  => 'Allow post publishing without registration/login',
+                            'desc'  => __( 'Allow post publishing without registration/login', CONTR_PLUGIN_SLUG ),
                             'type'  => 'checkbox',
                             'value'   => false,
                         ),
                         array(
-                            'name' => 'Assign Author',
+                            'name' => __( 'Assign Author', CONTR_PLUGIN_SLUG ),
                             'id' => 'guest_post_author',
                             'type' => 'select',
-                            'desc' => 'Assign Author',
+                            'desc' => __( 'Assign Author', CONTR_PLUGIN_SLUG ),
                             'options' => $users_array,
                             'value' => key( $users_array ),
                             'condition' => array(
@@ -180,9 +180,9 @@ class Contributer {
                             )
                         ),
                         array(
-                            'name' => 'Google reCaptcha Site Key',
+                            'name' => __( 'Google reCaptcha Site Key', CONTR_PLUGIN_SLUG ),
                             'id' => 'google_recaptcha_site_key',
-                            'desc'  => 'Strongly recommended to use google reCapcha if you want to allow public posting. https://www.google.com/recaptcha/admin',
+                            'desc'  => __( 'Strongly recommended to use google reCapcha if you want to allow public posting. https://www.google.com/recaptcha/admin', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => '',
                             'condition' => array(
@@ -191,9 +191,9 @@ class Contributer {
                             )
                         ),
                         array(
-                            'name' => 'Google reCaptcha Secret Key',
+                            'name' => __( 'Google reCaptcha Secret Key', CONTR_PLUGIN_SLUG ),
                             'id' => 'google_recaptcha_secret_key',
-                            'desc'  => 'Strongly recommended to use google reCapcha if you want to allow public posting. https://www.google.com/recaptcha/admin',
+                            'desc'  => __( 'Strongly recommended to use google reCapcha if you want to allow public posting. https://www.google.com/recaptcha/admin', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => '',
                             'condition' => array(
@@ -205,35 +205,35 @@ class Contributer {
                 ),
                 //tab registration
                 array(
-                    'title' => 'Socials',
+                    'title' => __( 'Socials', CONTR_PLUGIN_SLUG ),
                     'id' => 'socials',
                     'icon' => '',
                     'options' => array(
                         array(
-                            'name' => 'Facebok APP id',
+                            'name' => __( 'Facebok APP id', CONTR_PLUGIN_SLUG ),
                             'id' => 'facebook_app_id',
-                            'desc'  => 'Please insert your facebook app id if you want to use facebook login.',
+                            'desc'  => __( 'Please insert your facebook app id if you want to use facebook login.', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => ''
                         ),
                         array(
-                            'name' => 'Facebok APP secret',
+                            'name' => __( 'Facebok APP secret', CONTR_PLUGIN_SLUG ),
                             'id' => 'facebook_app_secret',
-                            'desc'  => 'Please insert your facebook app secret if you want to use facebook login.',
+                            'desc'  =>  __( 'Please insert your facebook app secret if you want to use facebook login.', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => ''
                         ),
                         array(
-                            'name' => 'Google APP id',
+                            'name' => __( 'Google APP id', CONTR_PLUGIN_SLUG ),
                             'id' => 'google_app_id',
-                            'desc'  => 'Please insert your google app id if you want to use google+ login.',
+                            'desc'  => __( 'Please insert your google app id if you want to use google+ login.', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => ''
                         ),
                         array(
-                            'name' => 'Google APP secret',
+                            'name' => __( 'Google APP secret', CONTR_PLUGIN_SLUG ),
                             'id' => 'google_app_secret',
-                            'desc'  => 'Please insert your google app secret if you want to use google+ login.',
+                            'desc'  => __( 'Please insert your google app secret if you want to use google+ login.', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => ''
                         ),
