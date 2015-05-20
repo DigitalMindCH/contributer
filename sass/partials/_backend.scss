@@ -9,6 +9,7 @@
 .sensei-panel-container {
     font-family: $main-font;
     background: $white;
+    font-weight: 300;
 
     input,
     select,
@@ -18,7 +19,7 @@
         border-bottom: 1px solid $dm-gray;
         transition: .5s all ease;
         padding: 8px 0px;
-
+        box-sizing: content-box;
         &:focus,
         &:active{
             box-shadow: 0 0 0 transparent;
