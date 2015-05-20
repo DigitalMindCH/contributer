@@ -63,7 +63,13 @@ jQuery(document).ready(function($) {
         $(".message-handler").hide();
         
         var ce_data = new FormData();
-                
+           
+        var tmce_tab = $( "#contributer-editor" ).find( ".tmce-active" );
+        if( tmce_tab.length ) {
+            var contributer_wysiwyg_iframe = $(this).find('iframe');
+            tmce_tab.find('textarea').val( contributer_wysiwyg_iframe.contents().find("#tinymce").html() );
+        }
+        
         $('#contributer-editor').find('#action, #title, #add_post_nonce, #cat, #post-content, #vid-url, #tags, #recaptcha_response_field, #recaptcha_challenge_field').each(function(){
             ce_data.append( this.name, $(this).val() );
         });

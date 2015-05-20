@@ -167,7 +167,7 @@ class Contributer_Contribute {
                     'media_buttons' => false,
                     'textarea_name' => 'content',
                     'textarea_rows' => 10,
-                    'teeny'         => true
+                    'teeny'         => true,
                 ) );
                 ?>
             </p>
