@@ -244,8 +244,8 @@ class Contributer_Contribute {
         if ( ! empty( $google_recaptcha_site_key ) && ! empty( $google_recaptcha_secret_key ) ) {
             require_once ( Sensei_Options::get_instance()->get_option( 'plugin_dir' ) . 'framework/modules/recaptcha/recaptchalib.php' );
             
-            if ( isset( $_POST["recaptcha_response_field"] ) && isset( $_POST["recaptcha_response_field"] ) ) {
-                $resp = recaptcha_check_answer ( $google_recaptcha_secret_key, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_response_field"], $_POST["recaptcha_response_field"] );
+            if ( isset( $_POST["recaptcha_challenge_field"] ) && isset( $_POST["recaptcha_response_field"] ) ) {
+                $resp = recaptcha_check_answer ( $google_recaptcha_secret_key, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
                 if ( ! $resp->is_valid) {
                     $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
                 } 
