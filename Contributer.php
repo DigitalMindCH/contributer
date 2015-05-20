@@ -57,7 +57,8 @@ class Contributer {
             $user = get_user_by( 'id' , $id );
         } 
         elseif ( is_object( $id_or_email ) ) {
-            if ( ! empty( $id_or_email->user_id ) ) {
+            $id_or_email_reference_check = $id_or_email->user_id;
+            if ( ! empty( $id_or_email_reference_check ) ) {
                 $id = (int) $id_or_email->user_id;
                 $user = get_user_by( 'id' , $id );
             }
@@ -101,11 +102,12 @@ class Contributer {
             
             $logged_off_with_recaptcha = false;
             $sensei_instance = Sensei_Options::get_instance();
+            $google_recaptcha_secret_key = $sensei_instance->get_option( 'google_recaptcha_secret_key' );
+            $google_recaptcha_site_key = $sensei_instance->get_option( 'google_recaptcha_site_key' );
             if (
                 $sensei_instance->get_option( 'post_publish_without_registration' ) &&
-                $sensei_instance->get_option( 'post_publish_without_registration' ) &&
-                ! empty( $sensei_instance->get_option( 'google_recaptcha_secret_key' ) ) &&
-                ! empty( $sensei_instance->get_option( 'google_recaptcha_site_key' ) )
+                ! empty( $google_recaptcha_secret_key ) &&
+                ! empty( $google_recaptcha_site_key )
             ) {
                 $logged_off_with_recaptcha = true;
             }
