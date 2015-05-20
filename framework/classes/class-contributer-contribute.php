@@ -47,6 +47,7 @@ class Contributer_Contribute {
     public function update_response_messages() {
         $this->update_response_messages = array(
             'general_fail' => __( 'You are not allowed to add post. Please try again later.', CONTR_PLUGIN_SLUG ),
+            'wrong_captcha' => __( 'The enetered captcha was not correct. Please try again', CONTR_PLUGIN_SLUG ),
         );
     }
     
@@ -249,11 +250,11 @@ class Contributer_Contribute {
             if ( isset( $_POST["recaptcha_challenge_field"] ) && isset( $_POST["recaptcha_response_field"] ) ) {
                 $resp = recaptcha_check_answer ( $google_recaptcha_secret_key, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
                 if ( ! $resp->is_valid) {
-                    $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
+                    $this->send_json_output( false, $this->get_response_message( 'wrong_captcha' ) );
                 } 
             }
             else {
-                $this->send_json_output( false, $this->get_response_message( 'general_fail' ) );
+                $this->send_json_output( false, $this->get_response_message( 'wrong_captcha' ) );
             }
            
         }
