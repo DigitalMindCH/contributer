@@ -94,19 +94,33 @@ class Contributer {
             wp_enqueue_script( 'contributer_main', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
             wp_localize_script( 'contributer_main', 'contributer_object', array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'logged_off_with_recaptcha' => false
             ));
         }
         else {
+            
+            $logged_off_with_recaptcha = false;
+            $sensei_instance = Sensei_Options::get_instance();
+            if (
+                $sensei_instance->get_option( 'post_publish_without_registration' ) &&
+                $sensei_instance->get_option( 'post_publish_without_registration' ) &&
+                ! empty( $sensei_instance->get_option( 'google_recaptcha_secret_key' ) ) &&
+                ! empty( $sensei_instance->get_option( 'google_recaptcha_site_key' ) )
+            ) {
+                $logged_off_with_recaptcha = true;
+            }
+            
             wp_enqueue_script( 'contributer_login', $this->plugin_url.'/assets/js/login.js', array( 'jquery' ), '1.0', true );
             wp_localize_script( 'contributer_login', 'contributer_object', array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'redirect_login_url' => Sensei_Options::get_instance()->get_option( 'redirect_login_url' ),
                 'facebook_app_id' => Sensei_Options::get_instance()->get_option( 'facebook_app_id' ),
                 'google_app_id' => Sensei_Options::get_instance()->get_option( 'google_app_id' ),
-                'facebook_login_nonce' => wp_create_nonce( 'facebook-login' )
+                'facebook_login_nonce' => wp_create_nonce( 'facebook-login' ),
+                'logged_off_with_recaptcha' => $logged_off_with_recaptcha
             ));
             
-            if ( Sensei_Options::get_instance()->get_option( 'post_publish_without_registration' ) ) {
+            if ( $sensei_instance->get_option( 'post_publish_without_registration' ) ) {
                 wp_enqueue_script( 'contributer_main', $this->plugin_url.'/assets/js/main.js', array( 'jquery', 'jquery-form' ), '1.0', true );
             }
         }

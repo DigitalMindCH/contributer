@@ -105,6 +105,11 @@ jQuery(document).ready(function($) {
                 else {
                     $("#contributer-failure").html( data.message );
                     $("#contributer-failure").show();
+                    
+                    //if user is logged out and if using recaptcha we are going to reload it on error
+                    if ( contributer_object.logged_off_with_recaptcha ) {
+                        Recaptcha.reload();
+                    }
                 }
                 $("html, body").animate( { scrollTop: 0 }, "slow" );
                 $("#publish-loader").addClass('hidden_loader');
