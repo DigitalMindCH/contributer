@@ -24,6 +24,7 @@ class Contributer {
         //add filter for custom avatars
         add_filter( 'get_avatar' , array( $this, 'contributer_avatar' ) , 1 , 5 );
         
+        //loading core on init.
         add_action( 'init', array( $this, 'load_plugin' ) );
     }
     
@@ -32,8 +33,6 @@ class Contributer {
     public function load_plugin() {
         new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
         Sensei_Options::get_instance()->set_option( 'plugin_dir', $this->plugin_directory );
-
-        
 
         $login_renderer = new Contributer_Login( $this->plugin_directory );
         add_shortcode( 'contributer_login', array( $login_renderer, 'contributer_login' ) );
