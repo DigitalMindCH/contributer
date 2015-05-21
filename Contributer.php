@@ -13,11 +13,8 @@ class Contributer {
         $this->plugin_directory_rel = dirname( plugin_basename( $file ) );
         $this->plugin_url = plugin_dir_url( $file );
         
-        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
-        Sensei_Options::get_instance()->set_option( 'plugin_dir', $this->plugin_directory );
+        add_action( 'init', array( $this, 'load_textdomain' ) );
         
-        add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
-
         //enque js scripts
         add_action( 'wp_enqueue_scripts', array( $this, 'load_js' ) );
 
@@ -26,6 +23,17 @@ class Contributer {
 
         //add filter for custom avatars
         add_filter( 'get_avatar' , array( $this, 'contributer_avatar' ) , 1 , 5 );
+        
+        add_action( 'init', array( $this, 'load_plugin' ) );
+    }
+    
+    
+    
+    public function load_plugin() {
+        new Sensei_Admin_Panel( $this->plugin_url.'/framework/modules/sensei-options', $this->define_page_options( $this->plugin_directory ) );
+        Sensei_Options::get_instance()->set_option( 'plugin_dir', $this->plugin_directory );
+
+        
 
         $login_renderer = new Contributer_Login( $this->plugin_directory );
         add_shortcode( 'contributer_login', array( $login_renderer, 'contributer_login' ) );
