@@ -14,8 +14,7 @@ class Contributer_Facebook_Login {
     public function __construct() {
         $this->client_id = Sensei_Options::get_instance()->get_option( 'facebook_app_id' );
         $this->client_secret = Sensei_Options::get_instance()->get_option( 'facebook_app_secret' );
-        
-        add_action( 'plugins_loaded', array( $this, 'populate_response_messages' ) );
+        $this->populate_response_messages();
         add_action( 'wp_ajax_nopriv_facebook_login', array( $this, 'facebook_login' ) );
     }
     

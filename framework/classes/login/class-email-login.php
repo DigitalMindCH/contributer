@@ -7,7 +7,7 @@ class Contributer_Email_Login {
     
     
     public function __construct() {
-        add_action( 'plugins_loaded', array( $this, 'populate_response_messages' ) );
+        $this->populate_response_messages();
         add_action( 'wp_ajax_nopriv_email_login', array( $this, 'email_login' ) );
         add_action( 'wp_ajax_nopriv_email_sign_up', array( $this, 'email_sign_up' ) );
     }

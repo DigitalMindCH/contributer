@@ -9,7 +9,7 @@ class Contributer_Contribute {
     
     
     public function __construct() {
-        add_action( 'plugins_loaded', array( $this, 'update_response_messages' ) );
+        $this->update_response_messages();
         add_action( 'wp_ajax_add_post', array( $this, 'add_post' ) );
         if (  Sensei_Options::get_instance()->get_option( 'post_publish_without_registration' ) ) {
             add_action( 'wp_ajax_nopriv_add_post_logged_off', array( $this, 'add_post_logged_off' ) );

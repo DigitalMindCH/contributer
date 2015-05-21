@@ -14,8 +14,7 @@ class Contributer_Profile {
      * This class will handle updates related with profile (updating profile information)
      */
     public function __construct() {
-        add_action( 'plugins_loaded', array( $this, 'update_response_messages' ) );
-        
+        $this->update_response_messages();
         add_action( 'wp_ajax_update_profile', array( $this, 'ajax_update_profile' ) );
         add_action( 'wp_ajax_update_profile_image', array( $this, 'ajax_update_profile_image' ) );
     }
