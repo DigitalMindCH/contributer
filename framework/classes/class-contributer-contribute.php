@@ -354,7 +354,7 @@ class CCStandardFormat {
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
-            'post_status' => 'draft',
+            'post_status' => 'pending',
             'post_type' => 'post',
             'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
@@ -506,7 +506,7 @@ class CCImageFormat {
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
-            'post_status' => 'draft',
+            'post_status' => 'pending',
             'post_type' => 'post',
             'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
@@ -672,7 +672,7 @@ class CCVideoFormat {
         $arguments = array(
             'post_content' => wp_oembed_get( $this->video_url ). ' <div>' . $this->post_content .'</div>',
             'post_title' =>  $this->post_title,
-            'post_status' => 'draft',
+            'post_status' => 'pending',
             'post_type' => 'post',
             'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
@@ -832,7 +832,7 @@ class CCGalleryFormat {
         $arguments = array(
             'post_content' => $this->post_content,
             'post_title' =>  $this->post_title,
-            'post_status' => 'draft',
+            'post_status' => 'pending',
             'post_type' => 'post',
             'post_author' => $user->ID,
             'tags_input' => $this->post_tags,
