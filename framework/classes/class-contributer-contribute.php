@@ -226,9 +226,10 @@ class Contributer_Contribute {
         }
         
         $post_format = 'standard';
-        $allowed_formats = array( 'standard', 'video', 'image', 'gallery' );
+        $plugin_supported_formats = array( 'standard', 'video', 'image', 'gallery' );
+        $post_formats = get_theme_support( 'post-formats' );
         
-        if ( isset( $_POST['post-format'] ) && in_array( $_POST['post-format'], $allowed_formats ) ) {
+        if ( isset( $_POST['post-format'] ) && in_array( $_POST['post-format'], $plugin_supported_formats ) && in_array( $_POST['post-format'], $post_formats[0] ) ) {
             $post_format = $_POST['post-format'];
         }
         
@@ -260,9 +261,10 @@ class Contributer_Contribute {
         }
         
         $post_format = 'standard';
-        $allowed_formats = array( 'standard', 'video', 'image', 'gallery' );
+        $plugin_supported_formats = array( 'standard', 'video', 'image', 'gallery' );
+        $post_formats = get_theme_support( 'post-formats' );
         
-        if ( isset( $_POST['post-format'] ) && in_array( $_POST['post-format'], $allowed_formats ) ) {
+        if ( isset( $_POST['post-format'] ) && in_array( $_POST['post-format'], $plugin_supported_formats ) && in_array( $_POST['post-format'], $post_formats[0] ) ) {
             $post_format = $_POST['post-format'];
         }
         

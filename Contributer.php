@@ -136,7 +136,9 @@ class Contributer {
         }
     }
 	
-
+    
+    //enable condition checks and val expr checks in v2 for only settings page.
+    //currently it is executing for each call
     public function define_page_options() {
         
         $users = get_users( array( 'role' => 'administrator' ) );
@@ -209,6 +211,19 @@ class Contributer {
                                 'value' => 'post_publish_without_registration'
                             )
                         ),
+                        array(
+                            'name' => __( 'Embed video into the content', CONTR_PLUGIN_SLUG ),
+                            'id' => 'embed_video_into_content',
+                            'desc'  => __( 'Do you want to embed video into the content when visitors are posting posts with video format?', CONTR_PLUGIN_SLUG ),
+                            'type'  => 'checkbox',
+                            'value'   => true,
+                            'condition' => array(
+                                'type' => 'custom',
+                                'value' => array( $this, 'video_format_exists' ),
+                                'disabled_type' => 'hidden'
+                            )
+                        ),
+                        
                     )
                 ),
                 //tab registration
@@ -280,11 +295,21 @@ class Contributer {
         );
         new User_Custom_Fields( $fields );
     }
-	
-	
-    public static function anyone_can_register() {
-        return true;
+    
+    
+    public function video_format_exists() {
+        $post_formats = get_theme_support( 'post-formats' );
+        
+        if ( ! is_array( $post_formats[0] ) || empty( $post_formats[0] ) ) {
+            return;
+        }
+        
+        if ( in_array( 'video', $post_formats[0] ) ) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }
-
