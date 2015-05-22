@@ -30,10 +30,10 @@ class Contributer_Login {
     
     public function contributer_login() {
         if ( get_option( 'users_can_register' ) ) {
-            $this->contributer_login_allowed();
+            return $this->contributer_login_allowed();
         }
         else {
-            $this->contributer_login_not_allowed();
+            return $this->contributer_login_not_allowed();
         }
     }
     
