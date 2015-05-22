@@ -81,6 +81,11 @@ class Contributer_Facebook_Login {
             do_action( 'wp_login', $user_info->user_login );
         }
         else {
+            
+            if ( ! get_option( 'users_can_register' ) ) {
+                $this->send_json_output( false, $this->get_response_message( 'registration_not_allowed' ) );
+            }
+            
             $random_password = wp_generate_password( 20 );
             $user_id = wp_create_user( $email, $random_password, $email );
 
@@ -123,7 +128,8 @@ class Contributer_Facebook_Login {
         $this->response_messages = array(
             'facebook_user_failed' => __( 'We were not able to retrieve facebook user. Please try again.', CONTR_PLUGIN_SLUG ),
             'registration_failed' => __( 'Registration failed. Please try again.', CONTR_PLUGIN_SLUG ),
-            'try_later' => __( 'Something wrong happened. Please try again later.', CONTR_PLUGIN_SLUG )
+            'try_later' => __( 'Something wrong happened. Please try again later.', CONTR_PLUGIN_SLUG ),
+            'registration_not_allowed' => __( 'Registration is not allowed at this moment. Please try again later.', CONTR_PLUGIN_SLUG )
         );
     }
     
