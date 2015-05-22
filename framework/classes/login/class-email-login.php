@@ -8,11 +8,9 @@ class Contributer_Email_Login {
     
     public function __construct() {
         $this->populate_response_messages();
-        add_action( 'wp_ajax_nopriv_email_login', array( $this, 'email_login' ) );
         
-        if ( get_option( 'users_can_register' ) ) {
-            add_action( 'wp_ajax_nopriv_email_sign_up', array( $this, 'email_sign_up' ) );
-        }
+        add_action( 'wp_ajax_nopriv_email_login', array( $this, 'email_login' ) );
+        add_action( 'wp_ajax_nopriv_email_sign_up', array( $this, 'email_sign_up' ) );
     }
     
     
@@ -101,8 +99,7 @@ class Contributer_Email_Login {
             'username_exists' => __( 'Username you inserted already exists. Please insert another username and try again.', CONTR_PLUGIN_SLUG ),
             'weak_password' => __( 'Your password needs to contain at least 4 characters.', CONTR_PLUGIN_SLUG ),
             'password_confirmation_fail' => __( 'The password and confirmation password do not match.', CONTR_PLUGIN_SLUG ),
-            'try_later' => __( 'Something wrong happened. Please try again later.', CONTR_PLUGIN_SLUG ),
-            'registration_not_allowed' => __( 'Registration is not allowed at this moment. Please try again later.', CONTR_PLUGIN_SLUG )
+            'try_later' => __( 'Something wrong happened. Please try again later.', CONTR_PLUGIN_SLUG )
         );
     }
     
@@ -149,10 +146,6 @@ class Contributer_Email_Login {
         //if checking nonce fails, there is no need to proceed
         if ( ! check_ajax_referer( 'email-signup' , 'email_signup_nonce', false ) ) {
             $this->send_json_output( false,  $this->get_response_message( 'try_later' ) );
-        }
-        
-        if ( ! get_option( 'users_can_register' ) ) {
-            $this->send_json_output( false,  $this->get_response_message( 'registration_not_allowed' ) );
         }
         
         $message = '';

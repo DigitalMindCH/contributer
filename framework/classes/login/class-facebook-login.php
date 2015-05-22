@@ -15,7 +15,9 @@ class Contributer_Facebook_Login {
         $this->client_id = Sensei_Options::get_instance()->get_option( 'facebook_app_id' );
         $this->client_secret = Sensei_Options::get_instance()->get_option( 'facebook_app_secret' );
         $this->populate_response_messages();
+        
         add_action( 'wp_ajax_nopriv_facebook_login', array( $this, 'facebook_login' ) );
+        
     }
     
     
@@ -81,10 +83,6 @@ class Contributer_Facebook_Login {
             do_action( 'wp_login', $user_info->user_login );
         }
         else {
-            
-            if ( ! get_option( 'users_can_register' ) ) {
-                $this->send_json_output( false, $this->get_response_message( 'registration_not_allowed' ) );
-            }
             
             $random_password = wp_generate_password( 20 );
             $user_id = wp_create_user( $email, $random_password, $email );

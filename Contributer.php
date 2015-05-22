@@ -55,6 +55,7 @@ class Contributer {
         load_plugin_textdomain( CONTR_PLUGIN_SLUG, false, $this->plugin_directory_rel . '/languages/' ); 
     }
     
+    
         
     public function contributer_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
         $user = false;

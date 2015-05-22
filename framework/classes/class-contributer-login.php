@@ -18,15 +18,28 @@ class Contributer_Login {
     
     public function __construct() {
         
-        $this->facebook_login = new Contributer_Facebook_Login();
-        $this->google_login = new Contributer_Google_Login();
-        $this->email_login = new Contributer_Email_Login();
+        //we will initialize these only if registration is allowed.
+        if ( get_option( 'users_can_register' ) ) {
+            $this->facebook_login = new Contributer_Facebook_Login();
+            $this->google_login = new Contributer_Google_Login();
+            $this->email_login = new Contributer_Email_Login();
+        }
         
     }
     
     
-    
     public function contributer_login() {
+        if ( get_option( 'users_can_register' ) ) {
+            $this->contributer_login_allowed();
+        }
+        else {
+            $this->contributer_login_not_allowed();
+        }
+    }
+    
+    
+    
+    public function contributer_login_allowed() {
         
         ob_start();
         ?>
@@ -62,6 +75,19 @@ class Contributer_Login {
         </div>
         <!-- contributer-signup end -->
         
+        <?php
+        $html_output = ob_get_clean();
+        return $html_output;
+    }
+    
+    
+    
+    public function contributer_login_not_allowed() {
+        ob_start();
+        ?>
+        <div class="contributer-signup">
+            <p><?php _e( 'This site does not allow new User Registration.', CONTR_PLUGIN_SLUG ) ?></p>
+        </div>
         <?php
         $html_output = ob_get_clean();
         return $html_output;

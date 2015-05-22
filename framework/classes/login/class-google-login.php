@@ -13,7 +13,7 @@ class Contributer_Google_Login {
         $this->client_secret = Sensei_Options::get_instance()->get_option( 'google_app_secret' );
         
         //after everything loaded (mostly because user functons we are using)
-        add_action( 'init', array( $this, 'google_login' ) );
+        $this->google_login();
     }
     
     
@@ -109,10 +109,6 @@ class Contributer_Google_Login {
                 wp_redirect( Sensei_Options::get_instance()->get_option( 'redirect_login_url' ) ); exit;
             }
             else {
-                
-                if ( ! get_option( 'users_can_register' ) ) {
-                    return;
-                }
                 
                 $random_password = wp_generate_password( 20 );
                 $user_id = wp_create_user( $email, $random_password, $email );
