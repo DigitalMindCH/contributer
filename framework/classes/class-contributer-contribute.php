@@ -671,8 +671,10 @@ class CCVideoFormat {
             $user = get_user_by( 'id', Sensei_Options::get_instance()->get_option( 'guest_post_author' ) );
         }
         
+        $video_shortcode = '[embed]' . $this->video_url . '[/embed]';
+        
         $arguments = array(
-            'post_content' => wp_oembed_get( $this->video_url ). ' <div>' . $this->post_content .'</div>',
+            'post_content' => $video_shortcode. ' <div>' . $this->post_content .'</div>',
             'post_title' =>  $this->post_title,
             'post_status' => 'pending',
             'post_type' => 'post',
