@@ -214,7 +214,7 @@ class Contributer {
                         array(
                             'name' => __( 'Embed video into the content', CONTR_PLUGIN_SLUG ),
                             'id' => 'embed_video_into_content',
-                            'desc'  => __( 'Do you want to embed video into the content when visitors are posting posts with video format?', CONTR_PLUGIN_SLUG ),
+                            'desc'  => __( 'Activate this if your theme&apos;s video post type does not feature a "video URL" custom field', CONTR_PLUGIN_SLUG ),
                             'type'  => 'checkbox',
                             'value'   => true,
                             'condition' => array(
@@ -259,6 +259,28 @@ class Contributer {
                             'desc'  => __( 'Please insert your google app secret if you want to use google+ login.', CONTR_PLUGIN_SLUG ),
                             'type'  => 'text',
                             'value'   => ''
+                        ),
+                    )
+                ),
+                //tab shortcodes
+                array(
+                    'title' => __( 'Shortcodes', CONTR_PLUGIN_SLUG ),
+                    'id' => 'shortcodes',
+                    'icon' => '',
+                    'options' => array(
+                        array(
+                            'name' => __( 'Profile Page', CONTR_PLUGIN_SLUG ),
+                            'id' => 'profile_page_shortcode',
+                            'desc'  => __( 'Copy &amp; Paste this shortcode into the place where you want the profile settings page to be rendered', CONTR_PLUGIN_SLUG ),
+                            'type'  => 'text',
+                            'value'   => '[contributer_profile]',
+                        ),
+                        array(
+                            'name' => __( 'Contributing Page', CONTR_PLUGIN_SLUG ),
+                            'id' => 'contribute_shortcode',
+                            'desc'  => __( 'Copy &amp; Paste this shortcode into the place where you want the contributing form to be rendered', CONTR_PLUGIN_SLUG ),
+                            'type'  => 'text',
+                            'value'   => '[contributer_contribute]',
                         ),
                     )
                 ),
