@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Contributer
-Description: Dynamic Admin Panel
+Description: Contributer enables your guests to easily create front-end post with videos, images or galleries. Transform your blog into a place of sharing and collaboration.
 Author: Mersed Kahrimanovic
 Version: 1.0
 Author URI: http://www.mersed.info

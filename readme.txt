@@ -16,6 +16,8 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Contributer enables your guests to easily create front-end post with videos, images or galleries. Transform your blog into a place of sharing and collaboration. 
 
+If you found a bug or if you have ideas, add them to [the GitHub issue tracker](https://github.com/DigitalMindCH/contributer/issues). We’ll also keep a list of tasks there.
+
 == Description ==  
 
 Transform your blog into a place of collaboration. Adds a basic front-end post creator form via shortcode to your blog and enable your visitors to submit posts and upload images or videos. Our user-submitted posts plugin taps into the standard post-type function of WordPress and includes featured-image, video, image and gallery posts. It integrates tags, categories, post titles, and more. Published posts are set to “pending for review”. The plugin enables you to define if, your users need to be logged-in (Facebook, Google+, Email) or can post freely without login. Our Google Captcha integration filters unwanted spam. Logged-in users have the possibility to edit their profile settings in the front-end profile editor and change their profile picture without the need of a Gravatar account. The can edit their bio, website and social links in the profile front-end editor as well. Happy blogging! 
