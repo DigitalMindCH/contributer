@@ -1,10 +1,11 @@
 <?php
 /*
 Plugin Name: Contributer
+Plugin URI:  https://wordpress.org/plugins/contributer/
 Description: Contributer enables your guests to easily create front-end post with videos, images or galleries. Transform your blog into a place of sharing and collaboration.
-Author: Mersed Kahrimanovic
+Author: digitalmind.ch
 Version: 1.0
-Author URI: http://www.mersed.info
+Author URI: http://digitalmind.ch
  */
 
 //defining plugin path and plugin url
