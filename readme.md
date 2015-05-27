@@ -98,7 +98,7 @@ Contributor uses the WordPress API to keep everything secure, and includes Googl
 We’re here to help you and really want to improve the plugin. Please [drop us an EMail](href=“mailto:contributor@digitalmind.ch”) or go to the support tag. 
 
 
-## vChangelog
+## Changelog
 
 ### v1.0
 
