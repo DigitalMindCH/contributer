@@ -1,4 +1,4 @@
-=== Contributer - Guest Posting===
+=== Contributer - Guest Posting ===
 
 Plugin Name: Contributer - Guest posting made easy
 Plugin URI: http://contributer.digitalmind.ch
@@ -14,7 +14,7 @@ Version: 1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Contributer enables your guests to easily create front-end post with videos, images or galleries. Transform your blog into a place of sharing and collaboration. 
+Contributer enables your guests to easily create front-end post with videos, images or galleries. Transform your blog into a place of collaboration
 
 If you found a bug or if you have ideas, add them to [the GitHub issue tracker](https://github.com/DigitalMindCH/contributer/issues). We’ll also keep a list of tasks there.
 
