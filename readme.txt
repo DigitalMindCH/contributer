@@ -61,7 +61,7 @@ If you found a bug or if you have ideas, add them to [the GitHub issue tracker](
 
 **Overview**
 
-1. Upload the `/contributer-guest-posting/` directory to your plugins folder and activate
+1. Upload the `/contributer/` directory to your plugins folder and activate
 2. Go to the “Contributer Panel“ settings Page and customize your options
 3. Display the submission form on your page(s) using the shortcode
 
