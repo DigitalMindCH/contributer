@@ -1,19 +1,4 @@
 # Contributer - Guest Posting
-
-Plugin Name: Contributer - Guest posting made easy
-Plugin URI: http://contributer.digitalmind.ch
-Description: Enables your visitors to submit posts from anywhere on your site.
-Tags: submit, public, share, upload, images, posts, users, user-submit, community, front-end, submissions, profile, social login,
-Author: digitalmind.ch, 
-Author URI: http://digitalmind.ch
-Contributors: DigitalMind.ch, mersed.kahrimanovic
-Requires at least: 4.0
-Tested up to: 4.2
-Stable tag: 1.0
-Version: 1.0
-License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-
 Contributer enables your guests to easily create front-end post with videos, images or galleries. Transform your blog into a place of sharing and collaboration. 
 
 ## Description
