@@ -40,7 +40,7 @@ If you found a bug or if you have ideas, add them to [the GitHub issue tracker](
 
 * If you choose to enable social login your users can register with Facebook, Google+ or E-mail (More social login features coming up)
 
-**Features User Profile **
+**Features User Profile**
 
 * Your users/guest posters have the possibility to choose their own Gravatar
 * Users/guest posters can add their bio
